@@ -60,7 +60,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)..\Lib\bin" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
+      <Command>xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -79,7 +79,7 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)..\Lib\bin" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
+      <Command>xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>

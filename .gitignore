@@ -1,9 +1,6 @@
-#Folders
-KVEngine/Application
-KVEngine/Temp
-
 # Compiled Object files
 *.sdf
+*.opensdf
 *.lo
 *.o
 *.obj
