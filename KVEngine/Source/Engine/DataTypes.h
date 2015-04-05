@@ -1,7 +1,7 @@
 #ifndef DATA_TYPES
 #define DATA_TYPES
 
-typedef char byte;
+//typedef char byte;
 
 typedef char i8;
 typedef short i16;
