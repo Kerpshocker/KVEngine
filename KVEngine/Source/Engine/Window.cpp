@@ -19,3 +19,8 @@ bool Window::initialize( WNDPROC mainWndProc )
 		return false;
 	}
 }
+
+void Window::onResize( void )
+{
+	RenderManager::Instance().onResize();
+}

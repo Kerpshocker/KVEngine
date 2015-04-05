@@ -3,6 +3,7 @@
 
 #include <Windows.h>
 #include "Singleton.h"
+#include "RenderManager.h"
 
 #define WINDOW_WIDTH 1200
 #define WINDOW_HEIGHT 800
