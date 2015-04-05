@@ -78,6 +78,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="DataTypes.h" />
+    <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />

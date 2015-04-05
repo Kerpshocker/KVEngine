@@ -1,17 +1,21 @@
 #include "Main.h"
-#include "Camera.h"
+#include "UpdateManager.h"
+#include "RenderManager.h"
 #include <iostream>
 
 void main( void )
 {
-	KVE::CameraParams camParams = KVE::CameraParams
+	UpdateManager::Instance().initialize();
+	RenderManager::Instance().initialize();
+
+	bool running = true;
+	while ( running )
 	{
-		45.0f,
-		0.00001f,
-		100.0f
-	};
-	KVE::Camera camera = KVE::Camera( camParams );
-	camera.debugPrint();
+		UpdateManager::Instance().update(); // should not be called every single frame
+		RenderManager::Instance().render();
+
+		// InputManager::Instance().pollInput()
+	}
 
 	system( "pause" );
 }
