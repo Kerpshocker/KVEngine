@@ -11,12 +11,12 @@ void UpdateManager::initialize( void )
 	pass = Window::Instance().initialize( MainWndProc );
 }
 
-bool UpdateManager::initWindow( void )
-{
-	
-}
-
 void UpdateManager::update( void )
 {
 
+}
+
+LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
+{
+	return 0;
 }
