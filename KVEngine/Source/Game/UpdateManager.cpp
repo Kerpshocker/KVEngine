@@ -4,11 +4,11 @@
 static LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam );
 static WNDPROC MainWndProc = [] ( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam ) { return MsgProc( hwnd, msg, wParam, lParam ); };
 
-void UpdateManager::initialize( void )
+void UpdateManager::initialize( HINSTANCE appInstance )
 {
 	bool pass = true;
 
-	pass = Window::Instance().initialize( MainWndProc );
+	pass = Window::Instance().initialize( appInstance, MainWndProc );
 }
 
 void UpdateManager::update( void )
@@ -18,5 +18,5 @@ void UpdateManager::update( void )
 
 LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
-	return 0;
+	return DefWindowProc( hwnd, msg, wParam, lParam );
 }

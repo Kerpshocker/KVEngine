@@ -35,9 +35,6 @@ class RenderManager
 {
 	SINGLETON_INSTANCE( RenderManager );
 protected:
-	std::wstring windowCaption;
-	int windowWidth;
-	int windowHeight;
 	bool enable4xMsaa;
 	UINT msaa4xQuality;
 

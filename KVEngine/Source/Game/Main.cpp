@@ -3,9 +3,9 @@
 #include "RenderManager.h"
 #include <iostream>
 
-void main( void )
+int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd )
 {
-	UpdateManager::Instance().initialize();
+	UpdateManager::Instance().initialize( appInstance );
 	RenderManager::Instance().initialize();
 
 	bool running = true;
@@ -18,4 +18,5 @@ void main( void )
 	}
 
 	system( "pause" );
+	return 0;
 }

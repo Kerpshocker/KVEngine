@@ -12,13 +12,23 @@ class Window
 {
 	SINGLETON_INSTANCE( Window );
 public:
-	bool initialize( WNDPROC mainWndProc );
+	bool initialize( HINSTANCE appInstance, WNDPROC mainWndProc );
 	void onResize( void );
 
+	int getWindowWidth( void ) const;
+	int getWindowHeight( void ) const;
+	float getAspectRatio( void ) const;
+
 private:
-	bool minimized;
-	bool maximized;
-	bool resizing;
+	HINSTANCE	hInstance;
+	HWND		hWindow;
+
+	int			windowWidth;
+	int			windowHeight;
+
+	bool		minimized;
+	bool		maximized;
+	bool		resizing;
 
 };
 

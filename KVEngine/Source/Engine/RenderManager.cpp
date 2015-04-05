@@ -1,4 +1,5 @@
 #include "RenderManager.h"
+#include "Window.h"
 
 void RenderManager::initialize( void )
 {
@@ -22,8 +23,8 @@ void RenderManager::onResize( void )
 	// recreate the render target view
 	HR( swapChain->ResizeBuffers(
 		1,
-		windowWidth,
-		windowHeight,
+		Window::Instance().getWindowWidth(),
+		Window::Instance().getWindowHeight(),
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		0 ) );
 	ID3D11Texture2D* backBuffer;
@@ -34,8 +35,8 @@ void RenderManager::onResize( void )
 	// Set up the description of the texture to use for the
 	// depth stencil buffer
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
-	depthStencilDesc.Width = windowWidth;
-	depthStencilDesc.Height = windowHeight;
+	depthStencilDesc.Width = Window::Instance().getWindowWidth();
+	depthStencilDesc.Height = Window::Instance().getWindowHeight();
 	depthStencilDesc.MipLevels = 1;
 	depthStencilDesc.ArraySize = 1;
 	depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
@@ -68,8 +69,8 @@ void RenderManager::onResize( void )
 	// Update the viewport and set it on the device
 	viewport.TopLeftX = 0;
 	viewport.TopLeftY = 0;
-	viewport.Width = (float)windowWidth;
-	viewport.Height = (float)windowHeight;
+	viewport.Width = (float)Window::Instance().getWindowWidth();
+	viewport.Height = (float)Window::Instance().getWindowHeight();
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 	deviceContext->RSSetViewports( 1, &viewport );
