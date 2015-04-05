@@ -1,7 +1,7 @@
 #ifndef RENDER_MANAGER_H
 #define RENDER_MANAGER_H
 
-#include "Singleton.h"
+#include "Manager.h"
 #include "dxerr.h"
 
 #include <string>
@@ -31,7 +31,7 @@
 	#endif
 #endif
 
-class RenderManager
+class RenderManager : public Manager
 {
 	SINGLETON_INSTANCE( RenderManager );
 protected:

@@ -1,10 +1,10 @@
 #ifndef UPDATE_MANAGER_H
 #define UPDATE_MANAGER_H
 
-#include "Singleton.h"
+#include "Manager.h"
 #include <Windows.h>
 
-class UpdateManager
+class UpdateManager : public Manager
 {
 	SINGLETON_INSTANCE( UpdateManager );
 public:

@@ -3,7 +3,7 @@
 
 void RenderManager::initialize( void )
 {
-
+	Manager::initialize();
 }
 
 void RenderManager::render( void )
@@ -75,3 +75,8 @@ void RenderManager::onResize( void )
 	viewport.MaxDepth = 1.0f;
 	deviceContext->RSSetViewports( 1, &viewport );
 }
+
+//bool RenderManager::isInitialized( void ) const
+//{
+//	return initialized;
+//}

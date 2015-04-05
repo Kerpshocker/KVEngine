@@ -14,6 +14,7 @@ public:
 
 	f32 totalTime( void ) const;
 	f32 deltaTime( void ) const;
+	f32 elapsedTime( void ) const;
 
 	void start( void );
 	void stop( void );

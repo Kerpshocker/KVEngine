@@ -50,6 +50,11 @@ f32 GameTimer::deltaTime( void ) const
 	return (f32) mDeltaTime;
 }
 
+f32 GameTimer::elapsedTime( void )const
+{
+	return (f32) mCurrTime;
+}
+
 void GameTimer::start( void )
 {
 	i64 startTime;
