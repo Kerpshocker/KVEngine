@@ -1,7 +1,7 @@
 #include "RenderManager.h"
 #include "Window.h"
 
-void RenderManager::initialize( HINSTANCE appInstance )
+void RenderManager::initialize( void )
 {
 	driverType = D3D_DRIVER_TYPE_HARDWARE;
 

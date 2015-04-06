@@ -8,7 +8,7 @@ class UpdateManager : public Manager
 {
 	SINGLETON_INSTANCE( UpdateManager );
 public:
-	void initialize( HINSTANCE appInstance );
+	void initialize( void );
 	void update( void );
 
 private:

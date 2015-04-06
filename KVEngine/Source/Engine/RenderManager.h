@@ -49,7 +49,7 @@ protected:
 	D3D_FEATURE_LEVEL featureLevel;
 
 public:
-	void initialize( HINSTANCE appInstance );
+	void initialize( void );
 	void render( void );
 	void onResize( void );
 

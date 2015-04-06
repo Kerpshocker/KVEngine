@@ -1,12 +1,8 @@
 #include "UpdateManager.h"
 #include "Window.h"
 
-void UpdateManager::initialize( HINSTANCE appInstance )
+void UpdateManager::initialize( void )
 {
-	bool pass = true;
-
-	pass = Window::Instance().initialize( appInstance );
-
 	Manager::initialize();
 }
 

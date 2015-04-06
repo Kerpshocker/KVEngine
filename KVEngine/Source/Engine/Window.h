@@ -21,14 +21,20 @@ class Window
 	SINGLETON_INSTANCE( Window );
 	friend LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam );
 public:
-	bool initialize( HINSTANCE appInstance );
+	bool initialize( HINSTANCE appInstance, GameTimer** timer );
 	void onResize( void );
+
+	HWND getWindow( void ) const;
 
 	u32 getWindowWidth( void ) const;
 	u32 getWindowHeight( void ) const;
 	f32 getAspectRatio( void ) const;
+
+	bool isMinimized( void ) const;
+	bool isMaximized( void ) const;
+	bool isResizing( void ) const;
+	bool isGamePaused( void ) const;
 	
-	HWND getWindow( void ) const;
 private:
 	HINSTANCE	hInstance;
 	HWND		hWindow;

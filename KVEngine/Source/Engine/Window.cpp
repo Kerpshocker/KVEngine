@@ -5,9 +5,10 @@
 
 static WNDPROC MainWndProc = []( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam ) { return MsgProc( hwnd, msg, wParam, lParam ); };
 
-bool Window::initialize( HINSTANCE appInstance )
+bool Window::initialize( HINSTANCE appInstance, GameTimer** timer )
 {
 	hInstance = appInstance;
+	*timer = &this->timer;
 
 	WNDCLASS window;
 	window.style			= CS_HREDRAW | CS_VREDRAW;
@@ -51,6 +52,11 @@ void Window::onResize( void )
 	RenderManager::Instance().onResize();
 }
 
+HWND Window::getWindow( void ) const
+{
+	return hWindow;
+}
+
 u32 Window::getWindowWidth( void ) const
 {
 	return windowWidth;
@@ -66,9 +72,24 @@ f32 Window::getAspectRatio( void ) const
 	return (float)windowWidth / (float)windowHeight;
 }
 
-HWND Window::getWindow( void ) const
+bool Window::isMinimized( void ) const
 {
-	return hWindow;
+	return minimized;
+}
+
+bool Window::isMaximized( void ) const
+{
+	return maximized;
+}
+
+bool Window::isResizing( void ) const
+{
+	return resizing;
+}
+
+bool Window::isGamePaused( void ) const
+{
+	return gamePaused;
 }
 
 LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )

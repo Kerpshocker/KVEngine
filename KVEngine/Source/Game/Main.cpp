@@ -1,22 +1,40 @@
 #include "Main.h"
+#include "Window.h"
 #include "UpdateManager.h"
 #include "RenderManager.h"
 #include <iostream>
 
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd )
 {
-	UpdateManager::Instance().initialize( appInstance );
-	RenderManager::Instance().initialize( appInstance );
+	Window::Instance().initialize( appInstance, &timer );
+	UpdateManager::Instance().initialize();
+	RenderManager::Instance().initialize();
 
-	bool running = true;
-	while ( running )
+	MSG msg = { 0 };
+	timer->reset();
+	
+	while ( msg.message != WM_QUIT )
 	{
-		UpdateManager::Instance().update(); // should not be called every single frame
-		RenderManager::Instance().render();
+		if ( PeekMessage( &msg, 0, 0, 0, PM_REMOVE ) )
+		{
+			TranslateMessage( &msg );
+			DispatchMessage( &msg );
+		}
+		else
+		{
+			timer->tick();
 
-		// InputManager::Instance().pollInput()
+			if ( Window::Instance().isGamePaused() )
+			{
+				Sleep( 100 );
+			}
+			else
+			{
+				UpdateManager::Instance().update();
+				RenderManager::Instance().render();
+			}
+		}
 	}
 
-	system( "pause" );
-	return 0;
+	return (int) msg.wParam;
 }
