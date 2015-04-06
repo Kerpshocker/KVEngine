@@ -6,6 +6,9 @@
 #include "RenderManager.h"
 #include "GameTimer.h"
 
+#pragma comment(lib, "user32.lib")
+#pragma comment(lib, "gdi32.lib")
+
 #define WINDOW_START_WIDTH  1200
 #define WINDOW_START_HEIGHT 800
 #define WINDOW_MIN_WIDTH	400
@@ -21,16 +24,17 @@ public:
 	bool initialize( HINSTANCE appInstance );
 	void onResize( void );
 
-	int getWindowWidth( void ) const;
-	int getWindowHeight( void ) const;
-	float getAspectRatio( void ) const;
-
+	u32 getWindowWidth( void ) const;
+	u32 getWindowHeight( void ) const;
+	f32 getAspectRatio( void ) const;
+	
+	HWND getWindow( void ) const;
 private:
 	HINSTANCE	hInstance;
 	HWND		hWindow;
 
-	int			windowWidth;
-	int			windowHeight;
+	u32			windowWidth;
+	u32			windowHeight;
 
 	bool		minimized;
 	bool		maximized;

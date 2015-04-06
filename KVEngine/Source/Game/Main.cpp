@@ -6,7 +6,7 @@
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd )
 {
 	UpdateManager::Instance().initialize( appInstance );
-	RenderManager::Instance().initialize();
+	RenderManager::Instance().initialize( appInstance );
 
 	bool running = true;
 	while ( running )

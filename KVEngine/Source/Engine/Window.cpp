@@ -1,5 +1,4 @@
 #include "Window.h"
-#include "DataTypes.h"
 
 #define WINDOW_CLASS_NAME L"D3DWndClass"
 #define WINDOW_CAPTION L"DirectX Game"
@@ -52,19 +51,24 @@ void Window::onResize( void )
 	RenderManager::Instance().onResize();
 }
 
-int Window::getWindowWidth( void ) const
+u32 Window::getWindowWidth( void ) const
 {
 	return windowWidth;
 }
 
-int Window::getWindowHeight( void ) const
+u32 Window::getWindowHeight( void ) const
 {
 	return windowHeight;
 }
 
-float Window::getAspectRatio( void ) const
+f32 Window::getAspectRatio( void ) const
 {
 	return (float)windowWidth / (float)windowHeight;
+}
+
+HWND Window::getWindow( void ) const
+{
+	return hWindow;
 }
 
 LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )

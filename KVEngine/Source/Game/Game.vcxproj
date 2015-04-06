@@ -58,6 +58,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;$(AddtionalDependencies);</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
@@ -77,6 +78,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;$(AddtionalDependencies);</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
