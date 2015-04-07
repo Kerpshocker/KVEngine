@@ -6,6 +6,11 @@ namespace KVE
 {
 	using namespace DirectX;
 
+	Camera::Camera( void )
+	{
+
+	}
+
 	Camera::Camera( const CameraParams& params )
 	{
 		fieldOfView = params.fieldOfView;

@@ -23,6 +23,7 @@ namespace KVE
 	class Camera
 	{
 	public:
+		Camera( void );
 		Camera( const CameraParams& params );
 
 		const DirectX::XMFLOAT4X4 getProjMatrix( void )const;
