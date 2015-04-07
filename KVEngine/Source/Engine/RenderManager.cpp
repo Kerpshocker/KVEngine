@@ -113,7 +113,7 @@ void RenderManager::initialize( void )
 void RenderManager::render( void )
 {
 	//draw background
-	const f32 color[ 4 ] = { 0.0f, 0.0f, 0.0f, 0.0f }; //black
+	const f32 color[ 4 ] = { 0.0f, 0.0f, 0.0f, 1.0f }; //black
 
 	// Clear the buffer
 	deviceContext->ClearRenderTargetView( renderTargetView, color );
@@ -124,22 +124,22 @@ void RenderManager::render( void )
 		0 );
 
 	// Set up the input assembler
-	deviceContext->IASetInputLayout(inputLayout);
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	deviceContext->IASetInputLayout( inputLayout );
+	deviceContext->IASetPrimitiveTopology( D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
 
 	// Set buffers in the input assembler
-	UINT stride = sizeof(Vertex);
+	UINT stride = sizeof( Vertex );
 	UINT offset = 0;
-	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
-	deviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
+	deviceContext->IASetVertexBuffers( 0, 1, &vertexBuffer, &stride, &offset );
+	deviceContext->IASetIndexBuffer( indexBuffer, DXGI_FORMAT_R32_UINT, 0 );
 
 	// Set the current vertex and pixel shaders, as well the constant buffer for the vert shader
-	deviceContext->VSSetShader(vertexShader, NULL, 0);
+	deviceContext->VSSetShader( vertexShader, NULL, 0 );
 	deviceContext->VSSetConstantBuffers(
 		0,	// Corresponds to the constant buffer's register in the vertex shader
 		1,
 		&vsConstantBuffer);
-	deviceContext->PSSetShader(pixelShader, NULL, 0);
+	deviceContext->PSSetShader( pixelShader, NULL, 0 );
 
 	// Finally do the actual drawing
 	deviceContext->DrawIndexed(
@@ -324,9 +324,16 @@ void RenderManager::loadShadersAndInputLayout( void )
 		NULL,
 		&vertexShader));
 
-	// Clean up
-	ReleaseMacro(vsBlob);
+	// Before cleaning up the data, create the input layout
+	HR( device->CreateInputLayout(
+		vertexDesc,
+		ARRAYSIZE( vertexDesc ),
+		vsBlob->GetBufferPointer(),
+		vsBlob->GetBufferSize(),
+		&inputLayout ) );
 
+	// Clean up
+	ReleaseMacro( vsBlob );
 
 	// Compile pixel shader shader
 	ID3DBlob *psBlob;
