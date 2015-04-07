@@ -1,10 +1,10 @@
 struct VertexToPixel
 {
-	float4 pos : SV_POSITION;
-	float4 col : COLOR;
+	float4 position : SV_POSITION;
+	float4 color	: COLOR;
 };
 
 float4 main(VertexToPixel input) : SV_TARGET
 {
-	return input.col;
+	return input.color;
 }

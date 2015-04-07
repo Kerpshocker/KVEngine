@@ -79,18 +79,24 @@ void RenderManager::initialize( void )
 	// is resized, so just run the OnResize method
 	onResize();
 
-	createGeometry();
-	loadShadersAndInputLayout();
+	KVE::CameraParams params;
+	params.fieldOfView = 45.0f * (3.1415f/180.0f);
+	params.nearPlane = .01f;
+	params.farPlane = 100.0f;
 
+	CameraManager::Instance().createNewCamera( params , true );
 	CameraManager::Instance().getActiveCamera()->setProjMatrix();
 	CameraManager::Instance().getActiveCamera()->setViewMatrix();
-	
+
 	XMMATRIX world = DirectX::XMMatrixIdentity();
-	XMStoreFloat4x4(&worldMatrix, world);
+	XMStoreFloat4x4( &worldMatrix, world );
 
 	vsDataToConstantBuffer.World = worldMatrix;
 	vsDataToConstantBuffer.Proj = CameraManager::Instance().getActiveCamera()->getProjMatrix();
 	vsDataToConstantBuffer.View = CameraManager::Instance().getActiveCamera()->getViewMatrix();
+
+	createGeometry();
+	loadShadersAndInputLayout();
 
 	// Update the constant buffer itself
 	deviceContext->UpdateSubresource(
@@ -252,7 +258,51 @@ void RenderManager::createGeometry(void)
 	HR(device->CreateBuffer(&ibd, &initialIndexData, &indexBuffer));
 }
 
-void RenderManager::loadShadersAndInputLayout(void)
+#pragma region shaderCompiler
+//HRESULT CompileShader( _In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob )
+//{
+//	if ( !srcFile || !entryPoint || !profile || !blob )
+//		return E_INVALIDARG;
+//
+//	*blob = nullptr;
+//
+//	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
+//#if defined( DEBUG ) || defined( _DEBUG )
+//	flags |= D3DCOMPILE_DEBUG;
+//#endif
+//
+//	const D3D_SHADER_MACRO defines[] =
+//	{
+//		"EXAMPLE_DEFINE", "1",
+//		NULL, NULL
+//	};
+//
+//	ID3DBlob* shaderBlob = nullptr;
+//	ID3DBlob* errorBlob = nullptr;
+//	HRESULT hr = D3DCompileFromFile( srcFile, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE,
+//		entryPoint, profile,
+//		flags, 0, &shaderBlob, &errorBlob );
+//	if ( FAILED( hr ) )
+//	{
+//		if ( errorBlob )
+//		{
+//			OutputDebugStringA( (char*)errorBlob->GetBufferPointer() );
+//			errorBlob->Release();
+//		}
+//
+//		if ( shaderBlob )
+//			shaderBlob->Release();
+//
+//		return hr;
+//	}
+//
+//	*blob = shaderBlob;
+//
+//	return hr;
+//}
+#pragma endregion
+
+void RenderManager::loadShadersAndInputLayout( void )
 {
 	// Set up the vertex layout description
 	// This has to match the vertex input layout in the vertex shader
@@ -274,19 +324,12 @@ void RenderManager::loadShadersAndInputLayout(void)
 		NULL,
 		&vertexShader));
 
-	// Before cleaning up the data, create the input layout
-	HR(device->CreateInputLayout(
-		vertexDesc,
-		ARRAYSIZE(vertexDesc),
-		vsBlob->GetBufferPointer(),
-		vsBlob->GetBufferSize(),
-		&inputLayout));
-
 	// Clean up
 	ReleaseMacro(vsBlob);
 
-	// Load Pixel Shader ---------------------------------------
-	ID3DBlob* psBlob;
+
+	// Compile pixel shader shader
+	ID3DBlob *psBlob;
 	D3DReadFileToBlob(L"PC_PShader.cso", &psBlob);
 
 	// Create the shader on the device
@@ -299,13 +342,15 @@ void RenderManager::loadShadersAndInputLayout(void)
 	// Clean up
 	ReleaseMacro(psBlob);
 
+	printf( "Success\n" );
+
 	// Constant buffers ----------------------------------------
 	D3D11_BUFFER_DESC cBufferDesc;
-	cBufferDesc.ByteWidth = sizeof(VSDataToConstantBuffer);
-	cBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
-	cBufferDesc.CPUAccessFlags = 0;
-	cBufferDesc.MiscFlags = 0;
+	cBufferDesc.ByteWidth			= sizeof(VSDataToConstantBuffer);
+	cBufferDesc.Usage				= D3D11_USAGE_DEFAULT;
+	cBufferDesc.BindFlags			= D3D11_BIND_CONSTANT_BUFFER;
+	cBufferDesc.CPUAccessFlags		= 0;
+	cBufferDesc.MiscFlags			= 0;
 	cBufferDesc.StructureByteStride = 0;
 	HR(device->CreateBuffer(
 		&cBufferDesc,

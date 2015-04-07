@@ -7,24 +7,24 @@ cbuffer perModel : register( b0 )
 
 struct VSInput
 {
-	float3 pos : POSITION;
-	float4 col : COLOR;
+	float3 position : POSITION;
+	float4 color	: COLOR;
 };
 
 struct VertexToPixel
 {
-	float4 pos : SV_POSITION;
-	float4 col : COLOR;
+	float4 position : SV_POSITION;
+	float4 color	: COLOR;
 };
 
-VertexToPixel main(VSInput input)
+VertexToPixel main( VSInput input )
 {
 	VertexToPixel output;
 
 	matrix wvp = mul(mul(world, view), proj);
-	output.pos = mul(float4(input.pos, 1.0f), wvp);
+	output.position = mul(float4(input.position, 1.0f), wvp);
 
-	output.col = input.col;
+	output.color = input.color;
 
 	return output;
 }
