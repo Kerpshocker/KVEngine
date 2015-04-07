@@ -29,6 +29,8 @@ namespace KVE
 		const DirectX::XMFLOAT4X4 getProjMatrix( void )const;
 		const DirectX::XMFLOAT4X4 getViewMatrix( void )const;
 
+		void setProjMatrix( void );
+		void setViewMatrix( void );
 		void debugPrint( void );
 
 	private:
@@ -42,10 +44,6 @@ namespace KVE
 
 		DirectX::XMFLOAT4X4 projMatrix;
 		DirectX::XMFLOAT4X4 viewMatrix;
-
-		void setProjMatrix( void );
-		void setViewMatrix( void );
-
 	};
 }
 

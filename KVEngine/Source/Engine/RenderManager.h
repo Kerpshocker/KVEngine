@@ -7,6 +7,7 @@
 #include <string>
 #include <d3d11.h>
 #include <assert.h>
+#include <DirectXMath.h>
 
 // Convenience macro for releasing a COM object
 #define ReleaseMacro(x) { if(x){ x->Release(); x = 0; } }
@@ -31,6 +32,20 @@
 	#endif
 #endif
 
+struct VSDataToConstantBuffer
+{
+	DirectX::XMFLOAT4X4 World;
+	DirectX::XMFLOAT4X4 View;
+	DirectX::XMFLOAT4X4 Proj;
+};
+
+// Vertex struct for triangles
+struct Vertex
+{
+	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT4 Color;
+};
+
 class RenderManager : public Manager
 {
 	SINGLETON_INSTANCE( RenderManager );
@@ -48,11 +63,29 @@ protected:
 	D3D_DRIVER_TYPE driverType;
 	D3D_FEATURE_LEVEL featureLevel;
 
+	// Buffers to hold actual geometry
+	ID3D11Buffer* vertexBuffer;
+	ID3D11Buffer* indexBuffer;
+
+	ID3D11VertexShader* vertexShader;
+	ID3D11PixelShader* pixelShader;
+
+	ID3D11InputLayout* inputLayout;
+	ID3D11Buffer* vsConstantBuffer;
+	VSDataToConstantBuffer vsDataToConstantBuffer;
+
+private:
+	DirectX::XMFLOAT4X4 worldMatrix;
+	DirectX::XMFLOAT4X4 viewMatrix;
+	DirectX::XMFLOAT4X4 projectionMatrix;
+
 public:
 	void initialize( void );
 	void render( void );
 	void onResize( void );
 
+	void createGeometry(void);
+	void loadShadersAndInputLayout( void );
 };
 
 #endif
