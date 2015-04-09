@@ -1,20 +1,12 @@
 #include "Window.h"
 
-#include "Window.h"
-
-LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
-{
-	return DefWindowProc( hwnd, msg, wParam, lParam );
-}
-static WNDPROC MainWndProc = [] ( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam ) { return MsgProc( hwnd, msg, wParam, lParam ); };
-
 Window::Window( const WindowParams& params )
 {
 	onResize( params.Width, params.Height );
 
 	WNDCLASS window;
 	window.style = CS_HREDRAW | CS_VREDRAW;
-	window.lpfnWndProc = MainWndProc;
+	window.lpfnWndProc = params.WndProcedure;
 	window.cbClsExtra = 0;
 	window.cbWndExtra = 0;
 	window.hInstance = params.HInstance;
@@ -52,6 +44,26 @@ void Window::onResize( u16 width, u16 height )
 	m_Width = width;
 	m_Height = height;
 	m_AspectRatio = (f32) m_Width / (f32) m_Height;
+}
+
+const bool Window::isMinimized( void ) const
+{
+	return m_Minimized;
+}
+
+const bool Window::isMaximized( void ) const
+{
+	return m_Maximized;
+}
+
+const bool Window::isResizing( void ) const
+{
+	return m_Resizing;
+}
+
+const bool Window::isPaused( void ) const
+{
+	return m_Paused;
 }
 
 

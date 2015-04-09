@@ -52,18 +52,6 @@ class RenderManager : public Manager
 {
 	SINGLETON_INSTANCE( RenderManager );
 protected:
-	/*bool enable4xMsaa;
-	UINT msaa4xQuality;
-
-	ID3D11Device* device;
-	ID3D11DeviceContext* deviceContext;
-	IDXGISwapChain* swapChain;
-	ID3D11Texture2D* depthStencilBuffer;
-	ID3D11RenderTargetView* renderTargetView;
-	ID3D11DepthStencilView* depthStencilView;
-	D3D11_VIEWPORT viewport;
-	D3D_DRIVER_TYPE driverType;
-	D3D_FEATURE_LEVEL featureLevel;*/
 
 	// Buffers to hold actual geometry
 	ID3D11Buffer* vertexBuffer;

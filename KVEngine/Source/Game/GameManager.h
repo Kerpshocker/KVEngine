@@ -4,9 +4,9 @@
 #include "Manager.h"
 #include <Windows.h>
 
-class UpdateManager : public Manager
+class GameManager : public Manager
 {
-	SINGLETON_INSTANCE( UpdateManager );
+	SINGLETON_INSTANCE( GameManager );
 public:
 	void initialize( void );
 	void update( void );

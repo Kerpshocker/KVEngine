@@ -1,8 +1,14 @@
 #include "Main.h"
 #include "Window.h"
-#include "UpdateManager.h"
+#include "GameManager.h"
 #include "RenderManager.h"
 #include <iostream>
+
+LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
+{
+	return DefWindowProc( hwnd, msg, wParam, lParam );
+}
+static WNDPROC MainWndProc = []( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam ) { return MsgProc( hwnd, msg, wParam, lParam ); };
 
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd )
 {
@@ -11,12 +17,12 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	windowParams.Width = 800;
 	windowParams.Height = 600;
 	windowParams.Name = L"TESTING";
+	windowParams.WndProcedure = MainWndProc;
 	window = new DXWindow( windowParams );
 
 	timer = new GameTimer();
 
-	//Window::Instance().initialize( appInstance, &timer );
-	UpdateManager::Instance().initialize();
+	GameManager::Instance().initialize();
 	RenderManager::Instance().initialize( window );
 
 	MSG msg = { 0 };
@@ -33,15 +39,15 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 		{
 			timer->tick();
 
-			//if ( Window::Instance().isGamePaused() )
-			//{
-			//	Sleep( 100 );
-			//}
-			//else
-			//{
-				UpdateManager::Instance().update();
+			if ( window->isPaused() )
+			{
+				Sleep( 100 );
+			}
+			else
+			{
+				GameManager::Instance().update();
 				RenderManager::Instance().renderTo( window );
-			//}
+			}
 		}
 	}
 
