@@ -1,4 +1,5 @@
 #include "RenderManager.h"
+#include "ResourceManager.h"
 #include "CameraManager.h"
 #include "Window.h"
 #include <d3dcompiler.h>
@@ -59,7 +60,7 @@ void RenderManager::initialize( void )
 		&device,
 		&featureLevel,
 		&deviceContext
-	);
+		);
 
 	// Handle any device creation or DirectX version errors
 	if ( FAILED( hr ) )
@@ -79,12 +80,12 @@ void RenderManager::initialize( void )
 	// is resized, so just run the OnResize method
 	onResize();
 
-	KVE::CameraParams params;
-	params.fieldOfView = 45.0f * (3.1415f/180.0f);
-	params.nearPlane = .01f;
-	params.farPlane = 100.0f;
+	KVE::CameraParams cParams;
+	cParams.fieldOfView = 45.0f * ( 3.1415f / 180.0f );
+	cParams.nearPlane = .01f;
+	cParams.farPlane = 100.0f;
 
-	CameraManager::Instance().createNewCamera( params , true );
+	CameraManager::Instance().createNewCamera( cParams, true );
 	CameraManager::Instance().getActiveCamera()->setProjMatrix();
 	CameraManager::Instance().getActiveCamera()->setViewMatrix();
 
@@ -105,7 +106,7 @@ void RenderManager::initialize( void )
 		NULL,
 		&vsDataToConstantBuffer,
 		0,
-		0);
+		0 );
 
 	Manager::initialize();
 }
@@ -138,14 +139,14 @@ void RenderManager::render( void )
 	deviceContext->VSSetConstantBuffers(
 		0,	// Corresponds to the constant buffer's register in the vertex shader
 		1,
-		&vsConstantBuffer);
+		&vsConstantBuffer );
 	deviceContext->PSSetShader( pixelShader, NULL, 0 );
 
 	// Finally do the actual drawing
 	deviceContext->DrawIndexed(
 		3,	// The number of indices we're using in this draw
 		0,
-		0);
+		0 );
 
 	// Present the buffer
 	HR( swapChain->Present( 0, 0 ) );
@@ -216,91 +217,20 @@ void RenderManager::onResize( void )
 	deviceContext->RSSetViewports( 1, &viewport );
 }
 
-void RenderManager::createGeometry(void)
+void RenderManager::createGeometry( void )
 {
-	XMFLOAT4 red = XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f);
-	XMFLOAT4 green = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-	XMFLOAT4 blue = XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f);
+	XMFLOAT4 red = XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f );
+	XMFLOAT4 green = XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f );
+	XMFLOAT4 blue = XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f );
 
 	// Set up the vertices
 	Vertex vertices[] =
 	{
-		{ XMFLOAT3(+0.0f, +1.0f, +0.0f), red },
-		{ XMFLOAT3(-1.5f, -1.0f, +0.0f), green },
-		{ XMFLOAT3(+1.5f, -1.0f, +0.0f), blue },
+		{ XMFLOAT3( +0.0f, +1.0f, +0.0f ), red },
+		{ XMFLOAT3( -1.5f, -1.0f, +0.0f ), green },
+		{ XMFLOAT3( +1.5f, -1.0f, +0.0f ), blue },
 	};
-
-	// Create the vertex buffer
-	D3D11_BUFFER_DESC vbd;
-	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sizeof(Vertex) * 3; // Number of vertices in the "model" you want to draw
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = 0;
-	vbd.MiscFlags = 0;
-	vbd.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA initialVertexData;
-	initialVertexData.pSysMem = vertices;
-	HR(device->CreateBuffer(&vbd, &initialVertexData, &vertexBuffer));
-
-	// Set up the indices
-	UINT indices[] = { 0, 2, 1 };
-
-	// Create the index buffer
-	D3D11_BUFFER_DESC ibd;
-	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof(UINT) * 3; // Number of indices in the "model" you want to draw
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-	ibd.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA initialIndexData;
-	initialIndexData.pSysMem = indices;
-	HR(device->CreateBuffer(&ibd, &initialIndexData, &indexBuffer));
 }
-
-#pragma region shaderCompiler
-//HRESULT CompileShader( _In_ LPCWSTR srcFile, _In_ LPCSTR entryPoint, _In_ LPCSTR profile, _Outptr_ ID3DBlob** blob )
-//{
-//	if ( !srcFile || !entryPoint || !profile || !blob )
-//		return E_INVALIDARG;
-//
-//	*blob = nullptr;
-//
-//	UINT flags = D3DCOMPILE_ENABLE_STRICTNESS;
-//#if defined( DEBUG ) || defined( _DEBUG )
-//	flags |= D3DCOMPILE_DEBUG;
-//#endif
-//
-//	const D3D_SHADER_MACRO defines[] =
-//	{
-//		"EXAMPLE_DEFINE", "1",
-//		NULL, NULL
-//	};
-//
-//	ID3DBlob* shaderBlob = nullptr;
-//	ID3DBlob* errorBlob = nullptr;
-//	HRESULT hr = D3DCompileFromFile( srcFile, defines, D3D_COMPILE_STANDARD_FILE_INCLUDE,
-//		entryPoint, profile,
-//		flags, 0, &shaderBlob, &errorBlob );
-//	if ( FAILED( hr ) )
-//	{
-//		if ( errorBlob )
-//		{
-//			OutputDebugStringA( (char*)errorBlob->GetBufferPointer() );
-//			errorBlob->Release();
-//		}
-//
-//		if ( shaderBlob )
-//			shaderBlob->Release();
-//
-//		return hr;
-//	}
-//
-//	*blob = shaderBlob;
-//
-//	return hr;
-//}
-#pragma endregion
 
 void RenderManager::loadShadersAndInputLayout( void )
 {
@@ -315,14 +245,14 @@ void RenderManager::loadShadersAndInputLayout( void )
 
 	// Load Vertex Shader --------------------------------------
 	ID3DBlob* vsBlob;
-	D3DReadFileToBlob(L"PC_VShader.cso", &vsBlob);
+	D3DReadFileToBlob( L"PC_VShader.cso", &vsBlob );
 
 	// Create the shader on the device
-	HR(device->CreateVertexShader(
+	HR( device->CreateVertexShader(
 		vsBlob->GetBufferPointer(),
 		vsBlob->GetBufferSize(),
 		NULL,
-		&vertexShader));
+		&vertexShader ) );
 
 	// Before cleaning up the data, create the input layout
 	HR( device->CreateInputLayout(
@@ -337,30 +267,30 @@ void RenderManager::loadShadersAndInputLayout( void )
 
 	// Compile pixel shader shader
 	ID3DBlob *psBlob;
-	D3DReadFileToBlob(L"PC_PShader.cso", &psBlob);
+	D3DReadFileToBlob( L"PC_PShader.cso", &psBlob );
 
 	// Create the shader on the device
-	HR(device->CreatePixelShader(
+	HR( device->CreatePixelShader(
 		psBlob->GetBufferPointer(),
 		psBlob->GetBufferSize(),
 		NULL,
-		&pixelShader));
+		&pixelShader ) );
 
 	// Clean up
-	ReleaseMacro(psBlob);
+	ReleaseMacro( psBlob );
 
 	printf( "Success\n" );
 
 	// Constant buffers ----------------------------------------
 	D3D11_BUFFER_DESC cBufferDesc;
-	cBufferDesc.ByteWidth			= sizeof(VSDataToConstantBuffer);
-	cBufferDesc.Usage				= D3D11_USAGE_DEFAULT;
-	cBufferDesc.BindFlags			= D3D11_BIND_CONSTANT_BUFFER;
-	cBufferDesc.CPUAccessFlags		= 0;
-	cBufferDesc.MiscFlags			= 0;
+	cBufferDesc.ByteWidth = sizeof( VSDataToConstantBuffer );
+	cBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
+	cBufferDesc.CPUAccessFlags = 0;
+	cBufferDesc.MiscFlags = 0;
 	cBufferDesc.StructureByteStride = 0;
-	HR(device->CreateBuffer(
+	HR( device->CreateBuffer(
 		&cBufferDesc,
 		NULL,
-		&vsConstantBuffer));
+		&vsConstantBuffer ) );
 }
