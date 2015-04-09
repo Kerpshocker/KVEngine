@@ -29,7 +29,7 @@ namespace KVE
 		const DirectX::XMFLOAT4X4 getProjMatrix( void )const;
 		const DirectX::XMFLOAT4X4 getViewMatrix( void )const;
 
-		void setProjMatrix( void );
+		void setProjMatrix( f32 aspectRatio );
 		void setViewMatrix( void );
 		void debugPrint( void );
 

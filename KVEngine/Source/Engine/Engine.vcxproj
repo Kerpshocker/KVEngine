@@ -82,6 +82,7 @@
     <ClInclude Include="CameraManager.h" />
     <ClInclude Include="DataTypes.h" />
     <ClInclude Include="dxerr.h" />
+    <ClInclude Include="DXWindow.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="Material.h" />
@@ -95,6 +96,7 @@
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="CameraManager.cpp" />
     <ClCompile Include="dxerr.cpp" />
+    <ClCompile Include="DXWindow.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="Material.cpp" />
     <ClCompile Include="Mesh.cpp" />

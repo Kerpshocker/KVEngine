@@ -46,11 +46,13 @@ struct Vertex
 	DirectX::XMFLOAT4 Color;
 };
 
+class DXWindow;
+
 class RenderManager : public Manager
 {
 	SINGLETON_INSTANCE( RenderManager );
 protected:
-	bool enable4xMsaa;
+	/*bool enable4xMsaa;
 	UINT msaa4xQuality;
 
 	ID3D11Device* device;
@@ -61,7 +63,7 @@ protected:
 	ID3D11DepthStencilView* depthStencilView;
 	D3D11_VIEWPORT viewport;
 	D3D_DRIVER_TYPE driverType;
-	D3D_FEATURE_LEVEL featureLevel;
+	D3D_FEATURE_LEVEL featureLevel;*/
 
 	// Buffers to hold actual geometry
 	ID3D11Buffer* vertexBuffer;
@@ -80,12 +82,12 @@ private:
 	DirectX::XMFLOAT4X4 projectionMatrix;
 
 public:
-	void initialize( void );
-	void render( void );
-	void onResize( void );
+	void initialize( const DXWindow* window );
+	void renderTo( const DXWindow* window );
+	//void onResize( void );
 
 	void createGeometry( void );
-	void loadShadersAndInputLayout( void );
+	void loadShadersAndInputLayout( ID3D11Device* device );
 };
 
 #endif

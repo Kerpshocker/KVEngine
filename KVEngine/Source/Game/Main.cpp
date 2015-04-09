@@ -6,9 +6,18 @@
 
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd )
 {
-	Window::Instance().initialize( appInstance, &timer );
+	WindowParams windowParams;
+	windowParams.HInstance = appInstance;
+	windowParams.Width = 800;
+	windowParams.Height = 600;
+	windowParams.Name = L"TESTING";
+	window = new DXWindow( windowParams );
+
+	timer = new GameTimer();
+
+	//Window::Instance().initialize( appInstance, &timer );
 	UpdateManager::Instance().initialize();
-	RenderManager::Instance().initialize();
+	RenderManager::Instance().initialize( window );
 
 	MSG msg = { 0 };
 	timer->reset();
@@ -24,15 +33,15 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 		{
 			timer->tick();
 
-			if ( Window::Instance().isGamePaused() )
-			{
-				Sleep( 100 );
-			}
-			else
-			{
+			//if ( Window::Instance().isGamePaused() )
+			//{
+			//	Sleep( 100 );
+			//}
+			//else
+			//{
 				UpdateManager::Instance().update();
-				RenderManager::Instance().render();
-			}
+				RenderManager::Instance().renderTo( window );
+			//}
 		}
 	}
 

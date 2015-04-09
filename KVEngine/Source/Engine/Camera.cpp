@@ -26,8 +26,8 @@ namespace KVE
 		projMatrix = DirectX::XMFLOAT4X4();
 		viewMatrix = DirectX::XMFLOAT4X4();
 
-		setProjMatrix();
-		setViewMatrix();
+		/*setProjMatrix( 0 );
+		setViewMatrix();*/
 	}
 
 	const XMFLOAT4X4 Camera::getProjMatrix( void ) const
@@ -45,12 +45,12 @@ namespace KVE
 		printf( "Camera:\n  fieldOfView=%f\n  nearPlane=%f\n  farPlane=%f\n", fieldOfView, nearPlane, farPlane );
 	}
 
-	void Camera::setProjMatrix( void )
+	void Camera::setProjMatrix( f32 aspectRatio )
 	{
 		assert( farPlane > nearPlane );
 
 		XMStoreFloat4x4( &projMatrix, XMMatrixTranspose( XMMatrixPerspectiveFovLH(
-			fieldOfView, Window::Instance().getAspectRatio(), nearPlane, farPlane ) ) );
+			fieldOfView, aspectRatio, nearPlane, farPlane ) ) );
 	}
 
 	void Camera::setViewMatrix( void )
