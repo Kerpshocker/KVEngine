@@ -27,8 +27,8 @@ public:
 	void update( void );
 
 private:
-	void createShaders( const DXWindow* window );
-	void createGeometry( const DXWindow* window );
+	void createShaders( void );
+	void createGeometry( void );
 
 	ShaderProgram m_ShaderProgram;
 	ShaderBuffers m_ShaderBuffers;

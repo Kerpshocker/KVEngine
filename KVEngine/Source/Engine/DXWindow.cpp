@@ -116,14 +116,5 @@ void DXWindow::onResize( void )
 
 	m_DeviceContext->OMSetRenderTargets( 1, &m_RenderTargetView, m_DepthStencilView );
 
-	D3D11_VIEWPORT viewport;
-	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
-	viewport.Width = m_Width;
-	viewport.Height = m_Height;
-	viewport.MinDepth = 0.0f;
-	viewport.MaxDepth = 1.0f;
-	m_DeviceContext->RSSetViewports( 1, &viewport );
-
 	Window::onResize( m_Width, m_Height );
 }

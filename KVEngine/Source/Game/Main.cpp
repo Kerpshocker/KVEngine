@@ -29,8 +29,17 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 
 	timer = new GameTimer();
 
+	D3D11_VIEWPORT viewport;
+	viewport.TopLeftX = 0;
+	viewport.TopLeftY = 0;
+	viewport.Width = window->width();
+	viewport.Height = window->height();
+	viewport.MinDepth = 0.0f;
+	viewport.MaxDepth = 1.0f;
+
+	RenderManager::Instance().initialize( &viewport, 1 );
+	RenderManager::Instance().setWindow( window );
 	GameManager::Instance().initialize( window );
-	RenderManager::Instance().initialize();
 
 	MSG msg = { 0 };
 	timer->reset();
@@ -53,7 +62,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 			else
 			{
 				GameManager::Instance().update();
-				RenderManager::Instance().renderTo( window );
+				RenderManager::Instance().render();
 			}
 		}
 	}

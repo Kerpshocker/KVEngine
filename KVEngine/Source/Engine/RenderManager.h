@@ -30,20 +30,43 @@
 
 struct ShaderProgram
 {
-	ID3D11VertexShader* VertexShader;
-	ID3D11PixelShader* PixelShader;
-	ID3D11InputLayout* InputLayout;
-	D3D_PRIMITIVE_TOPOLOGY Topology;
+	ID3D11VertexShader*			VertexShader;
+	ID3D11PixelShader*			PixelShader;
+	ID3D11InputLayout*			InputLayout;
+	D3D_PRIMITIVE_TOPOLOGY		Topology;
+};
+
+
+struct ShaderProgramDesc
+{
+	D3D11_INPUT_ELEMENT_DESC*	VertexDesc;
+	UINT						NumVertexElements;
+	LPCWSTR						VShaderFile;
+	LPCWSTR						PShaderFile;
 };
 
 struct ShaderBuffers
 {
-	ID3D11Buffer*	VertexBuffer;
-	ID3D11Buffer*	IndexBuffer;
-	ID3D11Buffer*	ConstantBuffer;
-	UINT			VertexStride;
-	UINT			VertexOffset;
-	UINT			IndexCount;
+	ID3D11Buffer*				VertexBuffer;
+	ID3D11Buffer*				IndexBuffer;
+	ID3D11Buffer*				ConstantBuffer;
+	UINT						VertexStride;
+	UINT						VertexOffset;
+	UINT						IndexCount;
+	D3D_PRIMITIVE_TOPOLOGY		Topology;
+};
+
+struct ShaderBuffersDesc
+{
+	void*						Vertices;
+	UINT						VertexCount;
+	UINT						VertexStride;
+	UINT						VertexOffset;
+	void*						Indices;
+	UINT						IndexCount;
+	void*						ConstBufferData;
+	UINT						ConstBufferByteSize;
+	D3D_PRIMITIVE_TOPOLOGY		Topology;
 };
 
 class DXWindow;
@@ -52,15 +75,22 @@ class RenderManager : public Manager
 {
 	SINGLETON_INSTANCE( RenderManager );
 public:
-	void initialize( void );
-	void renderTo( const DXWindow* window );
+	void initialize( const D3D11_VIEWPORT* viewports, const UINT numViewports );
+	void render( void );
 
-	void setShaderProgram( ShaderProgram* shaderProgram );
-	void setShaderBuffers( ShaderBuffers* shaderBuffers );
+	void setWindow( const DXWindow* const window );
+
+	void createShaderProgram( const ShaderProgramDesc& spDesc );
+	void createShaderBuffers( const ShaderBuffersDesc& sbDesc );
 
 private:
-	ShaderProgram* m_ShaderProgram;
-	ShaderBuffers* m_ShaderBuffers;
+	const DXWindow* m_Window;
+	
+	D3D11_VIEWPORT* m_Viewports;
+	UINT m_ViewportCount;
+
+	ShaderProgram m_ShaderProgram;
+	ShaderBuffers m_ShaderBuffers;
 
 };
 
