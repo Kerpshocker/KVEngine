@@ -10,6 +10,8 @@ class CameraManager : public Manager
 {
 	SINGLETON_INSTANCE( CameraManager );
 public:
+	void release( void ) { }
+
 	int createNewCamera( const KVE::CameraParams& camParams, const bool makeActive = false );
 	void changeActiveCamera( const uint32_t index );
 

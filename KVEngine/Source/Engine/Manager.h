@@ -11,6 +11,8 @@ public:
 		initialized = false;
 	}
 
+	virtual void release( void ) = 0;
+
 	virtual void initialize( void )
 	{
 		initialized = true;

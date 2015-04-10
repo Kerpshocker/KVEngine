@@ -24,14 +24,12 @@ class GameManager : public Manager
 	SINGLETON_INSTANCE( GameManager );
 public:
 	void initialize( const DXWindow* window );
+	void release( void ) { }
 	void update( void );
 
 private:
 	void createShaders( void );
 	void createGeometry( void );
-
-	ShaderProgram m_ShaderProgram;
-	ShaderBuffers m_ShaderBuffers;
 
 };
 

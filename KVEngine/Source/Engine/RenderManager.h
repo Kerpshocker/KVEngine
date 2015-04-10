@@ -33,7 +33,6 @@ struct ShaderProgram
 	ID3D11VertexShader*			VertexShader;
 	ID3D11PixelShader*			PixelShader;
 	ID3D11InputLayout*			InputLayout;
-	D3D_PRIMITIVE_TOPOLOGY		Topology;
 };
 
 
@@ -76,6 +75,7 @@ class RenderManager : public Manager
 	SINGLETON_INSTANCE( RenderManager );
 public:
 	void initialize( const D3D11_VIEWPORT* viewports, const UINT numViewports );
+	void release( void );
 	void render( void );
 
 	void setWindow( const DXWindow* const window );

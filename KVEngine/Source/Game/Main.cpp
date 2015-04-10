@@ -67,5 +67,13 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 		}
 	}
 
+	release();
+
 	return (int) msg.wParam;
+}
+
+void release( void )
+{
+	RenderManager::Instance().release();
+	delete window;
 }

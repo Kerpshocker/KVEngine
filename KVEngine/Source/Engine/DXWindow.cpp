@@ -72,6 +72,16 @@ DXWindow::DXWindow( const WindowParams& params )
 	onResize();
 }
 
+DXWindow::~DXWindow( void )
+{
+	ReleaseMacro( m_Device );
+	ReleaseMacro( m_DeviceContext );
+	ReleaseMacro( m_SwapChain );
+	ReleaseMacro( m_RenderTargetView );
+	ReleaseMacro( m_DepthStencilView );
+	ReleaseMacro( m_DepthStencilBuffer );
+}
+
 void DXWindow::onResize( void )
 {
 	ReleaseMacro( m_RenderTargetView );

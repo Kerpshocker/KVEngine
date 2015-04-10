@@ -59,7 +59,6 @@ void GameManager::createGeometry( void )
 
 	// Set up the indices
 	UINT indices[] = { 0, 2, 1 };
-	m_ShaderBuffers.IndexCount = 3;
 
 	VSDataToConstantBuffer* vsDataToConstantBuffer = new VSDataToConstantBuffer();
 	XMStoreFloat4x4( &vsDataToConstantBuffer->World, DirectX::XMMatrixIdentity() );

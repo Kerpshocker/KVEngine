@@ -14,6 +14,23 @@ void RenderManager::initialize( const D3D11_VIEWPORT* viewports, const UINT numV
 	Manager::initialize();
 }
 
+void RenderManager::release( void )
+{
+	ReleaseMacro( m_ShaderProgram.VertexShader );
+	ReleaseMacro( m_ShaderProgram.InputLayout );
+	ReleaseMacro( m_ShaderProgram.PixelShader );
+
+	ReleaseMacro( m_ShaderBuffers.VertexBuffer );
+	ReleaseMacro( m_ShaderBuffers.IndexBuffer );
+	ReleaseMacro( m_ShaderBuffers.ConstantBuffer );
+
+	if ( m_Viewports != nullptr )
+	{
+		delete[] m_Viewports;
+		m_Viewports = nullptr;
+	}
+}
+
 void RenderManager::setWindow( const DXWindow* const window )
 {
 	m_Window = window;
@@ -42,11 +59,11 @@ void RenderManager::render( void )
 	// FOR EACH SHADER PROGRAM
 	// Set up the input assembler and set the current vertex and pixel shaders
 	m_Window->m_DeviceContext->IASetInputLayout( m_ShaderProgram.InputLayout );
-	m_Window->m_DeviceContext->IASetPrimitiveTopology( m_ShaderProgram.Topology );
 	m_Window->m_DeviceContext->VSSetShader( m_ShaderProgram.VertexShader, NULL, 0 );
 	m_Window->m_DeviceContext->PSSetShader( m_ShaderProgram.PixelShader, NULL, 0 );
 
 	// FOR EACH SHADER BUFFERS
+	m_Window->m_DeviceContext->IASetPrimitiveTopology( m_ShaderBuffers.Topology );
 	m_Window->m_DeviceContext->IASetVertexBuffers(
 		0,
 		1,
