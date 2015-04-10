@@ -7,8 +7,8 @@
 DXWindow::DXWindow( const WindowParams& params )
 	: Window( params )
 {
-	m_Renderer.enable4xMsaa = false;
-	m_Renderer.msaa4xQuality = 0;
+	m_Enable4xMsaa = false;
+	m_Msaa4xQuality = 0;
 
 	DXGI_SWAP_CHAIN_DESC swapChainDesc;
 	swapChainDesc.BufferDesc.Width = m_Width;
@@ -24,10 +24,10 @@ DXWindow::DXWindow( const WindowParams& params )
 	swapChainDesc.Windowed = true;
 	swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	swapChainDesc.Flags = 0;
-	if ( m_Renderer.enable4xMsaa )
+	if ( m_Enable4xMsaa )
 	{
 		swapChainDesc.SampleDesc.Count = 4;
-		swapChainDesc.SampleDesc.Quality = m_Renderer.msaa4xQuality - 1;
+		swapChainDesc.SampleDesc.Quality = m_Msaa4xQuality - 1;
 	}
 	else
 	{
@@ -51,10 +51,10 @@ DXWindow::DXWindow( const WindowParams& params )
 		0,
 		D3D11_SDK_VERSION,
 		&swapChainDesc,
-		&m_Renderer.swapChain,
-		&m_Renderer.device,
+		&m_SwapChain,
+		&m_Device,
 		&featureLevel,
-		&m_Renderer.deviceContext
+		&m_DeviceContext
 		);
 	if ( FAILED( hr ) )
 	{
@@ -62,23 +62,23 @@ DXWindow::DXWindow( const WindowParams& params )
 		return;
 	}
 
-	hr = m_Renderer.device->CheckMultisampleQualityLevels(
+	hr = m_Device->CheckMultisampleQualityLevels(
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		4,
-		&m_Renderer.msaa4xQuality
+		&m_Msaa4xQuality
 		);
-	assert( m_Renderer.msaa4xQuality > 0 );
+	assert( m_Msaa4xQuality > 0 );
 
 	onResize();
 }
 
 void DXWindow::onResize( void )
 {
-	ReleaseMacro( m_Renderer.renderTargetView );
-	ReleaseMacro( m_Renderer.depthStencilView );
-	ReleaseMacro( m_Renderer.depthStencilBuffer );
+	ReleaseMacro( m_RenderTargetView );
+	ReleaseMacro( m_DepthStencilView );
+	ReleaseMacro( m_DepthStencilBuffer );
 
-	m_Renderer.swapChain->ResizeBuffers(
+	m_SwapChain->ResizeBuffers(
 		1,
 		m_Width,
 		m_Height,
@@ -86,8 +86,8 @@ void DXWindow::onResize( void )
 		0
 	);
 	ID3D11Texture2D* backBuffer;
-	HR( m_Renderer.swapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), reinterpret_cast<void**>( &backBuffer ) ) );
-	HR( m_Renderer.device->CreateRenderTargetView( backBuffer, 0, &m_Renderer.renderTargetView ) );
+	HR( m_SwapChain->GetBuffer( 0, __uuidof( ID3D11Texture2D ), reinterpret_cast<void**>( &backBuffer ) ) );
+	HR( m_Device->CreateRenderTargetView( backBuffer, 0, &m_RenderTargetView ) );
 	ReleaseMacro( backBuffer );
 
 	D3D11_TEXTURE2D_DESC depthStencilDesc;
@@ -100,10 +100,10 @@ void DXWindow::onResize( void )
 	depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 	depthStencilDesc.CPUAccessFlags = 0;
 	depthStencilDesc.MiscFlags = 0;
-	if ( m_Renderer.enable4xMsaa )
+	if ( m_Enable4xMsaa )
 	{
 		depthStencilDesc.SampleDesc.Count = 4;
-		depthStencilDesc.SampleDesc.Quality = m_Renderer.msaa4xQuality - 1;
+		depthStencilDesc.SampleDesc.Quality = m_Msaa4xQuality - 1;
 	}
 	else
 	{
@@ -111,10 +111,10 @@ void DXWindow::onResize( void )
 		depthStencilDesc.SampleDesc.Quality = 0;
 	}
 
-	HR( m_Renderer.device->CreateTexture2D( &depthStencilDesc, 0, &m_Renderer.depthStencilBuffer ) );
-	HR( m_Renderer.device->CreateDepthStencilView( m_Renderer.depthStencilBuffer, 0, &m_Renderer.depthStencilView ) );
+	HR( m_Device->CreateTexture2D( &depthStencilDesc, 0, &m_DepthStencilBuffer ) );
+	HR( m_Device->CreateDepthStencilView( m_DepthStencilBuffer, 0, &m_DepthStencilView ) );
 
-	m_Renderer.deviceContext->OMSetRenderTargets( 1, &m_Renderer.renderTargetView, m_Renderer.depthStencilView );
+	m_DeviceContext->OMSetRenderTargets( 1, &m_RenderTargetView, m_DepthStencilView );
 
 	D3D11_VIEWPORT viewport;
 	viewport.TopLeftX = 0;
@@ -123,7 +123,7 @@ void DXWindow::onResize( void )
 	viewport.Height = m_Height;
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
-	m_Renderer.deviceContext->RSSetViewports( 1, &viewport );
+	m_DeviceContext->RSSetViewports( 1, &viewport );
 
 	Window::onResize( m_Width, m_Height );
 }

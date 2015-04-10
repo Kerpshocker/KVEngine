@@ -1,13 +1,9 @@
 #ifndef RENDER_MANAGER_H
 #define RENDER_MANAGER_H
 
-#include "Manager.h"
-#include "dxerr.h"
-
-#include <string>
 #include <d3d11.h>
-#include <assert.h>
-#include <DirectXMath.h>
+#include "dxerr.h"
+#include "Manager.h"
 
 // Convenience macro for releasing a COM object
 #define ReleaseMacro(x) { if(x){ x->Release(); x = 0; } }
@@ -16,15 +12,15 @@
 // on a failed HRESULT and then quitting (only in debug builds)
 #if defined(DEBUG) | defined(_DEBUG)
 #ifndef HR
-#define HR(x)												\
-		{															\
+#define HR(x)													\
+	{															\
 		HRESULT hr = (x);										\
 		if(FAILED(hr))											\
-				{														\
+		{														\
 			DXTrace(__FILEW__, (DWORD)__LINE__, hr, L#x, true);	\
 			PostQuitMessage(0);									\
-				}														\
-		}														
+		}														\
+	}														
 #endif
 #else
 #ifndef HR
@@ -32,18 +28,22 @@
 #endif
 #endif
 
-struct VSDataToConstantBuffer
+struct ShaderProgram
 {
-	DirectX::XMFLOAT4X4 World;
-	DirectX::XMFLOAT4X4 View;
-	DirectX::XMFLOAT4X4 Proj;
+	ID3D11VertexShader* VertexShader;
+	ID3D11PixelShader* PixelShader;
+	ID3D11InputLayout* InputLayout;
+	D3D_PRIMITIVE_TOPOLOGY Topology;
 };
 
-// Vertex struct for triangles
-struct Vertex
+struct ShaderBuffers
 {
-	DirectX::XMFLOAT3 Position;
-	DirectX::XMFLOAT4 Color;
+	ID3D11Buffer*	VertexBuffer;
+	ID3D11Buffer*	IndexBuffer;
+	ID3D11Buffer*	ConstantBuffer;
+	UINT			VertexStride;
+	UINT			VertexOffset;
+	UINT			IndexCount;
 };
 
 class DXWindow;
@@ -51,31 +51,17 @@ class DXWindow;
 class RenderManager : public Manager
 {
 	SINGLETON_INSTANCE( RenderManager );
-protected:
+public:
+	void initialize( void );
+	void renderTo( const DXWindow* window );
 
-	// Buffers to hold actual geometry
-	ID3D11Buffer* vertexBuffer;
-	ID3D11Buffer* indexBuffer;
-
-	ID3D11VertexShader* vertexShader;
-	ID3D11PixelShader* pixelShader;
-
-	ID3D11InputLayout* inputLayout;
-	ID3D11Buffer* vsConstantBuffer;
-	VSDataToConstantBuffer vsDataToConstantBuffer;
+	void setShaderProgram( ShaderProgram* shaderProgram );
+	void setShaderBuffers( ShaderBuffers* shaderBuffers );
 
 private:
-	DirectX::XMFLOAT4X4 worldMatrix;
-	DirectX::XMFLOAT4X4 viewMatrix;
-	DirectX::XMFLOAT4X4 projectionMatrix;
+	ShaderProgram* m_ShaderProgram;
+	ShaderBuffers* m_ShaderBuffers;
 
-public:
-	void initialize( const DXWindow* window );
-	void renderTo( const DXWindow* window );
-	//void onResize( void );
-
-	void createGeometry( void );
-	void loadShadersAndInputLayout( ID3D11Device* device );
 };
 
 #endif

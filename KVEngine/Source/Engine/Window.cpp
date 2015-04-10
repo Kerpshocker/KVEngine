@@ -46,6 +46,21 @@ void Window::onResize( u16 width, u16 height )
 	m_AspectRatio = (f32) m_Width / (f32) m_Height;
 }
 
+const u16 Window::width( void ) const
+{
+	return m_Width;
+}
+
+const u16 Window::height( void ) const
+{
+	return m_Height;
+}
+
+const f32 Window::aspectRatio( void ) const
+{
+	return m_AspectRatio;
+}
+
 const bool Window::isMinimized( void ) const
 {
 	return m_Minimized;

@@ -19,7 +19,7 @@ Mesh::Mesh( ID3D11Device* device, const KVE::MeshParams& meshParams )
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
 	vbd.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA initialVertexData;
+	//D3D11_SUBRESOURCE_DATA initialVertexData;
 	//initialVertexData.pSysMem = vertices;
 	//HR( device->CreateBuffer( &vbd, &initialVertexData, &vBuffer ) );
 
