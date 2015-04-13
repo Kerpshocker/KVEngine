@@ -1,16 +1,19 @@
 #include "Material.h"
 
-
-Material::Material()
+namespace KVE
 {
-}
+    Material::Material( void )
+    {
 
-Material::Material( ID3D11ShaderResourceView *shaderResourceView, ID3D11SamplerState *samplerState )
-{
-	ss = samplerState;
-	srv = shaderResourceView;
-}
+    }
 
-Material::~Material()
-{
+    Material::Material( const MaterialParams& materialParams )
+    {
+        m_MaterialParams.ss = materialParams.ss;
+        m_MaterialParams.srv = materialParams.srv;
+    }
+
+    Material::~Material()
+    {
+    }
 }

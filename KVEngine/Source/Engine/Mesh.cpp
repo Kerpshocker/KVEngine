@@ -1,45 +1,126 @@
 #include "Mesh.h"
 
-Mesh::Mesh()
+namespace KVE
 {
-}
+    Mesh::Mesh( void )
+    {
 
-Mesh::Mesh( ID3D11Device* device, const KVE::MeshParams& meshParams )
-{
-	iBuffer = meshParams.indexBuffer;
-	indicesPerObject = meshParams.indexCount;
-	vBuffer = meshParams.vertexBuffer;
-	verticesPerObject = meshParams.vertexCount;
+    }
 
-	// Create the vertex buffer
-	D3D11_BUFFER_DESC vbd;
-	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	//vbd.ByteWidth = sizeof( Vertex ) * 3; // Number of vertices in the "model" you want to draw
-	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	vbd.CPUAccessFlags = 0;
-	vbd.MiscFlags = 0;
-	vbd.StructureByteStride = 0;
-	//D3D11_SUBRESOURCE_DATA initialVertexData;
-	//initialVertexData.pSysMem = vertices;
-	//HR( device->CreateBuffer( &vbd, &initialVertexData, &vBuffer ) );
+    Mesh::Mesh( const ShaderBuffers& sb, const ShaderBuffersDesc& sbDesc, const ShaderProgramDesc& spDesc )
+    {
+        m_ShaderProgamDesc.VertexDesc           = spDesc.VertexDesc;
+        m_ShaderProgamDesc.NumVertexElements    = spDesc.NumVertexElements;
+        m_ShaderProgamDesc.VShaderFile          = spDesc.VShaderFile;
+        m_ShaderProgamDesc.PShaderFile          = spDesc.PShaderFile;
 
-	// Set up the indices
-	UINT indices[] = { 0, 2, 1 };
+        m_ShaderBuffers.VertexBuffer            = sb.VertexBuffer;
+        m_ShaderBuffers.IndexBuffer             = sb.IndexBuffer;
+        m_ShaderBuffers.ConstantBuffer          = sb.ConstantBuffer;
+        m_ShaderBuffers.VertexStride            = sb.VertexStride;
+        m_ShaderBuffers.VertexOffset            = sb.VertexOffset;
+        m_ShaderBuffers.IndexCount              = sb.IndexCount;
+        m_ShaderBuffers.Topology                = sb.Topology;
 
-	// Create the index buffer
-	D3D11_BUFFER_DESC ibd;
-	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof( UINT ) * 3; // Number of indices in the "model" you want to draw
-	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
-	ibd.CPUAccessFlags = 0;
-	ibd.MiscFlags = 0;
-	ibd.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA initialIndexData;
-	initialIndexData.pSysMem = indices;
-	//HR( device->CreateBuffer( &ibd, &initialIndexData, &iBuffer ) );
-}
+        m_ShaderBufferDesc.Topology             = sbDesc.Topology;
+        m_ShaderBufferDesc.ConstBufferData      = sbDesc.ConstBufferData;
+        m_ShaderBufferDesc.Vertices             = sbDesc.Vertices;
+        m_ShaderBufferDesc.Indices              = sbDesc.Indices;
+        m_ShaderBufferDesc.VertexCount          = sbDesc.VertexCount;
+        m_ShaderBufferDesc.IndexCount           = sbDesc.IndexCount;
+        m_ShaderBufferDesc.VertexStride         = sbDesc.VertexStride;
+        m_ShaderBufferDesc.VertexOffset         = sbDesc.VertexOffset;
+        m_ShaderBufferDesc.ConstBufferByteSize  = sbDesc.ConstBufferByteSize;
+    }
 
+    Mesh::~Mesh()
+    {
 
-Mesh::~Mesh()
-{
+    }
+
+#pragma region setters
+    void Mesh::setVertexBuffer( ID3D11Buffer* VertexBuffer )
+    {
+        m_ShaderBuffers.VertexBuffer = VertexBuffer;
+    }
+
+    void Mesh::setIndexBuffer( ID3D11Buffer* IndexBuffer )
+    {
+        m_ShaderBuffers.IndexBuffer = IndexBuffer;
+    }
+
+    void Mesh::setConstBuffer( ID3D11Buffer* ConstBuffer )
+    {
+        m_ShaderBuffers.ConstantBuffer = ConstBuffer;
+    }
+
+    void Mesh::setVertexDesc( D3D11_INPUT_ELEMENT_DESC* VertexDesc )
+    {
+        m_ShaderProgamDesc.VertexDesc = VertexDesc;
+    }
+
+    void Mesh::setNumVertexElements( UINT NumVertexElements )
+    {
+        m_ShaderProgamDesc.NumVertexElements = NumVertexElements;
+    }
+
+    void Mesh::setVShaderFile( LPCWSTR VShaderFile )
+    {
+        m_ShaderProgamDesc.VShaderFile = VShaderFile;
+    }
+
+    void Mesh::setPShaderFile( LPCWSTR PShaderFile )
+    {
+        m_ShaderProgamDesc.PShaderFile = PShaderFile;
+    }
+
+    void Mesh::setTopology( D3D_PRIMITIVE_TOPOLOGY Topology )
+    {
+        m_ShaderBuffers.Topology = Topology;
+        m_ShaderBufferDesc.Topology = Topology;
+    }
+
+    void Mesh::setConstBufferData( void* ConstBufferData )
+    {
+        m_ShaderBufferDesc.ConstBufferData = ConstBufferData;
+    }
+
+    void Mesh::setVertices( void* Vertices )
+    {
+        m_ShaderBufferDesc.Vertices = Vertices;
+    }
+
+    void Mesh::setIndices( void* Indices )
+    {
+        m_ShaderBufferDesc.Indices = Indices;
+    }
+
+    void Mesh::setVertexCount( UINT	VertexCount )
+    {
+        m_ShaderBufferDesc.VertexCount = VertexCount;
+    }
+
+    void Mesh::setIndexCount( UINT IndexCount )
+    {
+        m_ShaderBuffers.IndexCount = IndexCount;
+        m_ShaderBufferDesc.IndexCount = IndexCount;
+    }
+
+    void Mesh::setVertexStride( UINT VertexStride )
+    {
+        m_ShaderBuffers.VertexStride = VertexStride;
+        m_ShaderBufferDesc.VertexStride = VertexStride;
+    }
+
+    void Mesh::setVertexOffset( UINT VertexOffset )
+    {
+        m_ShaderBuffers.VertexOffset = VertexOffset;
+        m_ShaderBufferDesc.VertexOffset = VertexOffset;
+    }
+
+    void Mesh::setConstBufferByteSize( UINT ConstBufferByteSize )
+    {
+        m_ShaderBufferDesc.ConstBufferByteSize = ConstBufferByteSize;
+    }
+#pragma endregion
 }

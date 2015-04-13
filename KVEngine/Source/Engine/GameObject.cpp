@@ -1,6 +1,4 @@
 #include "GameObject.h"
-#include "Mesh.h"
-#include "Material.h"
 
 using namespace DirectX;
 
@@ -51,12 +49,12 @@ namespace KVE
 		position = vPosition;
 	}
 
-	void GameObject::setPostion( Vector vRotation )
+	void GameObject::setRotation( Vector vRotation )
 	{
 		rotation = vRotation;
 	}
 
-	void GameObject::setPostion( Vector vScale )
+	void GameObject::setScale( Vector vScale )
 	{
 		scale = vScale;
 	}

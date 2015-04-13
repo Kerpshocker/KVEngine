@@ -4,6 +4,7 @@
 #include <d3d11.h>
 #include "dxerr.h"
 #include "Manager.h"
+#include "Mesh.h"
 
 // Convenience macro for releasing a COM object
 #define ReleaseMacro(x) { if(x){ x->Release(); x = 0; } }
@@ -35,39 +36,6 @@ struct ShaderProgram
 	ID3D11InputLayout*			InputLayout;
 };
 
-
-struct ShaderProgramDesc
-{
-	D3D11_INPUT_ELEMENT_DESC*	VertexDesc;
-	UINT						NumVertexElements;
-	LPCWSTR						VShaderFile;
-	LPCWSTR						PShaderFile;
-};
-
-struct ShaderBuffers
-{
-	ID3D11Buffer*				VertexBuffer;
-	ID3D11Buffer*				IndexBuffer;
-	ID3D11Buffer*				ConstantBuffer;
-	UINT						VertexStride;
-	UINT						VertexOffset;
-	UINT						IndexCount;
-	D3D_PRIMITIVE_TOPOLOGY		Topology;
-};
-
-struct ShaderBuffersDesc
-{
-	void*						Vertices;
-	UINT						VertexCount;
-	UINT						VertexStride;
-	UINT						VertexOffset;
-	void*						Indices;
-	UINT						IndexCount;
-	void*						ConstBufferData;
-	UINT						ConstBufferByteSize;
-	D3D_PRIMITIVE_TOPOLOGY		Topology;
-};
-
 class DXWindow;
 
 class RenderManager : public Manager
@@ -80,8 +48,8 @@ public:
 
 	void setWindow( const DXWindow* const window );
 
-	void createShaderProgram( const ShaderProgramDesc& spDesc );
-	void createShaderBuffers( const ShaderBuffersDesc& sbDesc );
+	void createShaderProgram( const KVE::ShaderProgramDesc& spDesc );
+    void createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc );
 
 private:
 	const DXWindow* m_Window;
@@ -90,7 +58,7 @@ private:
 	UINT m_ViewportCount;
 
 	ShaderProgram m_ShaderProgram;
-	ShaderBuffers m_ShaderBuffers;
+	KVE::ShaderBuffers m_ShaderBuffers;
 
 };
 

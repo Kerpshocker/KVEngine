@@ -95,7 +95,7 @@ void RenderManager::render( void )
 	HR( m_Window->m_SwapChain->Present( 0, 0 ) );
 }
 
-void RenderManager::createShaderProgram( const ShaderProgramDesc& spDesc )
+void RenderManager::createShaderProgram( const KVE::ShaderProgramDesc& spDesc )
 {
 	assert( m_Window );
 
@@ -136,25 +136,25 @@ void RenderManager::createShaderProgram( const ShaderProgramDesc& spDesc )
 	ReleaseMacro( psBlob );
 }
 
-void RenderManager::createShaderBuffers( const ShaderBuffersDesc& sbDesc )
+void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc )
 {
 	assert( m_Window );
 
-	m_ShaderBuffers.VertexStride = sbDesc.VertexStride;
-	m_ShaderBuffers.VertexOffset = sbDesc.VertexOffset;
-	m_ShaderBuffers.IndexCount   = sbDesc.IndexCount;
-	m_ShaderBuffers.Topology	 = sbDesc.Topology;
+    m_ShaderBuffers.VertexStride = sbDesc.VertexStride;
+    m_ShaderBuffers.VertexOffset = sbDesc.VertexOffset;
+    m_ShaderBuffers.IndexCount   = sbDesc.IndexCount;
+    m_ShaderBuffers.Topology     = sbDesc.Topology;
 
 	// Create the vertex buffer
 	D3D11_BUFFER_DESC vbd;
 	vbd.Usage = D3D11_USAGE_IMMUTABLE;
-	vbd.ByteWidth = sbDesc.VertexStride * sbDesc.VertexCount; // Number of vertices in the "model" you want to draw
+    vbd.ByteWidth = sbDesc.VertexStride * sbDesc.VertexCount; // Number of vertices in the "model" you want to draw
 	vbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vbd.CPUAccessFlags = 0;
 	vbd.MiscFlags = 0;
 	vbd.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA initialVertexData;
-	initialVertexData.pSysMem = sbDesc.Vertices;
+    initialVertexData.pSysMem = sbDesc.Vertices;
 	HR( m_Window->m_Device->CreateBuffer( 
 		&vbd, 
 		&initialVertexData, 
@@ -163,13 +163,13 @@ void RenderManager::createShaderBuffers( const ShaderBuffersDesc& sbDesc )
 	// Create the index buffer
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-	ibd.ByteWidth = sizeof( UINT ) * sbDesc.IndexCount; // Number of indices in the "model" you want to draw
+    ibd.ByteWidth = sizeof( UINT )* sbDesc.IndexCount; // Number of indices in the "model" you want to draw
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 	ibd.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA initialIndexData;
-	initialIndexData.pSysMem = sbDesc.Indices;
+    initialIndexData.pSysMem = sbDesc.Indices;
 	HR( m_Window->m_Device->CreateBuffer( 
 		&ibd, 
 		&initialIndexData, 
@@ -177,14 +177,14 @@ void RenderManager::createShaderBuffers( const ShaderBuffersDesc& sbDesc )
 
 	// Create the constant buffer
 	D3D11_BUFFER_DESC cBufferDesc;
-	cBufferDesc.ByteWidth = sbDesc.ConstBufferByteSize;
+    cBufferDesc.ByteWidth = sbDesc.ConstBufferByteSize;
 	cBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cBufferDesc.CPUAccessFlags = 0;
 	cBufferDesc.MiscFlags = 0;
 	cBufferDesc.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA initialCBufferData;
-	initialCBufferData.pSysMem = sbDesc.ConstBufferData;
+    initialCBufferData.pSysMem = sbDesc.ConstBufferData;
 	HR( m_Window->m_Device->CreateBuffer( 
 		&cBufferDesc, 
 		&initialCBufferData, 

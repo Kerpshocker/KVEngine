@@ -34,7 +34,7 @@ void GameManager::createShaders( void )
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 }
 	};
 
-	ShaderProgramDesc spDesc;
+	KVE::ShaderProgramDesc spDesc;
 	spDesc.VShaderFile = L"PC_VShader.cso";
 	spDesc.PShaderFile = L"PC_PShader.cso";
 	spDesc.VertexDesc = vertexDesc;
@@ -65,17 +65,17 @@ void GameManager::createGeometry( void )
 	vsDataToConstantBuffer->Proj = CameraManager::Instance().getActiveCamera()->getProjMatrix();
 	vsDataToConstantBuffer->View = CameraManager::Instance().getActiveCamera()->getViewMatrix();
 
-	ShaderBuffersDesc sbDesc;
-	sbDesc.Vertices = vertices;
-	sbDesc.VertexCount = ARRAYSIZE( vertices );
-	sbDesc.VertexStride = sizeof( Vertex );
-	sbDesc.VertexOffset = 0;
-	sbDesc.Indices = indices;
-	sbDesc.IndexCount = ARRAYSIZE( indices );
-	sbDesc.ConstBufferData = vsDataToConstantBuffer;
-	sbDesc.ConstBufferByteSize = sizeof( VSDataToConstantBuffer );
+    KVE::ShaderBuffersDesc sbDesc;
+    sbDesc.Vertices = vertices;
+    sbDesc.VertexCount = ARRAYSIZE( vertices );
+    sbDesc.VertexStride = sizeof( Vertex );
+    sbDesc.VertexOffset = 0;
+    sbDesc.Indices = indices;
+    sbDesc.IndexCount = ARRAYSIZE( indices );
+    sbDesc.ConstBufferData = vsDataToConstantBuffer;
+    sbDesc.ConstBufferByteSize = sizeof( VSDataToConstantBuffer );
 
-	sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+    sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	RenderManager::Instance().createShaderBuffers( sbDesc );
+    RenderManager::Instance().createShaderBuffers( sbDesc );
 }
