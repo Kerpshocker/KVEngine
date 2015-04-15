@@ -30,7 +30,7 @@ namespace KVE
         m_ShaderBufferDesc.IndexCount           = sbDesc.IndexCount;
         m_ShaderBufferDesc.VertexStride         = sbDesc.VertexStride;
         m_ShaderBufferDesc.VertexOffset         = sbDesc.VertexOffset;
-        m_ShaderBufferDesc.ConstBufferByteSize  = sbDesc.ConstBufferByteSize;
+		m_ShaderBufferDesc.ConstBufferStride	= sbDesc.ConstBufferStride;
     }
 
     Mesh::~Mesh()
@@ -118,9 +118,9 @@ namespace KVE
         m_ShaderBufferDesc.VertexOffset = VertexOffset;
     }
 
-    void Mesh::setConstBufferByteSize( UINT ConstBufferByteSize )
+	void Mesh::setConstBufferStride( UINT ConstBufferStride )
     {
-        m_ShaderBufferDesc.ConstBufferByteSize = ConstBufferByteSize;
+		m_ShaderBufferDesc.ConstBufferStride = ConstBufferStride;
     }
 #pragma endregion
 }

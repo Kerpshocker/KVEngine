@@ -7,8 +7,12 @@ cbuffer perModel : register( b0 )
 
 struct VSInput
 {
-	float3 position : POSITION;
-	float4 color	: COLOR;
+	// vertex
+	float3 position		: POSITION0;
+	float4 color		: COLOR0;
+
+	// instance
+	float3 instancePos	: POSITION1;
 };
 
 struct VertexToPixel
@@ -22,7 +26,7 @@ VertexToPixel main( VSInput input )
 	VertexToPixel output;
 
 	matrix wvp = mul(mul(world, view), proj);
-	output.position = mul(float4(input.position, 1.0f), wvp);
+	output.position = mul(float4(input.position + input.instancePos, 1.0f), wvp);
 
 	output.color = input.color;
 

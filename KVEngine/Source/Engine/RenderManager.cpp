@@ -71,6 +71,13 @@ void RenderManager::render( void )
 		&m_ShaderBuffers.VertexStride,
 		&m_ShaderBuffers.VertexOffset
 		);
+	m_Window->m_DeviceContext->IASetVertexBuffers(
+		1,
+		1,
+		&m_ShaderBuffers.InstanceBuffer,
+		&m_ShaderBuffers.InstanceStride,
+		&m_ShaderBuffers.InstanceOffset
+		);
 	m_Window->m_DeviceContext->IASetIndexBuffer(
 		m_ShaderBuffers.IndexBuffer,
 		DXGI_FORMAT_R32_UINT,
@@ -83,8 +90,10 @@ void RenderManager::render( void )
 		&m_ShaderBuffers.ConstantBuffer
 		);
 
-	m_Window->m_DeviceContext->DrawIndexed(
+	m_Window->m_DeviceContext->DrawIndexedInstanced(
 		m_ShaderBuffers.IndexCount,
+		m_ShaderBuffers.InstanceCount,
+		0,
 		0,
 		0
 		);
@@ -140,10 +149,13 @@ void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc )
 {
 	assert( m_Window );
 
-    m_ShaderBuffers.VertexStride = sbDesc.VertexStride;
-    m_ShaderBuffers.VertexOffset = sbDesc.VertexOffset;
-    m_ShaderBuffers.IndexCount   = sbDesc.IndexCount;
-    m_ShaderBuffers.Topology     = sbDesc.Topology;
+    m_ShaderBuffers.VertexStride	= sbDesc.VertexStride;
+    m_ShaderBuffers.VertexOffset	= sbDesc.VertexOffset;
+    m_ShaderBuffers.IndexCount		= sbDesc.IndexCount;
+	m_ShaderBuffers.InstanceCount	= sbDesc.InstanceCount;
+	m_ShaderBuffers.InstanceStride	= sbDesc.InstanceStride;
+	m_ShaderBuffers.InstanceOffset	= sbDesc.InstanceOffset;
+    m_ShaderBuffers.Topology		= sbDesc.Topology;
 
 	// Create the vertex buffer
 	D3D11_BUFFER_DESC vbd;
@@ -175,9 +187,24 @@ void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc )
 		&initialIndexData, 
 		&m_ShaderBuffers.IndexBuffer ) );
 
+	// Create the instance buffer
+	D3D11_BUFFER_DESC instbd;
+	instbd.Usage = D3D11_USAGE_IMMUTABLE;
+	instbd.ByteWidth = sbDesc.InstanceStride * sbDesc.InstanceCount;
+	instbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
+	instbd.CPUAccessFlags = 0;
+	instbd.MiscFlags = 0;
+	instbd.StructureByteStride = 0;
+	D3D11_SUBRESOURCE_DATA initialInstanceData;
+	initialInstanceData.pSysMem = sbDesc.Instances;
+	HR( m_Window->m_Device->CreateBuffer(
+		&instbd,
+		&initialInstanceData,
+		&m_ShaderBuffers.InstanceBuffer ) );
+
 	// Create the constant buffer
 	D3D11_BUFFER_DESC cBufferDesc;
-    cBufferDesc.ByteWidth = sbDesc.ConstBufferByteSize;
+    cBufferDesc.ByteWidth = sbDesc.ConstBufferStride;
 	cBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cBufferDesc.CPUAccessFlags = 0;

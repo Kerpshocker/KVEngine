@@ -13,26 +13,34 @@ namespace KVE
 
     struct ShaderBuffers
     {
-        ID3D11Buffer*				VertexBuffer;
-        ID3D11Buffer*				IndexBuffer;
+		ID3D11Buffer*				VertexBuffer;
+		UINT						VertexStride;
+		UINT						VertexOffset;
+		ID3D11Buffer*				IndexBuffer;
+		UINT						IndexCount;
+		ID3D11Buffer*				InstanceBuffer;
+		UINT						InstanceCount;
+		UINT						InstanceStride;
+		UINT						InstanceOffset;
         ID3D11Buffer*				ConstantBuffer;
-        UINT						VertexStride;
-        UINT						VertexOffset;
-        UINT						IndexCount;
         D3D_PRIMITIVE_TOPOLOGY		Topology;
     };
 
     struct ShaderBuffersDesc
     {
-        D3D_PRIMITIVE_TOPOLOGY		Topology;
-        void*						ConstBufferData;
-        void*						Vertices;
-        void*						Indices;
-        UINT						VertexCount;
-        UINT						IndexCount;
-        UINT						VertexStride;
-        UINT						VertexOffset;
-        UINT						ConstBufferByteSize;
+		void*						Vertices;
+		UINT						VertexCount;
+		UINT						VertexStride;
+		UINT						VertexOffset;
+		void*						Indices;
+		UINT						IndexCount;
+		void*						Instances;
+		UINT						InstanceCount;
+		UINT						InstanceStride;
+		UINT						InstanceOffset;
+		void*						ConstBufferData;
+        UINT						ConstBufferStride;
+		D3D_PRIMITIVE_TOPOLOGY		Topology;
     };
 
     class Mesh
@@ -63,7 +71,7 @@ namespace KVE
         void setIndexCount( UINT IndexCount );
         void setVertexStride( UINT VertexStride );
         void setVertexOffset( UINT VertexOffset );
-        void setConstBufferByteSize( UINT ConstBufferByteSize );
+		void setConstBufferStride( UINT ConstBufferStride );
 #pragma endregion
 
     };

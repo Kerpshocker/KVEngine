@@ -15,9 +15,10 @@ namespace KVE
 
 	struct CameraParams
 	{
-		f32 fieldOfView;
-		f32 nearPlane;
-		f32 farPlane;
+		f32					fieldOfView;
+		f32					nearPlane;
+		f32					farPlane;
+		DirectX::XMFLOAT3	initialPos;
 	};
 
 	class Camera

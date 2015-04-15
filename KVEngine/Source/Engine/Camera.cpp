@@ -17,7 +17,7 @@ namespace KVE
 		nearPlane = params.nearPlane;
 		farPlane = params.farPlane;
 
-		position = XMVectorSet( 0.0f, 0.0f, 0.0f, 1.0f );
+		position = XMLoadFloat3( &params.initialPos );
 		scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 1.0f );
 		orientation.forward = XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
 		orientation.up = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );

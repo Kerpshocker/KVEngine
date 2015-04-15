@@ -12,6 +12,11 @@ struct Vertex
 	DirectX::XMFLOAT4 Color;
 };
 
+struct MeshInstance
+{
+	DirectX::XMFLOAT3 Position;
+};
+
 struct VSDataToConstantBuffer
 {
 	DirectX::XMFLOAT4X4 World;
