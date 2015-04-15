@@ -33,10 +33,10 @@ void GameManager::createShaders( void )
 	{
 		// vertex buffer
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
 		// instance buffer
-		{ "POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
+		{ "POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
+		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 12, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
 	KVE::ShaderProgramDesc spDesc;
@@ -57,9 +57,9 @@ void GameManager::createGeometry( void )
 	// Set up the vertices
 	Vertex vertices[] =
 	{
-		{ XMFLOAT3( +0.0f, +1.0f, +0.0f ), red },
-		{ XMFLOAT3( -1.5f, -1.0f, +0.0f ), green },
-		{ XMFLOAT3( +1.5f, -1.0f, +0.0f ), blue },
+		{ XMFLOAT3( +0.0f, +1.0f, +0.0f ) },
+		{ XMFLOAT3( -1.5f, -1.0f, +0.0f ) },
+		{ XMFLOAT3( +1.5f, -1.0f, +0.0f ) },
 	};
 
 	// Set up the indices
@@ -68,8 +68,9 @@ void GameManager::createGeometry( void )
 	// Set up the instances
 	MeshInstance instances[] =
 	{
-		{ XMFLOAT3( -2.0f, 0.0f, 0.0f ) },
-		{ XMFLOAT3( +2.0f, 0.0f, 0.0f ) },
+		{ XMFLOAT3( -1.5f, -1.0f, 0.0f ), red },
+		{ XMFLOAT3( +1.5f, -1.0f, 0.0f ), green },
+		{ XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue },
 	};
 
 	VSDataToConstantBuffer* vsDataToConstantBuffer = new VSDataToConstantBuffer();

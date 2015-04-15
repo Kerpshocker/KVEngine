@@ -9,10 +9,10 @@ struct VSInput
 {
 	// vertex
 	float3 position		: POSITION0;
-	float4 color		: COLOR0;
 
 	// instance
 	float3 instancePos	: POSITION1;
+	float4 instanceCol	: COLOR0;
 };
 
 struct VertexToPixel
@@ -28,7 +28,7 @@ VertexToPixel main( VSInput input )
 	matrix wvp = mul(mul(world, view), proj);
 	output.position = mul(float4(input.position + input.instancePos, 1.0f), wvp);
 
-	output.color = input.color;
+	output.color = input.instanceCol;
 
 	return output;
 }
