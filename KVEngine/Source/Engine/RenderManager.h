@@ -4,7 +4,7 @@
 #include <d3d11.h>
 #include "dxerr.h"
 #include "Manager.h"
-#include "Mesh.h"
+#include "Resources.h"
 
 // Convenience macro for releasing a COM object
 #define ReleaseMacro(x) { if(x){ x->Release(); x = 0; } }
@@ -29,13 +29,6 @@
 #endif
 #endif
 
-struct ShaderProgram
-{
-	ID3D11VertexShader*			VertexShader;
-	ID3D11PixelShader*			PixelShader;
-	ID3D11InputLayout*			InputLayout;
-};
-
 class DXWindow;
 
 class RenderManager : public Manager
@@ -57,8 +50,10 @@ private:
 	D3D11_VIEWPORT* m_Viewports;
 	UINT m_ViewportCount;
 
-	ShaderProgram m_ShaderProgram;
-	KVE::ShaderBuffers m_ShaderBuffers;
+	KVE::ShaderLayout* m_ShaderLayouts;
+
+	//KVE::ShaderProgram m_ShaderProgram;
+	//KVE::ShaderBuffers* m_ShaderBuffers;
 
 };
 

@@ -86,10 +86,8 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Manager.h" />
-    <ClInclude Include="Material.h" />
-    <ClInclude Include="Mesh.h" />
     <ClInclude Include="RenderManager.h" />
-    <ClInclude Include="ResourceManager.h" />
+    <ClInclude Include="Resources.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="Window.h" />
   </ItemGroup>
@@ -100,10 +98,7 @@
     <ClCompile Include="DXWindow.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTimer.cpp" />
-    <ClCompile Include="Material.cpp" />
-    <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="RenderManager.cpp" />
-    <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

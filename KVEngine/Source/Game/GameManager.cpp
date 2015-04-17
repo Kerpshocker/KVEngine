@@ -29,7 +29,7 @@ void GameManager::update( void )
 
 void GameManager::createShaders( void )
 {
-	D3D11_INPUT_ELEMENT_DESC vertexDesc[] =
+	D3D11_INPUT_ELEMENT_DESC inputDesc[] =
 	{
 		// vertex buffer
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -42,8 +42,8 @@ void GameManager::createShaders( void )
 	KVE::ShaderProgramDesc spDesc;
 	spDesc.VShaderFile = L"PC_VShader.cso";
 	spDesc.PShaderFile = L"PC_PShader.cso";
-	spDesc.VertexDesc = vertexDesc;
-	spDesc.NumVertexElements = ARRAYSIZE( vertexDesc );
+	spDesc.InputDesc = inputDesc;
+	spDesc.NumVertexElements = ARRAYSIZE( inputDesc );
 
 	RenderManager::Instance().createShaderProgram( spDesc );
 }
@@ -82,16 +82,15 @@ void GameManager::createGeometry( void )
     sbDesc.Vertices = vertices;
     sbDesc.VertexCount = ARRAYSIZE( vertices );
     sbDesc.VertexStride = sizeof( Vertex );
-    sbDesc.VertexOffset = 0;
-    sbDesc.Indices = indices;
-    sbDesc.IndexCount = ARRAYSIZE( indices );
+	sbDesc.VertexOffset = 0;
+    sbDesc.VertexIndices = indices;
+	sbDesc.VertexIndexCount = ARRAYSIZE( indices );
 	sbDesc.Instances = instances;
 	sbDesc.InstanceCount = ARRAYSIZE( instances );
 	sbDesc.InstanceStride = sizeof( MeshInstance );
 	sbDesc.InstanceOffset = 0;
-    sbDesc.ConstBufferData = vsDataToConstantBuffer;
+	sbDesc.ConstBufferData = vsDataToConstantBuffer;
 	sbDesc.ConstBufferStride = sizeof( VSDataToConstantBuffer );
-
     sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
     RenderManager::Instance().createShaderBuffers( sbDesc );

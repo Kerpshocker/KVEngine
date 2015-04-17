@@ -3,8 +3,7 @@
 
 #include <DirectXMath.h>
 #include "DataTypes.h"
-#include "Mesh.h"
-#include "Material.h"
+#include "Resources.h"
 
 namespace KVE
 {

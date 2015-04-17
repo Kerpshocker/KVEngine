@@ -1,7 +1,7 @@
 #include "DXWindow.h"
 #include "RenderManager.h"
-#include "ResourceManager.h"
 #include <d3dcompiler.h>
+#include <DirectXMath.h>
 
 using namespace DirectX;
 
@@ -16,13 +16,17 @@ void RenderManager::initialize( const D3D11_VIEWPORT* viewports, const UINT numV
 
 void RenderManager::release( void )
 {
-	ReleaseMacro( m_ShaderProgram.VertexShader );
+	ReleaseMacro( m_ShaderLayouts );
+
+	/*ReleaseMacro( m_ShaderProgram.VertexShader );
 	ReleaseMacro( m_ShaderProgram.InputLayout );
 	ReleaseMacro( m_ShaderProgram.PixelShader );
 
-	ReleaseMacro( m_ShaderBuffers.VertexBuffer );
-	ReleaseMacro( m_ShaderBuffers.IndexBuffer );
-	ReleaseMacro( m_ShaderBuffers.ConstantBuffer );
+	ReleaseMacro( m_ShaderBuffers );*/
+
+	//ReleaseMacro( m_ShaderBuffers.VertexBuffer );
+	//ReleaseMacro( m_ShaderBuffers.IndexBuffer );
+	//ReleaseMacro( m_ShaderBuffers.ConstantBuffer );
 
 	if ( m_Viewports != nullptr )
 	{
@@ -56,30 +60,30 @@ void RenderManager::render( void )
 		1.0f,
 		0 );
 
-	// FOR EACH SHADER PROGRAM
+	// FOR EACH SHADER LAYOUT
 	// Set up the input assembler and set the current vertex and pixel shaders
-	m_Window->m_DeviceContext->IASetInputLayout( m_ShaderProgram.InputLayout );
-	m_Window->m_DeviceContext->VSSetShader( m_ShaderProgram.VertexShader, NULL, 0 );
-	m_Window->m_DeviceContext->PSSetShader( m_ShaderProgram.PixelShader, NULL, 0 );
+	m_Window->m_DeviceContext->IASetInputLayout( m_ShaderLayouts[0].Program.InputLayout );
+	m_Window->m_DeviceContext->VSSetShader( m_ShaderLayouts[ 0 ].Program.VertexShader, NULL, 0 );
+	m_Window->m_DeviceContext->PSSetShader( m_ShaderLayouts[ 0 ].Program.PixelShader, NULL, 0 );
 
-	// FOR EACH SHADER BUFFERS
-	m_Window->m_DeviceContext->IASetPrimitiveTopology( m_ShaderBuffers.Topology );
+	// FOR EACH SHADER BUFFER UNDER CURRENT PROGRAM
+	m_Window->m_DeviceContext->IASetPrimitiveTopology( m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.Topology );
 	m_Window->m_DeviceContext->IASetVertexBuffers(
 		0,
 		1,
-		&m_ShaderBuffers.VertexBuffer,
-		&m_ShaderBuffers.VertexStride,
-		&m_ShaderBuffers.VertexOffset
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexBuffer,
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexStride,
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexOffset
 		);
 	m_Window->m_DeviceContext->IASetVertexBuffers(
 		1,
 		1,
-		&m_ShaderBuffers.InstanceBuffer,
-		&m_ShaderBuffers.InstanceStride,
-		&m_ShaderBuffers.InstanceOffset
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].InstanceBuffer,
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].InstanceStride,
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].InstanceOffset
 		);
 	m_Window->m_DeviceContext->IASetIndexBuffer(
-		m_ShaderBuffers.IndexBuffer,
+		m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexIndexBuffer,
 		DXGI_FORMAT_R32_UINT,
 		0
 		);
@@ -87,12 +91,12 @@ void RenderManager::render( void )
 	m_Window->m_DeviceContext->VSSetConstantBuffers(
 		0,
 		1,
-		&m_ShaderBuffers.ConstantBuffer
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].ConstBuffer
 		);
 
 	m_Window->m_DeviceContext->DrawIndexedInstanced(
-		m_ShaderBuffers.IndexCount,
-		m_ShaderBuffers.InstanceCount,
+		m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexIndexCount,
+		m_ShaderLayouts[ 0 ].Buffers[ 0 ].InstanceCount,
 		0,
 		0,
 		0
@@ -108,6 +112,8 @@ void RenderManager::createShaderProgram( const KVE::ShaderProgramDesc& spDesc )
 {
 	assert( m_Window );
 
+	m_ShaderLayouts = new KVE::ShaderLayout[ 1 ];
+
 	// Load Vertex Shader --------------------------------------
 	ID3DBlob* vsBlob;
 	D3DReadFileToBlob( spDesc.VShaderFile, &vsBlob );
@@ -117,15 +123,15 @@ void RenderManager::createShaderProgram( const KVE::ShaderProgramDesc& spDesc )
 		vsBlob->GetBufferPointer(),
 		vsBlob->GetBufferSize(),
 		NULL,
-		&m_ShaderProgram.VertexShader ) );
+		&m_ShaderLayouts[0].Program.VertexShader ) );
 
 	// Before cleaning up the data, create the input layout
 	HR( m_Window->m_Device->CreateInputLayout(
-		spDesc.VertexDesc,
+		spDesc.InputDesc,
 		spDesc.NumVertexElements,
 		vsBlob->GetBufferPointer(),
 		vsBlob->GetBufferSize(),
-		&m_ShaderProgram.InputLayout ) );
+		&m_ShaderLayouts[ 0 ].Program.InputLayout ) );
 
 	// Clean up
 	ReleaseMacro( vsBlob );
@@ -139,7 +145,7 @@ void RenderManager::createShaderProgram( const KVE::ShaderProgramDesc& spDesc )
 		psBlob->GetBufferPointer(),
 		psBlob->GetBufferSize(),
 		NULL,
-		&m_ShaderProgram.PixelShader ) );
+		&m_ShaderLayouts[ 0 ].Program.PixelShader ) );
 
 	// Clean up
 	ReleaseMacro( psBlob );
@@ -149,13 +155,15 @@ void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc )
 {
 	assert( m_Window );
 
-    m_ShaderBuffers.VertexStride	= sbDesc.VertexStride;
-    m_ShaderBuffers.VertexOffset	= sbDesc.VertexOffset;
-    m_ShaderBuffers.IndexCount		= sbDesc.IndexCount;
-	m_ShaderBuffers.InstanceCount	= sbDesc.InstanceCount;
-	m_ShaderBuffers.InstanceStride	= sbDesc.InstanceStride;
-	m_ShaderBuffers.InstanceOffset	= sbDesc.InstanceOffset;
-    m_ShaderBuffers.Topology		= sbDesc.Topology;
+	m_ShaderLayouts[ 0 ].Buffers = new KVE::ShaderBuffers[ 1 ];
+
+	m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexStride = sbDesc.VertexStride;
+	m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexOffset = sbDesc.VertexOffset;
+	m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexIndexCount = sbDesc.VertexIndexCount;
+	m_ShaderLayouts[ 0 ].Buffers[ 0 ].InstanceCount = sbDesc.InstanceCount;
+	m_ShaderLayouts[ 0 ].Buffers[ 0 ].InstanceStride = sbDesc.InstanceStride;
+	m_ShaderLayouts[ 0 ].Buffers[ 0 ].InstanceOffset = sbDesc.InstanceOffset;
+	m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.Topology = sbDesc.Topology;
 
 	// Create the vertex buffer
 	D3D11_BUFFER_DESC vbd;
@@ -170,22 +178,22 @@ void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc )
 	HR( m_Window->m_Device->CreateBuffer( 
 		&vbd, 
 		&initialVertexData, 
-		&m_ShaderBuffers.VertexBuffer ) );
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexBuffer ) );
 
 	// Create the index buffer
 	D3D11_BUFFER_DESC ibd;
 	ibd.Usage = D3D11_USAGE_IMMUTABLE;
-    ibd.ByteWidth = sizeof( UINT )* sbDesc.IndexCount; // Number of indices in the "model" you want to draw
+    ibd.ByteWidth = sizeof( UINT )* sbDesc.VertexIndexCount; // Number of indices in the "model" you want to draw
 	ibd.BindFlags = D3D11_BIND_INDEX_BUFFER;
 	ibd.CPUAccessFlags = 0;
 	ibd.MiscFlags = 0;
 	ibd.StructureByteStride = 0;
 	D3D11_SUBRESOURCE_DATA initialIndexData;
-    initialIndexData.pSysMem = sbDesc.Indices;
+    initialIndexData.pSysMem = sbDesc.VertexIndices;
 	HR( m_Window->m_Device->CreateBuffer( 
 		&ibd, 
 		&initialIndexData, 
-		&m_ShaderBuffers.IndexBuffer ) );
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].Mesh.VertexIndexBuffer ) );
 
 	// Create the instance buffer
 	D3D11_BUFFER_DESC instbd;
@@ -200,7 +208,7 @@ void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc )
 	HR( m_Window->m_Device->CreateBuffer(
 		&instbd,
 		&initialInstanceData,
-		&m_ShaderBuffers.InstanceBuffer ) );
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].InstanceBuffer ) );
 
 	// Create the constant buffer
 	D3D11_BUFFER_DESC cBufferDesc;
@@ -215,5 +223,5 @@ void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc )
 	HR( m_Window->m_Device->CreateBuffer( 
 		&cBufferDesc, 
 		&initialCBufferData, 
-		&m_ShaderBuffers.ConstantBuffer ) );
+		&m_ShaderLayouts[ 0 ].Buffers[ 0 ].ConstBuffer ) );
 }
