@@ -45,7 +45,7 @@ void GameManager::createShaders( void )
 	spDesc.InputDesc = inputDesc;
 	spDesc.NumVertexElements = ARRAYSIZE( inputDesc );
 
-	RenderManager::Instance().createShaderProgram( spDesc );
+	RenderManager::Instance().createShaderLayout( spDesc );
 }
 
 void GameManager::createGeometry( void )
@@ -93,5 +93,5 @@ void GameManager::createGeometry( void )
 	sbDesc.ConstBufferStride = sizeof( VSDataToConstantBuffer );
     sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-    RenderManager::Instance().createShaderBuffers( sbDesc );
+    RenderManager::Instance().createShaderBuffers( sbDesc, 1 );
 }

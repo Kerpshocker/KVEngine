@@ -29,6 +29,8 @@
 #endif
 #endif
 
+#define MAX_LAYOUTS 2
+
 class DXWindow;
 
 class RenderManager : public Manager
@@ -41,8 +43,8 @@ public:
 
 	void setWindow( const DXWindow* const window );
 
-	void createShaderProgram( const KVE::ShaderProgramDesc& spDesc );
-    void createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc );
+	UINT createShaderLayout( const KVE::ShaderProgramDesc& spDesc );
+    void createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc, UINT layoutCount );
 
 private:
 	const DXWindow* m_Window;
@@ -54,6 +56,8 @@ private:
 
 	//KVE::ShaderProgram m_ShaderProgram;
 	//KVE::ShaderBuffers* m_ShaderBuffers;
+
+    UINT m_LayoutCount;
 
 };
 
