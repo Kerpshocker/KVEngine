@@ -86,6 +86,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Manager.h" />
+    <ClInclude Include="MemoryManager.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Singleton.h" />
@@ -98,6 +99,7 @@
     <ClCompile Include="DXWindow.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTimer.cpp" />
+    <ClCompile Include="MemoryManager.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Window.cpp" />
   </ItemGroup>

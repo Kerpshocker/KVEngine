@@ -2,6 +2,7 @@
 #include "Window.h"
 #include "GameManager.h"
 #include "RenderManager.h"
+#include "MemoryManager.h"
 #include <iostream>
 
 LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
@@ -37,6 +38,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
+	MemoryManager::Instance().initialize();
 	RenderManager::Instance().initialize( &viewport, 1 );
 	RenderManager::Instance().setWindow( window );
 	GameManager::Instance().initialize( window );
