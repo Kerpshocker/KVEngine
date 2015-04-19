@@ -44,7 +44,7 @@ public:
 	void setWindow( const DXWindow* const window );
 
 	UINT createShaderLayout( const KVE::ShaderProgramDesc& spDesc );
-    void createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc, UINT layoutCount );
+	void createShaderBuffers(const KVE::ShaderBuffersDesc& sbDesc, UINT layoutIndex);
 
 private:
 	const DXWindow* m_Window;
@@ -53,9 +53,6 @@ private:
 	UINT m_ViewportCount;
 
 	KVE::ShaderLayout* m_ShaderLayouts;
-
-	//KVE::ShaderProgram m_ShaderProgram;
-	//KVE::ShaderBuffers* m_ShaderBuffers;
 
     UINT m_LayoutCount;
 

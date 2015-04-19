@@ -93,5 +93,5 @@ void GameManager::createGeometry( void )
 	sbDesc.ConstBufferStride = sizeof( VSDataToConstantBuffer );
     sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-    RenderManager::Instance().createShaderBuffers( sbDesc, 1 );
+    RenderManager::Instance().createShaderBuffers( sbDesc, 0 );
 }

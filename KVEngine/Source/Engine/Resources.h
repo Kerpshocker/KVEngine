@@ -101,8 +101,9 @@ namespace KVE
 	struct ShaderLayout
 	{
 		ShaderProgram Program;
+		UINT NumBuffers;
 		ShaderBuffers* Buffers;
-
+		
 		void Release( void )
 		{
 			Program.Release();
