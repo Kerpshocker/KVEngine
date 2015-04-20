@@ -89,9 +89,9 @@ void GameManager::createGeometry( void )
 	sbDesc.InstanceCount = ARRAYSIZE( instances );
 	sbDesc.InstanceStride = sizeof( MeshInstance );
 	sbDesc.InstanceOffset = 0;
-	sbDesc.ConstBufferData = vsDataToConstantBuffer;
-	sbDesc.ConstBufferStride = sizeof( VSDataToConstantBuffer );
     sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
     RenderManager::Instance().createShaderBuffers( sbDesc, 0 );
+	RenderManager::Instance().createConstBuffer( sizeof( VSDataToConstantBuffer ) );
+	RenderManager::Instance().setConstBuffer( vsDataToConstantBuffer );
 }

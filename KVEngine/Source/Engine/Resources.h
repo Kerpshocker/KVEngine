@@ -70,7 +70,6 @@ namespace KVE
 		UINT						InstanceStride;
 		UINT						InstanceOffset;
 		ID3D11Buffer*				InstanceBuffer;
-		ID3D11Buffer*				ConstBuffer;
 
 		void Release( void )
 		{
@@ -93,9 +92,7 @@ namespace KVE
 		UINT						InstanceCount;
 		UINT						InstanceStride;
 		UINT						InstanceOffset;
-		UINT						ConstBufferStride;
 		void*						Instances;
-		void*						ConstBufferData;
 	};
 
 	struct ShaderLayout

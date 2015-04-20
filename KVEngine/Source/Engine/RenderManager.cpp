@@ -90,12 +90,6 @@ void RenderManager::render( void )
 				0
 				);
 
-			m_Window->m_DeviceContext->VSSetConstantBuffers(
-				0,
-				1,
-				&m_ShaderLayouts[ i ].Buffers[ j ].ConstBuffer
-				);
-
 			m_Window->m_DeviceContext->DrawIndexedInstanced(
 				m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexIndexCount,
 				m_ShaderLayouts[ i ].Buffers[ j ].InstanceCount,
@@ -225,19 +219,38 @@ void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc, U
 		&instbd,
 		&initialInstanceData,
 		&m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceBuffer ) );
+}
 
+void RenderManager::createConstBuffer( const UINT stride )
+{
 	// Create the constant buffer
 	D3D11_BUFFER_DESC cBufferDesc;
-	cBufferDesc.ByteWidth = sbDesc.ConstBufferStride;
+	cBufferDesc.ByteWidth = stride;
 	cBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	cBufferDesc.BindFlags = D3D11_BIND_CONSTANT_BUFFER;
 	cBufferDesc.CPUAccessFlags = 0;
 	cBufferDesc.MiscFlags = 0;
 	cBufferDesc.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA initialCBufferData;
-	initialCBufferData.pSysMem = sbDesc.ConstBufferData;
 	HR( m_Window->m_Device->CreateBuffer(
 		&cBufferDesc,
-		&initialCBufferData,
-		&m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].ConstBuffer ) );
+		NULL,
+		&m_ConstBuffer ) );
+
+	m_Window->m_DeviceContext->VSSetConstantBuffers(
+		0,
+		1,
+		&m_ConstBuffer
+		);
+}
+
+void RenderManager::setConstBuffer( void* data )
+{
+	m_Window->m_DeviceContext->UpdateSubresource(
+		m_ConstBuffer,
+		0,
+		NULL,
+		data,
+		0,
+		0
+		);
 }
