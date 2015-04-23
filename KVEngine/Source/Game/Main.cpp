@@ -3,6 +3,7 @@
 #include "GameManager.h"
 #include "RenderManager.h"
 #include "MemoryManager.h"
+#include "InputManager.h"
 #include <iostream>
 
 LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
@@ -42,6 +43,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	RenderManager::Instance().initialize( &viewport, 1 );
 	RenderManager::Instance().setWindow( window );
 	GameManager::Instance().initialize( window );
+    SteelBattalion::InputManager();
 
 	MSG msg = { 0 };
 	timer->reset();
@@ -65,6 +67,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 			{
 				GameManager::Instance().update();
 				RenderManager::Instance().render();
+                
 			}
 		}
 	}

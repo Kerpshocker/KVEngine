@@ -60,7 +60,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;$(AddtionalDependencies);</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;$(SolutionDir)..\Lib\libusb-1.0.lib;$(AddtionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
