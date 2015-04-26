@@ -5,6 +5,13 @@
 
 using namespace DirectX;
 
+struct CameraConstBuffer
+{
+	DirectX::XMFLOAT4X4 ViewMatrix;
+	DirectX::XMFLOAT4X4 ProjMatrix;
+	DirectX::XMFLOAT4X4 WorldMatrix;
+};
+
 void RenderManager::initialize( const D3D11_VIEWPORT* viewports, const UINT numViewports )
 {
 	m_ViewportCount = numViewports;
@@ -39,7 +46,9 @@ void RenderManager::setWindow( const DXWindow* const window )
 {
 	m_Window = window;
 
-	window->m_DeviceContext->RSSetViewports( m_ViewportCount, m_Viewports );
+	window->m_DeviceContext->RSSetViewports(m_ViewportCount, m_Viewports);
+
+	createConstBuffer(sizeof(CameraConstBuffer));
 }
 
 void RenderManager::render( void )
@@ -59,6 +68,21 @@ void RenderManager::render( void )
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.0f,
 		0 );
+
+	// set camera constant buffer
+	struct CameraConstBuffer
+	{
+		DirectX::XMFLOAT4X4 ViewMatrix;
+		DirectX::XMFLOAT4X4 ProjMatrix;
+		DirectX::XMFLOAT4X4 WorldMatrix;
+	};
+	CameraConstBuffer ccBuffer =
+	{
+		m_FramesList[0].ViewMatrix,
+		m_FramesList[0].ProjMatrix,
+		m_FramesList[0].WorldMatrix
+	};
+	setConstBuffer(&ccBuffer);
 
 	for ( UINT i = 0; i < m_LayoutCount; i++ )
 	{
@@ -253,4 +277,9 @@ void RenderManager::setConstBuffer( void* data )
 		0,
 		0
 		);
+}
+
+void RenderManager::pushFrame( KVE::FrameParams frame )
+{
+	m_FramesList[ 0 ] = frame;
 }

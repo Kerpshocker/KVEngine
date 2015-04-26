@@ -1,12 +1,15 @@
 #include "GameManager.h"
 #include "CameraManager.h"
 #include "RenderManager.h"
+#include "GameTimer.h"
 #include <d3dcompiler.h>
 
 using namespace DirectX;
 
-void GameManager::initialize( const DXWindow* window )
+void GameManager::initialize(const DXWindow* window, const GameTimer* timer)
 {
+	m_Timer = timer;
+
 	KVE::CameraParams cParams;
 	cParams.fieldOfView = 45.0f * ( 3.1415f / 180.0f );
 	cParams.nearPlane = .01f;
@@ -24,7 +27,17 @@ void GameManager::initialize( const DXWindow* window )
 
 void GameManager::update( void )
 {
+	KVE::FrameParams fp;
+	fp.DeltaTime = m_Timer->deltaTime();
+	fp.StartTime = m_Timer->totalTime();
 
+	fp.ViewMatrix = CameraManager::Instance().getActiveCamera()->getViewMatrix();
+	fp.ProjMatrix = CameraManager::Instance().getActiveCamera()->getProjMatrix();
+	XMStoreFloat4x4( &fp.WorldMatrix, XMMatrixIdentity() );
+
+	fp.EndTime = m_Timer->totalTime();
+	RenderManager::Instance().pushFrame( fp );
+	RenderManager::Instance().render();
 }
 
 void GameManager::createShaders( void )
@@ -73,11 +86,6 @@ void GameManager::createGeometry( void )
 		{ XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue },
 	};
 
-	VSDataToConstantBuffer* vsDataToConstantBuffer = new VSDataToConstantBuffer();
-	XMStoreFloat4x4( &vsDataToConstantBuffer->World, DirectX::XMMatrixIdentity() );
-	vsDataToConstantBuffer->Proj = CameraManager::Instance().getActiveCamera()->getProjMatrix();
-	vsDataToConstantBuffer->View = CameraManager::Instance().getActiveCamera()->getViewMatrix();
-
     KVE::ShaderBuffersDesc sbDesc;
     sbDesc.Vertices = vertices;
     sbDesc.VertexCount = ARRAYSIZE( vertices );
@@ -92,6 +100,4 @@ void GameManager::createGeometry( void )
     sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
     RenderManager::Instance().createShaderBuffers( sbDesc, 0 );
-	RenderManager::Instance().createConstBuffer( sizeof( VSDataToConstantBuffer ) );
-	RenderManager::Instance().setConstBuffer( vsDataToConstantBuffer );
 }

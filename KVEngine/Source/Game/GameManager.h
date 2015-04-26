@@ -6,6 +6,8 @@
 #include "DXWindow.h"
 #include <DirectXMath.h>
 
+class GameTimer;
+
 struct Vertex
 {
 	DirectX::XMFLOAT3 Position;
@@ -28,13 +30,15 @@ class GameManager : public Manager
 {
 	SINGLETON_INSTANCE( GameManager );
 public:
-	void initialize( const DXWindow* window );
+	void initialize( const DXWindow* window, const GameTimer* timer );
 	void release( void ) { }
 	void update( void );
 
 private:
 	void createShaders( void );
 	void createGeometry( void );
+
+	const GameTimer* m_Timer;
 
 };
 

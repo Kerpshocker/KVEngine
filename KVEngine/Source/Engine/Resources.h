@@ -2,6 +2,7 @@
 #define RESOURCES_H
 
 #include <d3d11.h>
+#include <DirectXMath.h>
 
 // Convenience macro for releasing a COM object
 #define ReleaseMacro(x) { if(x){ x->Release(); x = 0; } }
@@ -106,6 +107,16 @@ namespace KVE
 			Program.Release();
 			Buffers->Release();
 		}
+	};
+
+	struct FrameParams
+	{
+		double DeltaTime;
+		double StartTime, EndTime;
+
+		DirectX::XMFLOAT4X4 WorldMatrix;
+		DirectX::XMFLOAT4X4 ViewMatrix;
+		DirectX::XMFLOAT4X4 ProjMatrix;
 	};
 }
 

@@ -42,7 +42,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	MemoryManager::Instance().initialize();
 	RenderManager::Instance().initialize( &viewport, 1 );
 	RenderManager::Instance().setWindow( window );
-	GameManager::Instance().initialize( window );
+	GameManager::Instance().initialize( window, timer );
     SteelBattalion::InputManager();
 
 	MSG msg = { 0 };
@@ -66,7 +66,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 			else
 			{
 				GameManager::Instance().update();
-				RenderManager::Instance().render();
+				//RenderManager::Instance().render();
                 
 			}
 		}

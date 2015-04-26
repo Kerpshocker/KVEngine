@@ -43,10 +43,11 @@ public:
 
 	UINT createShaderLayout( const KVE::ShaderProgramDesc& spDesc );
 	void createShaderBuffers(const KVE::ShaderBuffersDesc& sbDesc, UINT layoutIndex);
-	void createConstBuffer( const UINT stride );
 
 	void setWindow( const DXWindow* const window );
 	void setConstBuffer( void* data );
+
+	void pushFrame( KVE::FrameParams frame );
 
 private:
 	const DXWindow* m_Window;
@@ -58,6 +59,10 @@ private:
 	ID3D11Buffer* m_ConstBuffer;
 
     UINT m_LayoutCount;
+
+	KVE::FrameParams m_FramesList[ 1 ];
+
+	void createConstBuffer(const UINT stride);
 
 };
 
