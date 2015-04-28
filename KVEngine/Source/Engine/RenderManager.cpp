@@ -23,23 +23,22 @@ void RenderManager::initialize( const D3D11_VIEWPORT* viewports, const UINT numV
 
 void RenderManager::release( void )
 {
-	ReleaseMacro( m_ShaderLayouts );
-
-	/*ReleaseMacro( m_ShaderProgram.VertexShader );
-	ReleaseMacro( m_ShaderProgram.InputLayout );
-	ReleaseMacro( m_ShaderProgram.PixelShader );
-
-	ReleaseMacro( m_ShaderBuffers );*/
-
-	//ReleaseMacro( m_ShaderBuffers.VertexBuffer );
-	//ReleaseMacro( m_ShaderBuffers.IndexBuffer );
-	//ReleaseMacro( m_ShaderBuffers.ConstantBuffer );
-
 	if ( m_Viewports != nullptr )
 	{
 		delete[] m_Viewports;
 		m_Viewports = nullptr;
 	}
+
+	if ( m_ShaderLayouts != nullptr )
+	{
+		for ( int i = 0; i < 1; i++ )
+			m_ShaderLayouts[ i ].Release();
+
+		delete m_ShaderLayouts;
+		m_ShaderLayouts = nullptr;
+	}
+	
+	ReleaseMacro( m_ConstBuffer );
 }
 
 void RenderManager::setWindow( const DXWindow* const window )

@@ -66,8 +66,6 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 			else
 			{
 				GameManager::Instance().update();
-				//RenderManager::Instance().render();
-                
 			}
 		}
 	}
@@ -80,5 +78,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 void release( void )
 {
 	RenderManager::Instance().release();
+	MemoryManager::Instance().release();
 	delete window;
+	delete timer;
 }

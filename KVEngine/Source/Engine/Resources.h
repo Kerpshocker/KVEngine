@@ -82,6 +82,7 @@ namespace KVE
 		{
 			Mesh.Release();
 			Material.Release();
+			ReleaseMacro( InstanceBuffer );
 		}
 	};
 
@@ -110,7 +111,15 @@ namespace KVE
 		void Release( void )
 		{
 			Program.Release();
-			Buffers->Release();
+
+			if ( Buffers != nullptr )
+			{
+				for ( int i = 0; i < NumBuffers; i++ )
+					Buffers->Release();
+
+				delete[] Buffers;
+				Buffers = nullptr;
+			}
 		}
 	};
 
