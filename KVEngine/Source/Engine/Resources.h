@@ -9,6 +9,12 @@
 
 namespace KVE
 {
+	struct CameraBuffer
+	{
+		DirectX::XMFLOAT4X4			ViewMatrix;
+		DirectX::XMFLOAT4X4			ProjMatrix;
+		DirectX::XMFLOAT4X4			WorldMatrix;
+	};
 
 	struct Mesh
 	{
@@ -74,8 +80,8 @@ namespace KVE
 
 		void Release( void )
 		{
-			//ReleaseMacro( Mesh );
-			//ReleaseMacro( Material );
+			Mesh.Release();
+			Material.Release();
 		}
 	};
 
@@ -93,7 +99,6 @@ namespace KVE
 		UINT						InstanceCount;
 		UINT						InstanceStride;
 		UINT						InstanceOffset;
-		void*						Instances;
 	};
 
 	struct ShaderLayout
@@ -117,6 +122,10 @@ namespace KVE
 		DirectX::XMFLOAT4X4 WorldMatrix;
 		DirectX::XMFLOAT4X4 ViewMatrix;
 		DirectX::XMFLOAT4X4 ProjMatrix;
+
+		void*	Instances;
+		UINT	InstanceStride;
+		UINT	InstanceCount;
 	};
 }
 

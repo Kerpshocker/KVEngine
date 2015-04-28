@@ -35,6 +35,11 @@ void GameManager::update( void )
 	fp.ProjMatrix = CameraManager::Instance().getActiveCamera()->getProjMatrix();
 	XMStoreFloat4x4( &fp.WorldMatrix, XMMatrixIdentity() );
 
+	m_LocalInstances[ 0 ].Position.x += 0.0001f;
+	fp.Instances = m_LocalInstances;
+	fp.InstanceStride = sizeof( MeshInstance );
+	fp.InstanceCount = m_LocalInstanceCount;
+
 	fp.EndTime = m_Timer->totalTime();
 	RenderManager::Instance().pushFrame( fp );
 	RenderManager::Instance().render();
@@ -63,10 +68,6 @@ void GameManager::createShaders( void )
 
 void GameManager::createGeometry( void )
 {
-	XMFLOAT4 red = XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f );
-	XMFLOAT4 green = XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f );
-	XMFLOAT4 blue = XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f );
-
 	// Set up the vertices
 	Vertex vertices[] =
 	{
@@ -79,12 +80,14 @@ void GameManager::createGeometry( void )
 	UINT indices[] = { 0, 2, 1 };
 
 	// Set up the instances
-	MeshInstance instances[] =
-	{
-		{ XMFLOAT3( -1.5f, -1.0f, 0.0f ), red },
-		{ XMFLOAT3( +1.5f, -1.0f, 0.0f ), green },
-		{ XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue },
-	};
+	XMFLOAT4 red = XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f );
+	XMFLOAT4 green = XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f );
+	XMFLOAT4 blue = XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f );
+	m_LocalInstanceCount = 3;
+	m_LocalInstances = new MeshInstance[ m_LocalInstanceCount ];
+	m_LocalInstances[ 0 ] = { XMFLOAT3( -1.5f, -1.0f, 0.0f ), red };
+	m_LocalInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), green };
+	m_LocalInstances[ 2 ] = { XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue };
 
     KVE::ShaderBuffersDesc sbDesc;
     sbDesc.Vertices = vertices;
@@ -93,8 +96,7 @@ void GameManager::createGeometry( void )
 	sbDesc.VertexOffset = 0;
     sbDesc.VertexIndices = indices;
 	sbDesc.VertexIndexCount = ARRAYSIZE( indices );
-	sbDesc.Instances = instances;
-	sbDesc.InstanceCount = ARRAYSIZE( instances );
+	sbDesc.InstanceCount = m_LocalInstanceCount;
 	sbDesc.InstanceStride = sizeof( MeshInstance );
 	sbDesc.InstanceOffset = 0;
     sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

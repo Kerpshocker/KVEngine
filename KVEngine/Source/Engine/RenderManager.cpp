@@ -70,17 +70,11 @@ void RenderManager::render( void )
 		0 );
 
 	// set camera constant buffer
-	struct CameraConstBuffer
+	KVE::CameraBuffer ccBuffer =
 	{
-		DirectX::XMFLOAT4X4 ViewMatrix;
-		DirectX::XMFLOAT4X4 ProjMatrix;
-		DirectX::XMFLOAT4X4 WorldMatrix;
-	};
-	CameraConstBuffer ccBuffer =
-	{
-		m_FramesList[0].ViewMatrix,
-		m_FramesList[0].ProjMatrix,
-		m_FramesList[0].WorldMatrix
+		m_FramesList[ 0 ].ViewMatrix,
+		m_FramesList[ 0 ].ProjMatrix,
+		m_FramesList[ 0 ].WorldMatrix
 	};
 	setConstBuffer(&ccBuffer);
 
@@ -101,17 +95,24 @@ void RenderManager::render( void )
 				&m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexStride,
 				&m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexOffset
 				);
+			m_Window->m_DeviceContext->IASetIndexBuffer(
+				m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexIndexBuffer,
+				DXGI_FORMAT_R32_UINT,
+				0
+				);
+
+			setInstanceBuffer( 
+				m_ShaderLayouts[ i ].Buffers[ j ].InstanceBuffer, 
+				m_FramesList[ 0 ].InstanceStride * m_FramesList[ 0 ].InstanceCount,
+				i,
+				j
+				);
 			m_Window->m_DeviceContext->IASetVertexBuffers(
 				1,
 				1,
 				&m_ShaderLayouts[ i ].Buffers[ j ].InstanceBuffer,
 				&m_ShaderLayouts[ i ].Buffers[ j ].InstanceStride,
 				&m_ShaderLayouts[ i ].Buffers[ j ].InstanceOffset
-				);
-			m_Window->m_DeviceContext->IASetIndexBuffer(
-				m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexIndexBuffer,
-				DXGI_FORMAT_R32_UINT,
-				0
 				);
 
 			m_Window->m_DeviceContext->DrawIndexedInstanced(
@@ -231,18 +232,31 @@ void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc, U
 
 	// Create the instance buffer
 	D3D11_BUFFER_DESC instbd;
-	instbd.Usage = D3D11_USAGE_IMMUTABLE;
+	instbd.Usage = D3D11_USAGE_DYNAMIC;
 	instbd.ByteWidth = sbDesc.InstanceStride * sbDesc.InstanceCount;
 	instbd.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-	instbd.CPUAccessFlags = 0;
+	instbd.CPUAccessFlags = D3D11_CPU_ACCESS_WRITE;
 	instbd.MiscFlags = 0;
 	instbd.StructureByteStride = 0;
-	D3D11_SUBRESOURCE_DATA initialInstanceData;
-	initialInstanceData.pSysMem = sbDesc.Instances;
 	HR( m_Window->m_Device->CreateBuffer(
 		&instbd,
-		&initialInstanceData,
+		0,
 		&m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceBuffer ) );
+
+	/*D3D11_MAPPED_SUBRESOURCE mappedInstanceData;
+
+	m_Window->m_DeviceContext->Map(
+		m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceBuffer,
+		0,
+		D3D11_MAP_WRITE_DISCARD,
+		0,
+		&mappedInstanceData
+		);
+	memcpy( mappedInstanceData.pData, sbDesc.Instances, sbDesc.InstanceStride * sbDesc.InstanceCount );
+	m_Window->m_DeviceContext->Unmap(
+		m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceBuffer,
+		0
+		);*/
 }
 
 void RenderManager::createConstBuffer( const UINT stride )
@@ -282,4 +296,25 @@ void RenderManager::setConstBuffer( void* data )
 void RenderManager::pushFrame( KVE::FrameParams frame )
 {
 	m_FramesList[ 0 ] = frame;
+}
+
+void RenderManager::setInstanceBuffer( ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex )
+{
+	D3D11_MAPPED_SUBRESOURCE mappedInstanceData;
+
+	// maps the underlying InstanceBuffer's data to the local D3D11_MAPPED_SUBRESOURCE 'pData' variable
+	m_Window->m_DeviceContext->Map(
+		m_ShaderLayouts[layoutIndex].Buffers[bufferIndex].InstanceBuffer,
+		0,
+		D3D11_MAP_WRITE_DISCARD, // discard any instance data that was previously here (i.e. in this 'InstanceBuffer')
+		0,
+		&mappedInstanceData
+		);
+	// fill 'pData' with the new instance data taken from the top FrameParam in the frames list
+	// because the local D3D11_MAPPED_SUBRESOURCE is mapped to the InstanceBuffer data this fills this buffer's data
+	memcpy( mappedInstanceData.pData, m_FramesList[ 0 ].Instances, m_FramesList[ 0 ].InstanceStride * m_FramesList[ 0 ].InstanceCount );
+	m_Window->m_DeviceContext->Unmap(
+		m_ShaderLayouts[ layoutIndex ].Buffers[ bufferIndex ].InstanceBuffer,
+		0
+		);
 }

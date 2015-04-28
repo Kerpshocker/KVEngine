@@ -40,6 +40,9 @@ private:
 
 	const GameTimer* m_Timer;
 
+	MeshInstance*	m_LocalInstances;
+	UINT			m_LocalInstanceCount;
+
 };
 
 #endif
