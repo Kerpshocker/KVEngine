@@ -2,6 +2,10 @@
 #define RENDER_MANAGER_H
 
 #include <d3d11.h>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <iostream>
 #include "dxerr.h"
 #include "Manager.h"
 #include "Resources.h"
@@ -14,14 +18,14 @@
 #if defined(DEBUG) | defined(_DEBUG)
 #ifndef HR
 #define HR(x)													\
-	{															\
+		{															\
 		HRESULT hr = (x);										\
 		if(FAILED(hr))											\
-		{														\
+				{														\
 			DXTrace(__FILEW__, (DWORD)__LINE__, hr, L#x, true);	\
 			PostQuitMessage(0);									\
-		}														\
-	}														
+				}														\
+		}														
 #endif
 #else
 #ifndef HR
@@ -30,6 +34,20 @@
 #endif
 
 #define MAX_LAYOUTS 2
+
+struct VertexHelper
+{
+	int Positions;
+	int Normals;
+	int UVs;
+	int Colors;
+
+	int GetIndividualBytes( )
+	{
+		return ( Positions != 0 ) * sizeof( DirectX::XMFLOAT3 ) + ( Normals != 0 ) * sizeof( DirectX::XMFLOAT3 ) +
+			( UVs != 0 ) * sizeof( DirectX::XMFLOAT2 ) + ( Colors != 0 ) * sizeof( DirectX::XMFLOAT4 );
+	}
+};
 
 class DXWindow;
 
@@ -42,7 +60,7 @@ public:
 	void render( void );
 
 	UINT createShaderLayout( const KVE::ShaderProgramDesc& spDesc );
-	void createShaderBuffers(const KVE::ShaderBuffersDesc& sbDesc, UINT layoutIndex);
+	void createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc, UINT layoutIndex );
 
 	void setWindow( const DXWindow* const window );
 
@@ -50,21 +68,21 @@ public:
 
 private:
 	const DXWindow* m_Window;
-	
+
 	D3D11_VIEWPORT* m_Viewports;
 	UINT m_ViewportCount;
 
 	KVE::ShaderLayout* m_ShaderLayouts;
 	ID3D11Buffer* m_ConstBuffer;
 
-    UINT m_LayoutCount;
+	UINT m_LayoutCount;
 
 	KVE::FrameParams m_FramesList[ 1 ];
 
 	void createConstBuffer( const UINT stride );
 	void setConstBuffer( void* data );
 	void setInstanceBuffer( ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
-
+	void loadMeshFromOBJFile( std::string objFilePath );
 };
 
 #endif
