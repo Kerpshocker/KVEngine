@@ -51,6 +51,7 @@ struct VertexHelper
 };
 
 class DXWindow;
+struct FrameParams;
 
 class RenderManager : public Manager
 {
@@ -76,9 +77,11 @@ private:
 
 	UINT m_LayoutCount;
 
+	const FrameParams* m_CurrentFrame;
+
 	void createConstBuffer( const UINT stride );
 	void setConstBuffer( void* data );
-	void setInstanceBuffer( FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
+	void setInstanceBuffer( const FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
     void loadMeshFromOBJFile( std::string objFilePath, ID3D11Buffer* vBuffer, ID3D11Buffer* iBuffer );
 
     std::string* split( std::string s, char delimiter );

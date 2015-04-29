@@ -26,6 +26,8 @@ struct VSDataToConstantBuffer
 	DirectX::XMFLOAT4X4 Proj;
 };
 
+struct FrameParams;
+
 class GameManager : public Manager
 {
 	SINGLETON_INSTANCE( GameManager );
@@ -38,10 +40,12 @@ private:
 	void createShaders( void );
 	void createGeometry( void );
 
-	const GameTimer* m_Timer;
+	const GameTimer*	m_Timer;
 
-	MeshInstance*	m_LocalInstances;
-	UINT			m_LocalInstanceCount;
+	FrameParams*		m_CurrentFrame;
+
+	MeshInstance*		m_LocalInstances;
+	UINT				m_LocalInstanceCount;
 
 };
 

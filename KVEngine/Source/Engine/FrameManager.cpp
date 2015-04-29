@@ -5,6 +5,7 @@ void FrameManager::initialize( void )
 {
 	m_ReadIndex = 0;
 	m_WriteIndex = 0;
+	m_Writing = false;
 
 	if ( !m_Data ) throw std::bad_alloc();
 }
@@ -14,8 +15,10 @@ void FrameManager::release( void )
 
 }
 
-bool FrameManager::pushFrame( FrameParams& in )
+bool FrameManager::openFrame( FrameParams** out )
 {
+	if ( m_Writing ) return false;
+
 	const uint32_t currentWrite = m_WriteIndex.load();
 
 	uint32_t nextRecord = currentWrite + 1;
@@ -26,16 +29,33 @@ bool FrameManager::pushFrame( FrameParams& in )
 
 	if ( nextRecord != m_ReadIndex.load() )
 	{
-		m_Data[ currentWrite ] = in;
-		m_WriteIndex.store( nextRecord );
-		return true;
+		( *out ) = &m_Data[ currentWrite ];
+		return ( m_Writing = true );
 	}
 
 	// queue is full
-	return false;
+	return ( m_Writing = false );
 }
 
-bool FrameManager::popFrame( FrameParams& out )
+bool FrameManager::closeFrame( FrameParams** in )
+{
+	if ( !m_Writing ) return false;
+
+	( *in ) = nullptr;
+
+	const uint32_t currentWrite = m_WriteIndex.load();
+
+	uint32_t nextRecord = currentWrite + 1;
+	if ( nextRecord == MAX_FRAMES )
+	{
+		nextRecord = 0;
+	}
+
+	m_WriteIndex.store( nextRecord );
+	return !( m_Writing = false );
+}
+
+bool FrameManager::readNextFrame( const FrameParams** const out )
 {
 	const uint32_t currentRead = m_ReadIndex.load();
 
@@ -51,10 +71,31 @@ bool FrameManager::popFrame( FrameParams& out )
 		nextRecord = 0;
 	}
 
-	out = m_Data[ currentRead ];
+	(*out) = &m_Data[ currentRead ];
 	m_ReadIndex.store( nextRecord );
 	return true;
 }
+
+//bool FrameManager::popFrame( FrameParams& out )
+//{
+//	const uint32_t currentRead = m_ReadIndex.load();
+//
+//	if ( currentRead == m_WriteIndex.load() )
+//	{
+//		// queue is empty
+//		return false;
+//	}
+//
+//	uint32_t nextRecord = currentRead + 1;
+//	if ( nextRecord == MAX_FRAMES )
+//	{
+//		nextRecord = 0;
+//	}
+//
+//	out = m_Data[ currentRead ];
+//	m_ReadIndex.store( nextRecord );
+//	return true;
+//}
 
 bool FrameManager::isEmpty( void ) const
 {

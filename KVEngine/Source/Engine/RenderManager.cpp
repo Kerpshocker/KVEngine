@@ -68,15 +68,14 @@ void RenderManager::render( void )
 		1.0f,
 		0 );
 
-	FrameParams frame;
-	FrameManager::Instance().popFrame( frame );
+	FrameManager::Instance().readNextFrame( &m_CurrentFrame );
 
 	// set camera constant buffer
 	KVE::CameraBuffer ccBuffer =
 	{
-		frame.ViewMatrix,
-		frame.ProjMatrix,
-		frame.WorldMatrix
+		m_CurrentFrame->ViewMatrix,
+		m_CurrentFrame->ProjMatrix,
+		m_CurrentFrame->WorldMatrix
 	};
 	setConstBuffer( &ccBuffer );
 
@@ -104,9 +103,9 @@ void RenderManager::render( void )
 				);
 
 			setInstanceBuffer( 
-				&frame,
+				m_CurrentFrame,
 				m_ShaderLayouts[ i ].Buffers[ j ].InstanceBuffer, 
-				frame.InstanceStride * frame.InstanceCount,
+				m_CurrentFrame->InstanceStride * m_CurrentFrame->InstanceCount,
 				i,
 				j
 				);
@@ -296,7 +295,7 @@ void RenderManager::setConstBuffer( void* data )
 		);
 }
 
-void RenderManager::setInstanceBuffer( FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex )
+void RenderManager::setInstanceBuffer( const FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex )
 {
 	D3D11_MAPPED_SUBRESOURCE mappedInstanceData;
 

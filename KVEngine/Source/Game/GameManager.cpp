@@ -28,21 +28,24 @@ void GameManager::initialize(const DXWindow* window, const GameTimer* timer)
 
 void GameManager::update( void )
 {
-	FrameParams fp;
-	fp.DeltaTime = m_Timer->deltaTime();
-	fp.StartTime = m_Timer->totalTime();
+	FrameManager::Instance().openFrame( &m_CurrentFrame );
 
-	fp.ViewMatrix = CameraManager::Instance().getActiveCamera()->getViewMatrix();
-	fp.ProjMatrix = CameraManager::Instance().getActiveCamera()->getProjMatrix();
-	XMStoreFloat4x4( &fp.WorldMatrix, XMMatrixIdentity() );
+	m_CurrentFrame->DeltaTime = m_Timer->deltaTime();
+	m_CurrentFrame->StartTime = m_Timer->totalTime();
+
+	m_CurrentFrame->ViewMatrix = CameraManager::Instance().getActiveCamera()->getViewMatrix();
+	m_CurrentFrame->ProjMatrix = CameraManager::Instance().getActiveCamera()->getProjMatrix();
+	XMStoreFloat4x4( &m_CurrentFrame->WorldMatrix, XMMatrixIdentity() );
 
 	m_LocalInstances[ 0 ].Position.x += 0.0001f;
-	fp.Instances = m_LocalInstances;
-	fp.InstanceStride = sizeof( MeshInstance );
-	fp.InstanceCount = m_LocalInstanceCount;
+	m_CurrentFrame->Instances = m_LocalInstances;
+	m_CurrentFrame->InstanceStride = sizeof( MeshInstance );
+	m_CurrentFrame->InstanceCount = m_LocalInstanceCount;
 
-	fp.EndTime = m_Timer->totalTime();
-	FrameManager::Instance().pushFrame( fp );
+	m_CurrentFrame->EndTime = m_Timer->totalTime();
+
+	FrameManager::Instance().closeFrame( &m_CurrentFrame );
+
 	RenderManager::Instance().render();
 }
 

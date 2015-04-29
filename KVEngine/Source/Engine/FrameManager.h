@@ -28,16 +28,18 @@ public:
 
 	void initialize( void );
 	void release( void );
-	bool pushFrame( FrameParams& in );
-	bool popFrame( FrameParams& out );
+	bool openFrame( FrameParams** out );
+	bool closeFrame( FrameParams** in );
+	bool readNextFrame( const FrameParams** const out );
 	bool isEmpty( void ) const;
 	bool isFull( void ) const;
 
 private:
 	FrameParams m_Data[ MAX_FRAMES ];
 
-	std::atomic<uint16_t> m_ReadIndex;
-	std::atomic<uint16_t> m_WriteIndex;
+	std::atomic<uint16_t>	m_ReadIndex;
+	std::atomic<uint16_t>	m_WriteIndex;
+	std::atomic<bool>		m_Writing;
 
 };
 
