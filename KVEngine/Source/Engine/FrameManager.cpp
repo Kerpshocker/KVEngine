@@ -11,17 +11,7 @@ void FrameManager::initialize( void )
 
 void FrameManager::release( void )
 {
-	while ( m_ReadIndex != m_WriteIndex )
-	{
-		m_Data[ m_ReadIndex ].~FrameParams();
 
-		if ( m_ReadIndex++ == MAX_FRAMES )
-		{
-			m_ReadIndex = 0;
-		}
-	}
-
-	free( m_Data );
 }
 
 bool FrameManager::pushFrame( FrameParams& in )
