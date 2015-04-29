@@ -318,8 +318,23 @@ void RenderManager::setInstanceBuffer( ID3D11Buffer* iBuffer, const UINT byteSiz
 		);
 }
 
+std::string* RenderManager::split( std::string s, char delimiter )
+{
+    std::string* temp = nullptr;
+
+    for ( int i = 0; i < s.length() - 1; i++ )
+    {
+        if ( s[ i ] != delimiter )
+        {
+            temp[ i ] = s[ i ];
+        }
+    }
+
+    return temp;
+}
+
 //should return an instance of a new mesh*
-void RenderManager::loadMeshFromOBJFile( std::string objFilePath )
+void RenderManager::loadMeshFromOBJFile( std::string objFilePath, ID3D11Buffer* vBuffer, ID3D11Buffer* iBuffer )
 {
 	std::string data = "";
 	std::string line = "";
@@ -380,57 +395,57 @@ void RenderManager::loadMeshFromOBJFile( std::string objFilePath )
 	int iUVs = 0; XMFLOAT2* tempUVs = ( vh.UVs > 0 ) ? new XMFLOAT2[ vh.UVs ] : nullptr;
 	int iColrs = 0; XMFLOAT4* tempColrs = ( vh.Colors > 0 ) ? new XMFLOAT4[ vh.Colors ] : nullptr;
 
-	std::string* split = nullptr;
+	std::string* s = nullptr;
 
 	while ( data.length( ) > 0 )
 	{
-		split = nullptr;
+		s = nullptr;
 		line = data.substr( 0, data.find_first_of( '\n' ) );
 		data = data.substr( line.length( ) + 1, data.length( ) );
 
 		if ( line[ 0 ] == 'v' && line[ 1 ] != 't' && line[ 1 ] != 'n' && line[ 1 ] != 'c' ) // v = Vertex
 		{
 			line = line.substr( 2, line.length( ) - 1 );
-			//split = Split( line, ' ' );
+            s = split( line, ' ' );
 
-			tempVerts[ iVerts++ ] = XMFLOAT3( ( float )atof( split[ 0 ].c_str( ) ),
-				( float )atof( split[ 1 ].c_str( ) ),
-				( float )atof( split[ 2 ].c_str( ) ) );
+			tempVerts[ iVerts++ ] = XMFLOAT3( ( float )atof( s[ 0 ].c_str( ) ),
+				( float )atof( s[ 1 ].c_str( ) ),
+				( float )atof( s[ 2 ].c_str( ) ) );
 		}
 		else if ( line[ 0 ] == 'v' && line[ 1 ] == 'n' ) // vn = Vertex Normal
 		{
 			line = line.substr( 3, line.length( ) - 1 );
-			//split = Split( line, ' ' );
+			s = split( line, ' ' );
 
-			tempNorms[ iNorms++ ] = XMFLOAT3( ( float )atof( split[ 0 ].c_str( ) ),
-				( float )atof( split[ 1 ].c_str( ) ),
-				( float )atof( split[ 2 ].c_str( ) ) );
+			tempNorms[ iNorms++ ] = XMFLOAT3( ( float )atof( s[ 0 ].c_str( ) ),
+				( float )atof( s[ 1 ].c_str( ) ),
+				( float )atof( s[ 2 ].c_str( ) ) );
 		}
 		else if ( line[ 0 ] == 'v' && line[ 1 ] == 't' ) // vt = Vertex Texture (UV)
 		{
 			line = line.substr( 3, line.length( ) - 1 );
-			//split = Split( line, ' ' );
+            s = split( line, ' ' );
 
-			tempUVs[ iUVs++ ] = XMFLOAT2( ( float )atof( split[ 0 ].c_str( ) ),
-				( float )atof( split[ 1 ].c_str( ) ) );
+			tempUVs[ iUVs++ ] = XMFLOAT2( ( float )atof( s[ 0 ].c_str( ) ),
+				( float )atof( s[ 1 ].c_str( ) ) );
 		}
 		else if ( line[ 0 ] == 'v' && line[ 1 ] == 'c' ) // vc = Vertex Color
 		{
 			line = line.substr( 3, line.length( ) - 1 );
-			//split = Split( line, ' ' );
+            s = split( line, ' ' );
 
-			tempColrs[ iColrs++ ] = XMFLOAT4( ( float )atof( split[ 0 ].c_str( ) ),
-				( float )atof( split[ 1 ].c_str( ) ),
-				( float )atof( split[ 2 ].c_str( ) ),
-				( float )atof( split[ 3 ].c_str( ) ) );
+			tempColrs[ iColrs++ ] = XMFLOAT4( ( float )atof( s[ 0 ].c_str( ) ),
+				( float )atof( s[ 1 ].c_str( ) ),
+				( float )atof( s[ 2 ].c_str( ) ),
+				( float )atof( s[ 3 ].c_str( ) ) );
 		}
 		else
 		{
-			// there be problems in them hills
+			// we done fucked up
 		}
 
-		delete[ ] split;
-		split = nullptr;
+		delete[ ] s;
+		s = nullptr;
 	}
 
 	int numIndices = std::count( faces.begin( ), faces.end( ), 'f' ) * 3; // 3 vertices in each face
@@ -445,38 +460,38 @@ void RenderManager::loadMeshFromOBJFile( std::string objFilePath )
 		if ( line[ 0 ] == 'f' )
 		{
 			line = line.substr( 2, line.length( ) - 1 ); // 2 for "f "
-			//split = Split( line, ' ' );
+            s = split( line, ' ' );
 
-			std::string* split2 = nullptr;
+			std::string* s2 = nullptr;
 			int indices = std::count( line.begin( ), line.end( ), ' ' ) + 1;
 			for ( int i = 0; i < indices; i++ )
 			{
-				int numData = std::count( split[ i ].begin( ), split[ i ].end( ), '/' );
-				//split2 = Split( split[ i ], '/' );
+				int numData = std::count( s[ i ].begin( ), s[ i ].end( ), '/' );
+                s2 = split( s[ i ], '/' );
 
-				*( XMFLOAT3* )( ( byte* )vertexData + tail ) = tempVerts[ atoi( split2[ 0 ].c_str( ) ) - 1 ];
+                *( XMFLOAT3* )( ( byte* )vertexData + tail ) = tempVerts[ atoi( s2[ 0 ].c_str( ) ) - 1 ];
 				tail += sizeof( XMFLOAT3 );
 
-				if ( split2[ 2 ].length( ) > 0 ) // if there is a normal
+                if ( s2[ 2 ].length( ) > 0 ) // if there is a normal
 				{
-					*( XMFLOAT3* )( ( byte* )vertexData + tail ) = tempNorms[ atoi( split2[ 2 ].c_str( ) ) - 1 ];
+                    *( XMFLOAT3* )( ( byte* )vertexData + tail ) = tempNorms[ atoi( s2[ 2 ].c_str( ) ) - 1 ];
 					tail += sizeof( XMFLOAT3 );
 				}
 
-				if ( split2[ 1 ].length( ) > 0 ) // if there is a uv
+                if ( s2[ 1 ].length( ) > 0 ) // if there is a uv
 				{
-					*( XMFLOAT2* )( ( byte* )vertexData + tail ) = tempUVs[ atoi( split2[ 1 ].c_str( ) ) - 1 ];
+                    *( XMFLOAT2* )( ( byte* )vertexData + tail ) = tempUVs[ atoi( s2[ 1 ].c_str( ) ) - 1 ];
 					tail += sizeof( XMFLOAT2 );
 				}
 
-				if ( numData > 2 && split2[ 3 ].length( ) > 0 ) // if there is a color
+                if ( numData > 2 && s2[ 3 ].length( ) > 0 ) // if there is a color
 				{
-					*( XMFLOAT4* )( ( byte* )vertexData + tail ) = tempColrs[ atoi( split2[ 3 ].c_str( ) ) - 1 ];
+                    *( XMFLOAT4* )( ( byte* )vertexData + tail ) = tempColrs[ atoi( s2[ 3 ].c_str( ) ) - 1 ];
 					tail += sizeof( XMFLOAT4 );
 				}
 
-				delete[ ] split2;
-				split2 = nullptr;
+                delete[ ] s2;
+                s2 = nullptr;
 			}
 		}
 		else
@@ -484,8 +499,8 @@ void RenderManager::loadMeshFromOBJFile( std::string objFilePath )
 			// there be problems in them hills
 		}
 
-		delete[ ] split;
-		split = nullptr;
+		delete[ ] s;
+		s = nullptr;
 	}
 
 	UINT* indices = new UINT[ numIndices ];
