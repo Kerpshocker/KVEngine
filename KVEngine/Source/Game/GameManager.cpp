@@ -1,6 +1,7 @@
 #include "GameManager.h"
 #include "CameraManager.h"
 #include "RenderManager.h"
+#include "FrameManager.h"
 #include "GameTimer.h"
 #include <d3dcompiler.h>
 
@@ -27,7 +28,7 @@ void GameManager::initialize(const DXWindow* window, const GameTimer* timer)
 
 void GameManager::update( void )
 {
-	KVE::FrameParams fp;
+	FrameParams fp;
 	fp.DeltaTime = m_Timer->deltaTime();
 	fp.StartTime = m_Timer->totalTime();
 
@@ -41,7 +42,7 @@ void GameManager::update( void )
 	fp.InstanceCount = m_LocalInstanceCount;
 
 	fp.EndTime = m_Timer->totalTime();
-	RenderManager::Instance().pushFrame( fp );
+	FrameManager::Instance().pushFrame( fp );
 	RenderManager::Instance().render();
 }
 

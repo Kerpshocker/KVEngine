@@ -68,14 +68,17 @@ void RenderManager::render( void )
 		1.0f,
 		0 );
 
+	FrameParams frame;
+	FrameManager::Instance().popFrame( frame );
+
 	// set camera constant buffer
 	KVE::CameraBuffer ccBuffer =
 	{
-		m_FramesList[ 0 ].ViewMatrix,
-		m_FramesList[ 0 ].ProjMatrix,
-		m_FramesList[ 0 ].WorldMatrix
+		frame.ViewMatrix,
+		frame.ProjMatrix,
+		frame.WorldMatrix
 	};
-	setConstBuffer(&ccBuffer);
+	setConstBuffer( &ccBuffer );
 
 	for ( UINT i = 0; i < m_LayoutCount; i++ )
 	{
@@ -101,8 +104,9 @@ void RenderManager::render( void )
 				);
 
 			setInstanceBuffer( 
+				&frame,
 				m_ShaderLayouts[ i ].Buffers[ j ].InstanceBuffer, 
-				m_FramesList[ 0 ].InstanceStride * m_FramesList[ 0 ].InstanceCount,
+				frame.InstanceStride * frame.InstanceCount,
 				i,
 				j
 				);
@@ -292,12 +296,7 @@ void RenderManager::setConstBuffer( void* data )
 		);
 }
 
-void RenderManager::pushFrame( KVE::FrameParams frame )
-{
-	m_FramesList[ 0 ] = frame;
-}
-
-void RenderManager::setInstanceBuffer( ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex )
+void RenderManager::setInstanceBuffer( FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex )
 {
 	D3D11_MAPPED_SUBRESOURCE mappedInstanceData;
 
@@ -311,7 +310,7 @@ void RenderManager::setInstanceBuffer( ID3D11Buffer* iBuffer, const UINT byteSiz
 		);
 	// fill 'pData' with the new instance data taken from the top FrameParam in the frames list
 	// because the local D3D11_MAPPED_SUBRESOURCE is mapped to the InstanceBuffer data this fills this buffer's data
-	memcpy( mappedInstanceData.pData, m_FramesList[ 0 ].Instances, m_FramesList[ 0 ].InstanceStride * m_FramesList[ 0 ].InstanceCount );
+	memcpy( mappedInstanceData.pData, frame->Instances, frame->InstanceStride * frame->InstanceCount );
 	m_Window->m_DeviceContext->Unmap(
 		m_ShaderLayouts[ layoutIndex ].Buffers[ bufferIndex ].InstanceBuffer,
 		0

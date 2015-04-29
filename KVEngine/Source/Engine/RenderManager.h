@@ -9,6 +9,7 @@
 #include "dxerr.h"
 #include "Manager.h"
 #include "Resources.h"
+#include "FrameManager.h"
 
 // Convenience macro for releasing a COM object
 #define ReleaseMacro(x) { if(x){ x->Release(); x = 0; } }
@@ -64,8 +65,6 @@ public:
 
 	void setWindow( const DXWindow* const window );
 
-	void pushFrame( KVE::FrameParams frame );
-
 private:
 	const DXWindow* m_Window;
 
@@ -77,11 +76,9 @@ private:
 
 	UINT m_LayoutCount;
 
-	KVE::FrameParams m_FramesList[ 1 ];
-
 	void createConstBuffer( const UINT stride );
 	void setConstBuffer( void* data );
-	void setInstanceBuffer( ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
+	void setInstanceBuffer( FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
     void loadMeshFromOBJFile( std::string objFilePath, ID3D11Buffer* vBuffer, ID3D11Buffer* iBuffer );
 
     std::string* split( std::string s, char delimiter );

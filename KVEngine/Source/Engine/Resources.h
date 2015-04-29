@@ -122,20 +122,6 @@ namespace KVE
 			}
 		}
 	};
-
-	struct FrameParams
-	{
-		double DeltaTime;
-		double StartTime, EndTime;
-
-		DirectX::XMFLOAT4X4 WorldMatrix;
-		DirectX::XMFLOAT4X4 ViewMatrix;
-		DirectX::XMFLOAT4X4 ProjMatrix;
-
-		void*	Instances;
-		UINT	InstanceStride;
-		UINT	InstanceCount;
-	};
 }
 
 #endif
