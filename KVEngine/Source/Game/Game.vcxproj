@@ -92,7 +92,6 @@ xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(OutDir)" /y</Command>
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="GameManager.h" />
-    <ClInclude Include="SteelBattalionButtons.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputManager.cpp" />

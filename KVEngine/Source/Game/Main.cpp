@@ -14,6 +14,14 @@ LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 	case WM_DESTROY:
 		PostQuitMessage( 0 );
 		return 0;
+	case WM_KEYDOWN:
+		std::cout << wParam << std::endl;
+		InputManager::Instance().keyPressed( wParam );
+		return 0;
+	case WM_KEYUP:
+		std::cout << wParam << std::endl;
+		InputManager::Instance().keyReleased( wParam );
+		return 0;
 	default:
 		return DefWindowProc( hwnd, msg, wParam, lParam );
 	}
@@ -26,7 +34,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	windowParams.HInstance = appInstance;
 	windowParams.Width = 800;
 	windowParams.Height = 600;
-	windowParams.Name = L"TESTING";
+	windowParams.Name = L"ASTEROIDS";
 	windowParams.WndProcedure = MainWndProc;
 	window = new DXWindow( windowParams );
 
@@ -47,10 +55,10 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 
 	MemoryManager::Instance().initialize();
 	FrameManager::Instance().initialize();
+	InputManager::Instance().initialize();
 	RenderManager::Instance().initialize( &viewport, 1 );
 	RenderManager::Instance().setWindow( window );
 	GameManager::Instance().initialize( window, timer );
-    SteelBattalion::InputManager();
 
 	MSG msg = { 0 };
 	timer->reset();
