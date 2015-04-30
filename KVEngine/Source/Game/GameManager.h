@@ -19,13 +19,6 @@ struct MeshInstance
 	DirectX::XMFLOAT4 Color;
 };
 
-struct VSDataToConstantBuffer
-{
-	DirectX::XMFLOAT4X4 World;
-	DirectX::XMFLOAT4X4 View;
-	DirectX::XMFLOAT4X4 Proj;
-};
-
 struct FrameParams;
 
 class GameManager : public Manager
@@ -46,7 +39,6 @@ private:
 
 	MeshInstance*		m_LocalInstances;
 	UINT				m_LocalInstanceCount;
-
 };
 
 #endif

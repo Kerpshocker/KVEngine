@@ -3,6 +3,10 @@
 
 #include <d3d11.h>
 #include <DirectXMath.h>
+#include <string>
+#include <sstream>
+#include <fstream>
+#include <iostream>
 
 // Convenience macro for releasing a COM object
 #define ReleaseMacro(x) { if(x){ x->Release(); x = 0; } }
@@ -122,6 +126,9 @@ namespace KVE
 			}
 		}
 	};
+
+	std::string* split( std::string s, char delimiter );
+	bool createSBDescFromOBJFile( std::string objFilePath, KVE::ShaderBuffersDesc* sbDesc, std::size_t vertices );
 }
 
 #endif

@@ -2,10 +2,7 @@
 #define RENDER_MANAGER_H
 
 #include <d3d11.h>
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <iostream>
+
 #include "dxerr.h"
 #include "Manager.h"
 #include "Resources.h"
@@ -35,20 +32,6 @@
 #endif
 
 #define MAX_LAYOUTS 2
-
-struct VertexHelper
-{
-	int Positions;
-	int Normals;
-	int UVs;
-	int Colors;
-
-	int GetIndividualBytes( )
-	{
-		return ( Positions != 0 ) * sizeof( DirectX::XMFLOAT3 ) + ( Normals != 0 ) * sizeof( DirectX::XMFLOAT3 ) +
-			( UVs != 0 ) * sizeof( DirectX::XMFLOAT2 ) + ( Colors != 0 ) * sizeof( DirectX::XMFLOAT4 );
-	}
-};
 
 class DXWindow;
 struct FrameParams;
@@ -82,9 +65,6 @@ private:
 	void createConstBuffer( const UINT stride );
 	void setConstBuffer( void* data );
 	void setInstanceBuffer( const FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
-	bool loadMeshFromOBJFile( std::string objFilePath, KVE::ShaderBuffersDesc* sbDesc );
-
-    std::string* split( std::string s, char delimiter );
 };
 
 #endif

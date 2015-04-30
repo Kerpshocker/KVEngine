@@ -72,16 +72,16 @@ void GameManager::createShaders( void )
 
 void GameManager::createGeometry( void )
 {
-	// Set up the vertices
-	Vertex vertices[] =
-	{
-		{ XMFLOAT3( +0.0f, +1.0f, +0.0f ) },
-		{ XMFLOAT3( -1.5f, -1.0f, +0.0f ) },
-		{ XMFLOAT3( +1.5f, -1.0f, +0.0f ) },
-	};
+	//// Set up the vertices
+	//KVE::Vertex vertices[] =
+	//{
+	//	{ XMFLOAT3( +0.0f, +1.0f, +0.0f ) },
+	//	{ XMFLOAT3( -1.5f, -1.0f, +0.0f ) },
+	//	{ XMFLOAT3( +1.5f, -1.0f, +0.0f ) },
+	//};
 
-	// Set up the indices
-	UINT indices[] = { 0, 2, 1 };
+	//// Set up the indices
+	//UINT indices[] = { 0, 2, 1 };
 
 	// Set up the instances
 	XMFLOAT4 red = XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f );
@@ -94,12 +94,13 @@ void GameManager::createGeometry( void )
 	m_LocalInstances[ 2 ] = { XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue };
 
     KVE::ShaderBuffersDesc sbDesc;
-    sbDesc.Vertices = vertices;
+   /* sbDesc.Vertices = vertices;
     sbDesc.VertexCount = ARRAYSIZE( vertices );
-    sbDesc.VertexStride = sizeof( Vertex );
+    sbDesc.VertexStride = sizeof( KVE::Vertex );
 	sbDesc.VertexOffset = 0;
     sbDesc.VertexIndices = indices;
-	sbDesc.VertexIndexCount = ARRAYSIZE( indices );
+	sbDesc.VertexIndexCount = ARRAYSIZE( indices );*/
+	KVE::createSBDescFromOBJFile( "crate_obj.obj", &sbDesc, sizeof( Vertex ) );
 	sbDesc.InstanceCount = m_LocalInstanceCount;
 	sbDesc.InstanceStride = sizeof( MeshInstance );
 	sbDesc.InstanceOffset = 0;
