@@ -1,14 +1,24 @@
 # Compiled Object files
-*.sdf
-*.opensdf
+*.slo
 *.lo
 *.o
+*.asp
 
-# Executables
-*.exe
-*.out
-*.app
+# Compiled Dynamic libraries
+*.so
+*.dylib
 
-# Other
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+
+# SQL/visual studio prefs crap
+*.sdf
+*.opensdf
 *.suo
-*.v12.suo
+
+# Unwanted folders
+DELETE
+[Aa]pplication
+[Tt]emp
