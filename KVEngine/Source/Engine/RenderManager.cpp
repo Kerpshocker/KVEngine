@@ -332,7 +332,7 @@ std::string* RenderManager::split( std::string s, char delimiter )
 }
 
 //should return an instance of a new mesh*
-void RenderManager::loadMeshFromOBJFile( std::string objFilePath, ID3D11Buffer* vBuffer, ID3D11Buffer* iBuffer )
+bool RenderManager::loadMeshFromOBJFile( std::string objFilePath, KVE::ShaderBuffersDesc* sbDesc )
 {
 	std::string data = "";
 	std::string line = "";
@@ -535,4 +535,6 @@ void RenderManager::loadMeshFromOBJFile( std::string objFilePath, ID3D11Buffer* 
 	//m->VertexIndexCount = numIndices;
 
 	//return m;
+
+	return true;
 }

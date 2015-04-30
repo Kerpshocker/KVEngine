@@ -82,7 +82,7 @@ private:
 	void createConstBuffer( const UINT stride );
 	void setConstBuffer( void* data );
 	void setInstanceBuffer( const FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
-    void loadMeshFromOBJFile( std::string objFilePath, ID3D11Buffer* vBuffer, ID3D11Buffer* iBuffer );
+	bool loadMeshFromOBJFile( std::string objFilePath, KVE::ShaderBuffersDesc* sbDesc );
 
     std::string* split( std::string s, char delimiter );
 };
