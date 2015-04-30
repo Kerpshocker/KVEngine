@@ -55,15 +55,16 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Engine;$(SolutionDir)..\Lib;$(SolutionDir)..\Assets;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Engine;$(SolutionDir)..\Lib;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG;_MBCS;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;$(SolutionDir)..\Lib\libusb-1.0.lib;$(AddtionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;$(AddtionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
+      <Command>copy "$(SolutionDir)..\Assets\" "$(OutDir)"
+xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(OutDir)" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,7 +74,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(SolutionDir)/Engine;$(SolutionDir)..\Lib;$(SolutionDir)..\Assets;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)/Engine;$(SolutionDir)..\Lib;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>RELEASE;_MBCS;UNICODE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -83,7 +84,8 @@
       <AdditionalDependencies>d3d11.lib;d3dcompiler.lib;$(AddtionalDependencies);</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(SolutionDir)..\Application\$(PlatformName)_$(Configuration)\" /y</Command>
+      <Command>copy "$(SolutionDir)..\Assets\" "$(OutDir)"
+xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(OutDir)" /y</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -111,6 +113,11 @@
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\Assets\crate_obj.obj">
+      <FileType>Document</FileType>
+    </None>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -118,7 +118,7 @@ namespace KVE
 
 			if ( Buffers != nullptr )
 			{
-				for ( int i = 0; i < NumBuffers; i++ )
+				for ( UINT i = 0; i < NumBuffers; i++ )
 					Buffers->Release();
 
 				delete[] Buffers;

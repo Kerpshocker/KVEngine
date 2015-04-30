@@ -19,7 +19,7 @@ bool FrameManager::openFrame( FrameParams** out )
 {
 	if ( m_Writing ) return false;
 
-	const uint32_t currentWrite = m_WriteIndex.load();
+	const uint32_t currentWrite = m_WriteIndex.load( std::memory_order_relaxed );
 
 	uint32_t nextRecord = currentWrite + 1;
 	if ( nextRecord == MAX_FRAMES )
@@ -27,7 +27,7 @@ bool FrameManager::openFrame( FrameParams** out )
 		nextRecord = 0;
 	}
 
-	if ( nextRecord != m_ReadIndex.load() )
+	if ( nextRecord != m_ReadIndex.load( std::memory_order_acquire ) )
 	{
 		( *out ) = &m_Data[ currentWrite ];
 		return ( m_Writing = true );
@@ -43,7 +43,7 @@ bool FrameManager::closeFrame( FrameParams** in )
 
 	( *in ) = nullptr;
 
-	const uint32_t currentWrite = m_WriteIndex.load();
+	const uint32_t currentWrite = m_WriteIndex.load( std::memory_order_relaxed );
 
 	uint32_t nextRecord = currentWrite + 1;
 	if ( nextRecord == MAX_FRAMES )
@@ -51,15 +51,15 @@ bool FrameManager::closeFrame( FrameParams** in )
 		nextRecord = 0;
 	}
 
-	m_WriteIndex.store( nextRecord );
+	m_WriteIndex.store( nextRecord, std::memory_order_release );
 	return !( m_Writing = false );
 }
 
 bool FrameManager::readNextFrame( const FrameParams** const out )
 {
-	const uint32_t currentRead = m_ReadIndex.load();
+	const uint32_t currentRead = m_ReadIndex.load( std::memory_order_relaxed );
 
-	if ( currentRead == m_WriteIndex.load() )
+	if ( currentRead == m_WriteIndex.load( std::memory_order_acquire ) )
 	{
 		// queue is empty
 		return false;
@@ -72,7 +72,7 @@ bool FrameManager::readNextFrame( const FrameParams** const out )
 	}
 
 	(*out) = &m_Data[ currentRead ];
-	m_ReadIndex.store( nextRecord );
+	m_ReadIndex.store( nextRecord, std::memory_order_release );
 	return true;
 }
 

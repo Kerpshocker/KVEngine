@@ -55,6 +55,10 @@ void RenderManager::render( void )
 	// make sure there is a window to draw to
 	assert( m_Window );
 
+	if ( FrameManager::Instance().isEmpty() ) return;
+
+	FrameManager::Instance().readNextFrame( &m_CurrentFrame );
+
 	// draw background
 	const f32 color[ 4 ] = { 0.0f, 0.0f, 0.0f, 1.0f }; // black
 
@@ -67,8 +71,6 @@ void RenderManager::render( void )
 		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 		1.0f,
 		0 );
-
-	FrameManager::Instance().readNextFrame( &m_CurrentFrame );
 
 	// set camera constant buffer
 	KVE::CameraBuffer ccBuffer =

@@ -28,7 +28,7 @@ void GameManager::initialize(const DXWindow* window, const GameTimer* timer)
 
 void GameManager::update( void )
 {
-	FrameManager::Instance().openFrame( &m_CurrentFrame );
+	if ( !FrameManager::Instance().openFrame( &m_CurrentFrame ) ) return;
 
 	m_CurrentFrame->DeltaTime = m_Timer->deltaTime();
 	m_CurrentFrame->StartTime = m_Timer->totalTime();
@@ -45,8 +45,6 @@ void GameManager::update( void )
 	m_CurrentFrame->EndTime = m_Timer->totalTime();
 
 	FrameManager::Instance().closeFrame( &m_CurrentFrame );
-
-	RenderManager::Instance().render();
 }
 
 void GameManager::createShaders( void )

@@ -28,6 +28,7 @@ public:
 	const bool isMaximized( void ) const;
 	const bool isResizing( void ) const;
 	const bool isPaused( void ) const;
+	const HWND* const getHandle( void ) const;
 
 protected:
 	Window( const WindowParams& params );

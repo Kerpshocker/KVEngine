@@ -81,6 +81,11 @@ const bool Window::isPaused( void ) const
 	return m_Paused;
 }
 
+const HWND* const Window::getHandle( void ) const
+{
+	return &m_HWindow;
+}
+
 
 //LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 //{

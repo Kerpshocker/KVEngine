@@ -3,7 +3,6 @@
 *.opensdf
 *.lo
 *.o
-*.obj
 
 # Executables
 *.exe

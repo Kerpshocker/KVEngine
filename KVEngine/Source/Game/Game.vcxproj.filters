@@ -16,6 +16,9 @@
     <Filter Include="Resource Files\Shaders">
       <UniqueIdentifier>{35909fbb-d3da-446d-93cc-63a591ec0c05}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\Assets">
+      <UniqueIdentifier>{72a93563-ad76-47a0-8807-465bc77a0544}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Main.h">
@@ -49,5 +52,10 @@
     <FxCompile Include="PC_PShader.hlsl">
       <Filter>Resource Files\Shaders</Filter>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Object Include="..\..\Assets\crate_obj.obj">
+      <Filter>Resource Files\Assets</Filter>
+    </Object>
   </ItemGroup>
 </Project>
