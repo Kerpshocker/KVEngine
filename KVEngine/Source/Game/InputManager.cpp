@@ -20,12 +20,17 @@ void InputManager::release()
 
 }
 
-void InputManager::keyPressed( int key )
+bool InputManager::isKeyPressed(int key)
+{
+	return keyData & key;
+}
+
+void InputManager::registerKeyPress(int key)
 {
 	keyData |= keyMap[ key - 'A' ];	//or
 }
 
-void InputManager::keyReleased( int key )
+void InputManager::registerKeyRelease(int key)
 {
 	keyData ^= keyMap[ key - 'A' ];	//exclusive or
 }

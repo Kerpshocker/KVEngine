@@ -16,11 +16,11 @@ LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		return 0;
 	case WM_KEYDOWN:
 		std::cout << wParam << std::endl;
-		InputManager::Instance().keyPressed( wParam );
+		InputManager::Instance().registerKeyPress( wParam );
 		return 0;
 	case WM_KEYUP:
 		std::cout << wParam << std::endl;
-		InputManager::Instance().keyReleased( wParam );
+		InputManager::Instance().registerKeyRelease( wParam );
 		return 0;
 	default:
 		return DefWindowProc( hwnd, msg, wParam, lParam );

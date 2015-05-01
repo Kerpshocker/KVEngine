@@ -2,6 +2,7 @@
 #include "CameraManager.h"
 #include "RenderManager.h"
 #include "FrameManager.h"
+#include "InputManager.h"
 #include "GameTimer.h"
 #include <d3dcompiler.h>
 
@@ -32,6 +33,11 @@ void GameManager::update( void )
 
 	m_CurrentFrame->DeltaTime = m_Timer->deltaTime();
 	m_CurrentFrame->StartTime = m_Timer->totalTime();
+
+	if ( InputManager::Instance().isKeyPressed( KEY_MOVE_FORWARD ) )
+	{
+		// move forward
+	}
 
 	m_CurrentFrame->ViewMatrix = CameraManager::Instance().getActiveCamera()->getViewMatrix();
 	m_CurrentFrame->ProjMatrix = CameraManager::Instance().getActiveCamera()->getProjMatrix();

@@ -24,8 +24,9 @@ public:
 	void initialize();
 	void release();
 
-	void keyPressed( int key );
-	void keyReleased( int key );
+	bool isKeyPressed(int key);
+	void registerKeyPress( int key );
+	void registerKeyRelease( int key );
 
 private:
 	int keyMap[ 26 ];
