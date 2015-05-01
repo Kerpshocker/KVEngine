@@ -16,11 +16,11 @@ LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		return 0;
 	case WM_KEYDOWN:
 		std::cout << wParam << std::endl;
-		InputManager::Instance().registerKeyPress( wParam );
+		KVE::Input::RegisterKeyPress( wParam );
 		return 0;
 	case WM_KEYUP:
 		std::cout << wParam << std::endl;
-		InputManager::Instance().registerKeyRelease( wParam );
+		KVE::Input::RegisterKeyRelease( wParam );
 		return 0;
 	default:
 		return DefWindowProc( hwnd, msg, wParam, lParam );
@@ -55,7 +55,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 
 	MemoryManager::Instance().initialize();
 	FrameManager::Instance().initialize();
-	InputManager::Instance().initialize();
+	KVE::Input::Initialize();
 	RenderManager::Instance().initialize( &viewport, 1 );
 	RenderManager::Instance().setWindow( window );
 	GameManager::Instance().initialize( window, timer );

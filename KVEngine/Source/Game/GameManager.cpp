@@ -34,7 +34,7 @@ void GameManager::update( void )
 	m_CurrentFrame->DeltaTime = m_Timer->deltaTime();
 	m_CurrentFrame->StartTime = m_Timer->totalTime();
 
-	if ( InputManager::Instance().isKeyPressed( KEY_MOVE_FORWARD ) )
+	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_MOVE_FORWARD ) )
 	{
 		// move forward
 	}
