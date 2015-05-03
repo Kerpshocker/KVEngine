@@ -18,16 +18,36 @@ namespace KVE
 		farPlane = params.farPlane;
 
 		position = XMLoadFloat3( &params.initialPos );
+		rotation = XMQuaternionIdentity();
 		scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 1.0f );
-		orientation.forward = XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f );
-		orientation.up = XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f );
-		orientation.right = XMVectorSet( 1.0f, 0.0f, 0.0f, 0.0f );
 
 		projMatrix = DirectX::XMFLOAT4X4();
 		viewMatrix = DirectX::XMFLOAT4X4();
 
 		/*setProjMatrix( 0 );
 		setViewMatrix();*/
+	}
+
+	void Camera::move( float amount )
+	{
+		XMVECTOR forward = XMQuaternionMultiply( XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ), XMQuaternionInverse( rotation ) );
+		position += forward * amount;
+	}
+
+	void Camera::rotatePitch( float radians )
+	{
+		XMVECTOR quat = XMQuaternionRotationRollPitchYaw( radians, 0.0f, 0.0f );
+		rotation *= XMQuaternionMultiply( XMQuaternionRotationRollPitchYaw( radians, 0.0f, 0.0f ), rotation );
+	}
+
+	void Camera::rotateYaw( float radians )
+	{
+		rotation *= XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, radians, 0.0f ) );
+	}
+
+	void Camera::rotateRoll( float radians )
+	{
+		rotation *= XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, 0.0f, radians ) );
 	}
 
 	const XMFLOAT4X4 Camera::getProjMatrix( void ) const
@@ -55,10 +75,12 @@ namespace KVE
 
 	void Camera::setViewMatrix( void )
 	{
-		XMVECTOR eye = position - orientation.forward;
-		XMVECTOR focus = eye + orientation.forward;
+		XMVECTOR quat = XMQuaternionInverse( rotation );
+
+		XMVECTOR forward = XMQuaternionMultiply( XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ), quat );
+		XMVECTOR up = XMQuaternionMultiply( XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ), quat );
 
 		XMStoreFloat4x4( &viewMatrix, XMMatrixTranspose( XMMatrixLookAtLH(
-			eye, focus, orientation.up ) ) );
+			position, position + forward, up ) ) );
 	}
 }

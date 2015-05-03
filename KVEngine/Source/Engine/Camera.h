@@ -34,13 +34,18 @@ namespace KVE
 		void setViewMatrix( void );
 		void debugPrint( void );
 
+		void move( float amount );
+		void rotatePitch( float radians );
+		void rotateYaw( float radians );
+		void rotateRoll( float radians );
+
 	private:
 		f32 fieldOfView;
 		f32 nearPlane;
 		f32 farPlane;
 
 		DirectX::XMVECTOR position;
-		Orientation orientation;
+		DirectX::XMVECTOR rotation;
 		DirectX::XMVECTOR scale;
 
 		DirectX::XMFLOAT4X4 projMatrix;
