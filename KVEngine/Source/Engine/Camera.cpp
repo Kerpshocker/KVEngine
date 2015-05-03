@@ -30,24 +30,23 @@ namespace KVE
 
 	void Camera::move( float amount )
 	{
-		XMVECTOR forward = XMQuaternionMultiply( XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ), XMQuaternionInverse( rotation ) );
+		XMVECTOR forward = XMQuaternionMultiply( XMQuaternionInverse( rotation ), XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
 		position += forward * amount;
 	}
 
 	void Camera::rotatePitch( float radians )
 	{
-		XMVECTOR quat = XMQuaternionRotationRollPitchYaw( radians, 0.0f, 0.0f );
-		rotation *= XMQuaternionMultiply( XMQuaternionRotationRollPitchYaw( radians, 0.0f, 0.0f ), rotation );
+		rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( radians, 0.0f, 0.0f ) );
 	}
 
 	void Camera::rotateYaw( float radians )
 	{
-		rotation *= XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, radians, 0.0f ) );
+		rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, radians, 0.0f ) );
 	}
 
 	void Camera::rotateRoll( float radians )
 	{
-		rotation *= XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, 0.0f, radians ) );
+		rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, 0.0f, radians ) );
 	}
 
 	const XMFLOAT4X4 Camera::getProjMatrix( void ) const
@@ -77,8 +76,8 @@ namespace KVE
 	{
 		XMVECTOR quat = XMQuaternionInverse( rotation );
 
-		XMVECTOR forward = XMQuaternionMultiply( XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ), quat );
-		XMVECTOR up = XMQuaternionMultiply( XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ), quat );
+		XMVECTOR forward = XMQuaternionMultiply( quat, XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
+		XMVECTOR up = XMQuaternionMultiply( quat, XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ) );
 
 		XMStoreFloat4x4( &viewMatrix, XMMatrixTranspose( XMMatrixLookAtLH(
 			position, position + forward, up ) ) );

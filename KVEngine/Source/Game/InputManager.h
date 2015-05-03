@@ -29,6 +29,7 @@ namespace KVE
 			void release( void );
 
 			bool isKeyPressed( Keys key );
+			bool isViewChanged( void );
 			void registerKeyPress( int key );
 			void registerKeyRelease( int key );
 
@@ -41,6 +42,7 @@ namespace KVE
 		inline void Initialize( void ) { InputManager::Instance().initialize(); }
 		inline void Release( void ) { InputManager::Instance().release(); }
 		inline bool IsKeyPressed( Keys key ) { return InputManager::Instance().isKeyPressed( key ); }
+		inline bool IsViewChanged( void ) { return InputManager::Instance().isViewChanged(); }
 		inline void RegisterKeyPress( int key ) { InputManager::Instance().registerKeyPress( key ); }
 		inline void RegisterKeyRelease( int key ) { InputManager::Instance().registerKeyRelease( key ); }
 	}

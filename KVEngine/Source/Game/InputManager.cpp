@@ -29,6 +29,11 @@ namespace KVE
 			return keyData & key;
 		}
 
+		bool InputManager::isViewChanged( void )
+		{
+			return keyData & 255;
+		}
+
 		void InputManager::registerKeyPress( int key )
 		{
 			keyData |= keyMap[ key - 'A' ];	//or
