@@ -12,7 +12,7 @@ namespace KVE
 		
 		int j = 0;
 
-		for ( int i = 0; i < s.length() - 1; i++ )
+		for ( int i = 0; i < s.length(); i++ )
 		{
 			if ( s[ i ] != delimiter )
 			{
@@ -212,7 +212,7 @@ namespace KVE
 
 		sbDesc->Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 		sbDesc->Vertices = vertexData;
-		sbDesc->VertexCount = iVerts;
+        sbDesc->VertexCount = numIndices;
 		sbDesc->VertexOffset = 0;
 		sbDesc->VertexStride = vertices;
 		sbDesc->VertexIndexCount = numIndices;
