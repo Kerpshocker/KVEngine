@@ -30,23 +30,27 @@ namespace KVE
 
 	void Camera::move( float amount )
 	{
-		XMVECTOR forward = XMQuaternionMultiply( XMQuaternionInverse( rotation ), XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
+		XMVECTOR forward = XMQuaternionMultiply( rotation, XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
+		forward = XMQuaternionMultiply( forward, XMQuaternionInverse( rotation ) );
 		position += forward * amount;
 	}
 
 	void Camera::rotatePitch( float radians )
 	{
-		rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( radians, 0.0f, 0.0f ) );
+		rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( -radians, 0.0f, 0.0f ) );
+		rotation = XMQuaternionNormalize( rotation );
 	}
 
 	void Camera::rotateYaw( float radians )
 	{
-		rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, radians, 0.0f ) );
+		rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, -radians, 0.0f ) );
+		rotation = XMQuaternionNormalize( rotation );
 	}
 
 	void Camera::rotateRoll( float radians )
 	{
 		rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, 0.0f, radians ) );
+		rotation = XMQuaternionNormalize( rotation );
 	}
 
 	const XMFLOAT4X4 Camera::getProjMatrix( void ) const
@@ -74,10 +78,12 @@ namespace KVE
 
 	void Camera::setViewMatrix( void )
 	{
-		XMVECTOR quat = XMQuaternionInverse( rotation );
+		XMVECTOR inverse = XMQuaternionInverse( rotation );
 
-		XMVECTOR forward = XMQuaternionMultiply( quat, XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
-		XMVECTOR up = XMQuaternionMultiply( quat, XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ) );
+		XMVECTOR forward = XMQuaternionMultiply( rotation, XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
+		forward = XMQuaternionMultiply( forward, inverse );
+		XMVECTOR up = XMQuaternionMultiply( rotation, XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ) );
+		up = XMQuaternionMultiply( up, inverse );
 
 		XMStoreFloat4x4( &viewMatrix, XMMatrixTranspose( XMMatrixLookAtLH(
 			position, position + forward, up ) ) );
