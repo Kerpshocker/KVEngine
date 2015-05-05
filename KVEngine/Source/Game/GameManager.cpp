@@ -34,46 +34,7 @@ void GameManager::update( void )
 	m_CurrentFrame->DeltaTime = m_Timer->deltaTime();
 	m_CurrentFrame->StartTime = m_Timer->totalTime();
 
-	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_MOVE_FORWARD ) )
-	{
-		CameraManager::Instance().getActiveCamera()->move( 0.001f );
-	}
-	else if( KVE::Input::IsKeyPressed( KVE::Input::KEY_MOVE_BACKWARD ) )
-	{
-		CameraManager::Instance().getActiveCamera()->move( -0.001f );
-	}
-
-	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_PITCH_POS ) )
-	{
-		CameraManager::Instance().getActiveCamera()->rotatePitch( XMConvertToRadians( 0.01f ) );
-	}
-	else if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_PITCH_NEG ) )
-	{
-		CameraManager::Instance().getActiveCamera()->rotatePitch( XMConvertToRadians( -0.01f ) );
-	}
-
-	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_YAW_POS ) )
-	{
-		CameraManager::Instance().getActiveCamera()->rotateYaw( XMConvertToRadians( 0.01f ) );
-	}
-	else if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_YAW_NEG ) )
-	{
-		CameraManager::Instance().getActiveCamera()->rotateYaw( XMConvertToRadians( -0.01f ) );
-	}
-
-	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_ROLL_POS ) )
-	{
-		CameraManager::Instance().getActiveCamera()->rotateRoll( XMConvertToRadians( 0.01f ) );
-	}
-	else if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_ROLL_NEG ) )
-	{
-		CameraManager::Instance().getActiveCamera()->rotateRoll( XMConvertToRadians( -0.01f ) );
-	}
-
-	if ( KVE::Input::IsViewChanged() )
-	{
-		CameraManager::Instance().getActiveCamera()->setViewMatrix();
-	}
+	m_Player.update( m_CurrentFrame->DeltaTime );
 
 	m_CurrentFrame->ViewMatrix = CameraManager::Instance().getActiveCamera()->getViewMatrix();
 	m_CurrentFrame->ProjMatrix = CameraManager::Instance().getActiveCamera()->getProjMatrix();

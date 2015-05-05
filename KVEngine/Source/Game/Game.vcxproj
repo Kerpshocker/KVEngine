@@ -92,11 +92,13 @@ xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(OutDir)" /y</Command>
     <ClInclude Include="InputManager.h" />
     <ClInclude Include="Main.h" />
     <ClInclude Include="GameManager.h" />
+    <ClInclude Include="Spaceship.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="GameManager.cpp" />
+    <ClCompile Include="Spaceship.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Engine\Engine.vcxproj">

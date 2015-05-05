@@ -5,6 +5,7 @@
 #include "Manager.h"
 #include "DXWindow.h"
 #include <DirectXMath.h>
+#include "Spaceship.h"
 
 class GameTimer;
 
@@ -39,6 +40,8 @@ private:
 
 	MeshInstance*		m_LocalInstances;
 	UINT				m_LocalInstanceCount;
+
+	Spaceship			m_Player;
 };
 
 #endif
