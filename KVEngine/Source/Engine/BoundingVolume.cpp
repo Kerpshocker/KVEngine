@@ -2,12 +2,15 @@
 
 namespace KVE
 {
-    BoundingVolume::BoundingVolume()
-    {
-    }
+	namespace Collisions
+	{
+		BoundingVolume::BoundingVolume()
+		{
+		}
 
 
-    BoundingVolume::~BoundingVolume()
-    {
-    }
+		BoundingVolume::~BoundingVolume()
+		{
+		}
+	}
 }
