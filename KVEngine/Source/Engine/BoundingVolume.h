@@ -23,7 +23,7 @@ namespace KVE
 			GameComponents::Vector* getCollisionCorners( void ){ return collisionCorners; };
 			GameComponents::Vector* getNormals( void ){ return normals; };
 
-			IntersectionValue intersects( BoundingVolume other );
+			virtual IntersectionValue intersects( BoundingVolume other );
 
 		private:
 			GameComponents::Vector* collisionCorners;

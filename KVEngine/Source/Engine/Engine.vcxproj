@@ -90,6 +90,7 @@
     <ClInclude Include="GameTimer.h" />
     <ClInclude Include="Manager.h" />
     <ClInclude Include="MemoryManager.h" />
+    <ClInclude Include="OBB.h" />
     <ClInclude Include="RenderManager.h" />
     <ClInclude Include="Resources.h" />
     <ClInclude Include="Singleton.h" />
@@ -106,6 +107,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="GameTimer.cpp" />
     <ClCompile Include="MemoryManager.cpp" />
+    <ClCompile Include="OBB.cpp" />
     <ClCompile Include="RenderManager.cpp" />
     <ClCompile Include="Resources.cpp" />
     <ClCompile Include="Window.cpp" />

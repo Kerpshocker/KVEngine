@@ -11,16 +11,16 @@ namespace KVE
 	{
 		struct Vector
 		{
-			f32					x;
-			f32					y;
-			f32					z;
+			f32	x;
+			f32	y;
+			f32	z;
 		};
 
 		class GameObject
 		{
 		public:
-			Graphics::Mesh				mesh;
-			Graphics::Material			material;
+			Graphics::Mesh			mesh;
+			Graphics::Material		material;
 
 		public:
 			GameObject( void );

@@ -66,6 +66,9 @@
     <ClInclude Include="BoundingVolume.h">
       <Filter>Collisions</Filter>
     </ClInclude>
+    <ClInclude Include="OBB.h">
+      <Filter>Collisions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="GameTimer.cpp">
@@ -105,6 +108,9 @@
       <Filter>System</Filter>
     </ClCompile>
     <ClCompile Include="BoundingVolume.cpp">
+      <Filter>Collisions</Filter>
+    </ClCompile>
+    <ClCompile Include="OBB.cpp">
       <Filter>Collisions</Filter>
     </ClCompile>
   </ItemGroup>
