@@ -8,7 +8,7 @@
 
 using namespace DirectX;
 
-void GameManager::initialize(const DXWindow* window, const GameTimer* timer)
+void GameManager::initialize( const DXWindow* window, const KVE::System::GameTimer* timer )
 {
 	m_Timer = timer;
 
@@ -62,7 +62,7 @@ void GameManager::createShaders( void )
 		{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 1, 12, D3D11_INPUT_PER_INSTANCE_DATA, 1 }
 	};
 
-	KVE::ShaderProgramDesc spDesc;
+	KVE::Graphics::ShaderProgramDesc spDesc;
 	spDesc.VShaderFile = L"PC_VShader.cso";
 	spDesc.PShaderFile = L"PC_PShader.cso";
 	spDesc.InputDesc = inputDesc;
@@ -73,17 +73,6 @@ void GameManager::createShaders( void )
 
 void GameManager::createGeometry( void )
 {
-	//// Set up the vertices
-	//KVE::Vertex vertices[] =
-	//{
-	//	{ XMFLOAT3( +0.0f, +1.0f, +0.0f ) },
-	//	{ XMFLOAT3( -1.5f, -1.0f, +0.0f ) },
-	//	{ XMFLOAT3( +1.5f, -1.0f, +0.0f ) },
-	//};
-
-	//// Set up the indices
-	//UINT indices[] = { 0, 2, 1 };
-
 	// Set up the instances
 	XMFLOAT4 red = XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f );
 	XMFLOAT4 green = XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f );
@@ -94,18 +83,12 @@ void GameManager::createGeometry( void )
 	m_LocalInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), green };
 	m_LocalInstances[ 2 ] = { XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue };
 
-    KVE::ShaderBuffersDesc sbDesc;
-   /* sbDesc.Vertices = vertices;
-    sbDesc.VertexCount = ARRAYSIZE( vertices );
-    sbDesc.VertexStride = sizeof( KVE::Vertex );
-	sbDesc.VertexOffset = 0;
-    sbDesc.VertexIndices = indices;
-	sbDesc.VertexIndexCount = ARRAYSIZE( indices );*/
-	KVE::createSBDescFromOBJFile( "crate_obj.obj", &sbDesc, sizeof( Vertex ) );
+	KVE::Graphics::ShaderBuffersDesc sbDesc;
+	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &sbDesc, sizeof( Vertex ) );
 	sbDesc.InstanceCount = m_LocalInstanceCount;
 	sbDesc.InstanceStride = sizeof( MeshInstance );
 	sbDesc.InstanceOffset = 0;
     sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-    RenderManager::Instance().createShaderBuffers( sbDesc, 0 );
+	RenderManager::Instance().createShaderBuffers( sbDesc, 0 );
 }

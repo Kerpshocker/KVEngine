@@ -21,7 +21,7 @@ namespace KVE
 			KEY_Z_TRIGGER = 256		//trigger behind right joystick
 		};
 
-		class InputManager : public Manager
+		class InputManager : public KVE::Utilities::Manager
 		{
 			SINGLETON_INSTANCE( InputManager );
 		public:

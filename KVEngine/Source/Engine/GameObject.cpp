@@ -9,7 +9,7 @@ namespace KVE
 
 	}
 
-	GameObject::GameObject( Mesh gMesh, Material gMaterial )
+	GameObject::GameObject( KVE::Graphics::Mesh gMesh, KVE::Graphics::Material gMaterial )
 	{
 		mesh = gMesh;
 		material = gMaterial;
@@ -59,12 +59,12 @@ namespace KVE
 		scale = vScale;
 	}
 
-	void GameObject::saveMesh( Mesh gMesh )
+	void GameObject::saveMesh( KVE::Graphics::Mesh gMesh )
 	{
 		mesh = gMesh;
 	}
 
-	void GameObject::saveMaterial( Material gMaterial )
+	void GameObject::saveMaterial( KVE::Graphics::Material gMaterial )
 	{
 		material = gMaterial;
 	}

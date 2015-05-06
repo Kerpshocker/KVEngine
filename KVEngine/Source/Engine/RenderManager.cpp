@@ -73,7 +73,7 @@ void RenderManager::render( void )
 		0 );
 
 	// set camera constant buffer
-	KVE::CameraBuffer ccBuffer =
+	KVE::Graphics::CameraBuffer ccBuffer =
 	{
 		m_CurrentFrame->ViewMatrix,
 		m_CurrentFrame->ProjMatrix,
@@ -133,11 +133,11 @@ void RenderManager::render( void )
 	HR( m_Window->m_SwapChain->Present( 0, 0 ) );
 }
 
-UINT RenderManager::createShaderLayout( const KVE::ShaderProgramDesc& spDesc )
+UINT RenderManager::createShaderLayout( const KVE::Graphics::ShaderProgramDesc& spDesc )
 {
 	assert( m_Window );
 
-	m_ShaderLayouts = new KVE::ShaderLayout[ 1 ];
+	m_ShaderLayouts = new KVE::Graphics::ShaderLayout[ 1 ];
 
 	m_ShaderLayouts[ 0 ].NumBuffers = 0;
 
@@ -188,11 +188,11 @@ UINT RenderManager::createShaderLayout( const KVE::ShaderProgramDesc& spDesc )
 	}
 }
 
-void RenderManager::createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc, UINT layoutIndex )
+void RenderManager::createShaderBuffers( const KVE::Graphics::ShaderBuffersDesc& sbDesc, UINT layoutIndex )
 {
 	assert( m_Window );
 
-	m_ShaderLayouts[ layoutIndex ].Buffers = new KVE::ShaderBuffers();
+	m_ShaderLayouts[ layoutIndex ].Buffers = new KVE::Graphics::ShaderBuffers();
 	
 	UINT buffNum = m_ShaderLayouts[ layoutIndex ].NumBuffers++;
 

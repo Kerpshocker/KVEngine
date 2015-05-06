@@ -5,11 +5,11 @@
 #include "Window.h"
 #include "RenderManager.h"
 
-class DXWindow : public Window
+class DXWindow : public KVE::System::Window
 {
 	friend class RenderManager;
 public:
-	DXWindow( const WindowParams& params );
+	DXWindow( const KVE::System::WindowParams& params );
 	~DXWindow( void );
 
 	//ID3D11Device*			m_Device; // REMOVE THIS

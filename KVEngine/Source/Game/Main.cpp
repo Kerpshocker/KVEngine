@@ -30,7 +30,7 @@ static WNDPROC MainWndProc = []( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd )
 {
-	WindowParams windowParams;
+	KVE::System::WindowParams windowParams;
 	windowParams.HInstance = appInstance;
 	windowParams.Width = 800;
 	windowParams.Height = 600;
@@ -38,7 +38,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	windowParams.WndProcedure = MainWndProc;
 	window = new DXWindow( windowParams );
 
-	timer = new GameTimer();
+	timer = new KVE::System::GameTimer();
 
 #ifdef MULTI_THREADED
 	running = new std::atomic_bool();
@@ -53,7 +53,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
-	MemoryManager::Instance().initialize();
+	KVE::System::MemoryManager::Instance().initialize();
 	FrameManager::Instance().initialize();
 	KVE::Input::Initialize();
 	RenderManager::Instance().initialize( &viewport, 1 );
@@ -108,7 +108,7 @@ void Release( void )
 #endif
 
 	RenderManager::Instance().release();
-	MemoryManager::Instance().release();
+	KVE::System::MemoryManager::Instance().release();
 	delete window;
 	delete timer;
 }

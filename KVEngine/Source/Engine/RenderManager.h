@@ -36,7 +36,7 @@
 class DXWindow;
 struct FrameParams;
 
-class RenderManager : public Manager
+class RenderManager : public KVE::Utilities::Manager
 {
 	SINGLETON_INSTANCE( RenderManager );
 public:
@@ -44,8 +44,8 @@ public:
 	void release( void );
 	void render( void );
 
-	UINT createShaderLayout( const KVE::ShaderProgramDesc& spDesc );
-	void createShaderBuffers( const KVE::ShaderBuffersDesc& sbDesc, UINT layoutIndex );
+	UINT createShaderLayout( const KVE::Graphics::ShaderProgramDesc& spDesc );
+	void createShaderBuffers( const KVE::Graphics::ShaderBuffersDesc& sbDesc, UINT layoutIndex );
 
 	void setWindow( const DXWindow* const window );
 
@@ -55,7 +55,7 @@ private:
 	D3D11_VIEWPORT* m_Viewports;
 	UINT m_ViewportCount;
 
-	KVE::ShaderLayout* m_ShaderLayouts;
+	KVE::Graphics::ShaderLayout* m_ShaderLayouts;
 	ID3D11Buffer* m_ConstBuffer;
 
 	UINT m_LayoutCount;

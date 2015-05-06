@@ -6,8 +6,7 @@
 #include "DXWindow.h"
 #include <DirectXMath.h>
 #include "Spaceship.h"
-
-class GameTimer;
+#include "GameTimer.h"
 
 struct Vertex
 {
@@ -22,11 +21,11 @@ struct MeshInstance
 
 struct FrameParams;
 
-class GameManager : public Manager
+class GameManager : public KVE::Utilities::Manager
 {
 	SINGLETON_INSTANCE( GameManager );
 public:
-	void initialize( const DXWindow* window, const GameTimer* timer );
+	void initialize( const DXWindow* window, const KVE::System::GameTimer* timer );
 	void release( void ) { }
 	void update( void );
 
@@ -34,14 +33,14 @@ private:
 	void createShaders( void );
 	void createGeometry( void );
 
-	const GameTimer*	m_Timer;
+	const KVE::System::GameTimer*	m_Timer;
 
-	FrameParams*		m_CurrentFrame;
+	FrameParams*					m_CurrentFrame;
 
-	MeshInstance*		m_LocalInstances;
-	UINT				m_LocalInstanceCount;
+	MeshInstance*					m_LocalInstances;
+	UINT							m_LocalInstanceCount;
 
-	Spaceship			m_Player;
+	Spaceship						m_Player;
 };
 
 #endif

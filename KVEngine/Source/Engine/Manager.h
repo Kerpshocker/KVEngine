@@ -3,29 +3,34 @@
 
 #include "Singleton.h"
 
-class Manager
+namespace KVE
 {
-public:
-	Manager( void )
+	namespace Utilities
 	{
-		initialized = false;
+		class Manager
+		{
+		public:
+			Manager( void )
+			{
+				initialized = false;
+			}
+
+			virtual void release( void ) = 0;
+
+			virtual void initialize( void )
+			{
+				initialized = true;
+			}
+
+			bool isInitialized( void ) const
+			{
+				return initialized;
+			}
+
+		protected:
+			bool initialized;
+		};
 	}
-
-	virtual void release( void ) = 0;
-
-	virtual void initialize( void )
-	{
-		initialized = true;
-	}
-
-	bool isInitialized( void ) const
-	{
-		return initialized;
-	}
-
-protected:
-	bool initialized;
-
-};
+}
 
 #endif

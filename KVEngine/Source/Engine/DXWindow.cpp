@@ -4,8 +4,8 @@
 // Convenience macro for releasing a COM object
 #define ReleaseMacro(x) { if(x){ x->Release(); x = 0; } }
 
-DXWindow::DXWindow( const WindowParams& params )
-	: Window( params )
+DXWindow::DXWindow( const KVE::System::WindowParams& params )
+	: KVE::System::Window( params )
 {
 	m_Enable4xMsaa = false;
 	m_Msaa4xQuality = 0;

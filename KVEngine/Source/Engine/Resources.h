@@ -13,122 +13,125 @@
 
 namespace KVE
 {
-	struct CameraBuffer
+	namespace Graphics
 	{
-		DirectX::XMFLOAT4X4			ViewMatrix;
-		DirectX::XMFLOAT4X4			ProjMatrix;
-		DirectX::XMFLOAT4X4			WorldMatrix;
-	};
-
-	struct Mesh
-	{
-		D3D_PRIMITIVE_TOPOLOGY		Topology;
-		UINT						VertexStride;
-		UINT						VertexOffset;
-		UINT						VertexIndexCount;
-		ID3D11Buffer*				VertexBuffer;
-		ID3D11Buffer*				VertexIndexBuffer;
-
-		void Release( void )
+		struct CameraBuffer
 		{
-			ReleaseMacro( VertexBuffer );
-			ReleaseMacro( VertexIndexBuffer );
-		}
-	};
+			DirectX::XMFLOAT4X4			ViewMatrix;
+			DirectX::XMFLOAT4X4			ProjMatrix;
+			DirectX::XMFLOAT4X4			WorldMatrix;
+		};
 
-	struct Material
-	{
-		ID3D11ShaderResourceView*	ShaderResourceView;
-		ID3D11SamplerState*			SamplerState;
-
-		void Release( void )
+		struct Mesh
 		{
-			ReleaseMacro( ShaderResourceView );
-			ReleaseMacro( SamplerState );
-		}
-	};
+			D3D_PRIMITIVE_TOPOLOGY		Topology;
+			UINT						VertexStride;
+			UINT						VertexOffset;
+			UINT						VertexIndexCount;
+			ID3D11Buffer*				VertexBuffer;
+			ID3D11Buffer*				VertexIndexBuffer;
 
-	struct ShaderProgram
-	{
-		ID3D11VertexShader*			VertexShader;
-		ID3D11InputLayout*			InputLayout;
-		ID3D11PixelShader*			PixelShader;
-
-		void Release( void )
-		{
-			ReleaseMacro( VertexShader );
-			ReleaseMacro( InputLayout );
-			ReleaseMacro( PixelShader );
-		}
-	};
-
-	struct ShaderProgramDesc
-	{
-		LPCWSTR						VShaderFile;
-		LPCWSTR						PShaderFile;
-		UINT						NumVertexElements;
-		D3D11_INPUT_ELEMENT_DESC*	InputDesc;
-	};
-
-	struct ShaderBuffers
-	{
-		Mesh						Mesh;
-		Material					Material;
-		// instances
-
-		// SHOULD NOT BE HERE
-		UINT						InstanceCount;
-		UINT						InstanceStride;
-		UINT						InstanceOffset;
-		ID3D11Buffer*				InstanceBuffer;
-
-		void Release( void )
-		{
-			Mesh.Release();
-			Material.Release();
-			ReleaseMacro( InstanceBuffer );
-		}
-	};
-
-	struct ShaderBuffersDesc
-	{
-		D3D_PRIMITIVE_TOPOLOGY		Topology;
-		UINT						VertexCount;
-		UINT						VertexStride;
-		UINT						VertexOffset;
-		UINT						VertexIndexCount;
-		void*						Vertices;
-		void*						VertexIndices;
-
-		// SHOULD NOT BE HERE
-		UINT						InstanceCount;
-		UINT						InstanceStride;
-		UINT						InstanceOffset;
-	};
-
-	struct ShaderLayout
-	{
-		ShaderProgram Program;
-		UINT NumBuffers;
-		ShaderBuffers* Buffers;
-		
-		void Release( void )
-		{
-			Program.Release();
-
-			if ( Buffers != nullptr )
+			void Release( void )
 			{
-				for ( UINT i = 0; i < NumBuffers; i++ )
-					Buffers->Release();
-
-				delete[] Buffers;
-				Buffers = nullptr;
+				ReleaseMacro( VertexBuffer );
+				ReleaseMacro( VertexIndexBuffer );
 			}
-		}
-	};
+		};
 
-	std::string* split( std::string s, char delimiter );
-	bool createSBDescFromOBJFile( std::string objFilePath, KVE::ShaderBuffersDesc* sbDesc, std::size_t vertices );
+		struct Material
+		{
+			ID3D11ShaderResourceView*	ShaderResourceView;
+			ID3D11SamplerState*			SamplerState;
+
+			void Release( void )
+			{
+				ReleaseMacro( ShaderResourceView );
+				ReleaseMacro( SamplerState );
+			}
+		};
+
+		struct ShaderProgram
+		{
+			ID3D11VertexShader*			VertexShader;
+			ID3D11InputLayout*			InputLayout;
+			ID3D11PixelShader*			PixelShader;
+
+			void Release( void )
+			{
+				ReleaseMacro( VertexShader );
+				ReleaseMacro( InputLayout );
+				ReleaseMacro( PixelShader );
+			}
+		};
+
+		struct ShaderProgramDesc
+		{
+			LPCWSTR						VShaderFile;
+			LPCWSTR						PShaderFile;
+			UINT						NumVertexElements;
+			D3D11_INPUT_ELEMENT_DESC*	InputDesc;
+		};
+
+		struct ShaderBuffers
+		{
+			Mesh						Mesh;
+			Material					Material;
+			// instances
+
+			// SHOULD NOT BE HERE
+			UINT						InstanceCount;
+			UINT						InstanceStride;
+			UINT						InstanceOffset;
+			ID3D11Buffer*				InstanceBuffer;
+
+			void Release( void )
+			{
+				Mesh.Release();
+				Material.Release();
+				ReleaseMacro( InstanceBuffer );
+			}
+		};
+
+		struct ShaderBuffersDesc
+		{
+			D3D_PRIMITIVE_TOPOLOGY		Topology;
+			UINT						VertexCount;
+			UINT						VertexStride;
+			UINT						VertexOffset;
+			UINT						VertexIndexCount;
+			void*						Vertices;
+			void*						VertexIndices;
+
+			// SHOULD NOT BE HERE
+			UINT						InstanceCount;
+			UINT						InstanceStride;
+			UINT						InstanceOffset;
+		};
+
+		struct ShaderLayout
+		{
+			ShaderProgram Program;
+			UINT NumBuffers;
+			ShaderBuffers* Buffers;
+
+			void Release( void )
+			{
+				Program.Release();
+
+				if ( Buffers != nullptr )
+				{
+					for ( UINT i = 0; i < NumBuffers; i++ )
+						Buffers->Release();
+
+					delete[] Buffers;
+					Buffers = nullptr;
+				}
+			}
+		};
+
+		std::string* split( std::string s, char delimiter );
+		bool createSBDescFromOBJFile( std::string objFilePath, ShaderBuffersDesc* sbDesc, std::size_t vertices );
+	}
 }
 
 #endif

@@ -6,7 +6,7 @@
 
 #define MAX_CAMERAS 1
 
-class CameraManager : public Manager
+class CameraManager : public KVE::Utilities::Manager
 {
 	SINGLETON_INSTANCE( CameraManager );
 public:

@@ -7,32 +7,37 @@
 
 #include "DataTypes.h"
 
-class GameTimer
+namespace KVE
 {
-public:
-	GameTimer( void );
+	namespace System
+	{
+		class GameTimer
+		{
+		public:
+			GameTimer( void );
 
-	f32 totalTime( void ) const;
-	f32 deltaTime( void ) const;
-	f32 elapsedTime( void ) const;
+			f32 totalTime( void ) const;
+			f32 deltaTime( void ) const;
+			f32 elapsedTime( void ) const;
 
-	void start( void );
-	void stop( void );
-	void tick( void );
-	void reset( void );
+			void start( void );
+			void stop( void );
+			void tick( void );
+			void reset( void );
 
-private:
-	f64 mSecondsPerCount;
-	f64 mDeltaTime;
+		private:
+			f64 mSecondsPerCount;
+			f64 mDeltaTime;
 
-	i64 mBaseTime;
-	i64 mPausedTime;
-	i64 mStopTime;
-	i64 mPrevTime;
-	i64 mCurrTime;
+			i64 mBaseTime;
+			i64 mPausedTime;
+			i64 mStopTime;
+			i64 mPrevTime;
+			i64 mCurrTime;
 
-	bool mStopped;
-
-};
+			bool mStopped;
+		};
+	}
+}
 
 #endif

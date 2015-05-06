@@ -10,7 +10,7 @@
 //#define MULTI_THREADED
 
 static DXWindow* window;
-static GameTimer* timer;
+static KVE::System::GameTimer* timer;
 
 int WINAPI WinMain( HINSTANCE hInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd );
 void Release( void );

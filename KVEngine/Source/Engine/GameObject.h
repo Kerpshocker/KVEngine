@@ -17,12 +17,12 @@ namespace KVE
 	class GameObject
 	{
 	public:
-		Mesh				mesh;
-		Material			material;
+		KVE::Graphics::Mesh				mesh;
+		KVE::Graphics::Material			material;
 
 	public:
 		GameObject( void );
-		GameObject( Mesh mesh, Material material );
+		GameObject( KVE::Graphics::Mesh mesh, KVE::Graphics::Material material );
 		~GameObject();
 
 		void transformWorldMatrix( float deltaTime );
@@ -36,8 +36,8 @@ namespace KVE
 		void setRotation( Vector rotation );
 		void setScale( Vector scale );
 
-		void saveMesh( Mesh mesh );
-		void saveMaterial( Material material );
+		void saveMesh( KVE::Graphics::Mesh mesh );
+		void saveMaterial( KVE::Graphics::Material material );
 
 	private:
 		DirectX::XMFLOAT4X4 world;
