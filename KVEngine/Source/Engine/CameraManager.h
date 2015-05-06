@@ -12,15 +12,15 @@ class CameraManager : public Manager
 public:
 	void release( void ) { }
 
-	int createNewCamera( const KVE::CameraParams& camParams, const bool makeActive = false );
+	int createNewCamera( const KVE::Graphics::CameraParams& camParams, const bool makeActive = false );
 	void changeActiveCamera( const uint32_t index );
 
-	KVE::Camera* const getActiveCamera( void );
+	KVE::Graphics::Camera* const getActiveCamera( void );
 
 private:
 	uint32_t numCameras;
 	int activeIndex;
-	KVE::Camera cameras[ MAX_CAMERAS ];
+	KVE::Graphics::Camera cameras[ MAX_CAMERAS ];
 
 };
 

@@ -11,7 +11,7 @@ public:
 	~Spaceship( void );
 
 	void update( float dt );
-	void mountCamera( KVE::Camera* const camera );
+	void mountCamera( KVE::Graphics::Camera* const camera );
 
 private:
 	DirectX::XMVECTOR m_Position;

@@ -12,7 +12,7 @@ void GameManager::initialize(const DXWindow* window, const GameTimer* timer)
 {
 	m_Timer = timer;
 
-	KVE::CameraParams cParams;
+	KVE::Graphics::CameraParams cParams;
 	cParams.fieldOfView = 45.0f * ( 3.1415f / 180.0f );
 	cParams.nearPlane = .01f;
 	cParams.farPlane = 100.0f;
@@ -34,7 +34,7 @@ void GameManager::update( void )
 	m_CurrentFrame->DeltaTime = m_Timer->deltaTime();
 	m_CurrentFrame->StartTime = m_Timer->totalTime();
 
-	m_Player.update( m_CurrentFrame->DeltaTime );
+	m_Player.update( (float)m_CurrentFrame->DeltaTime );
 
 	m_CurrentFrame->ViewMatrix = CameraManager::Instance().getActiveCamera()->getViewMatrix();
 	m_CurrentFrame->ProjMatrix = CameraManager::Instance().getActiveCamera()->getProjMatrix();

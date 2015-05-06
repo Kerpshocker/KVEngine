@@ -1,6 +1,6 @@
 #include "CameraManager.h"
 
-int CameraManager::createNewCamera( const KVE::CameraParams& camParams, const bool makeActive )
+int CameraManager::createNewCamera( const KVE::Graphics::CameraParams& camParams, const bool makeActive )
 {
 	if ( numCameras >= MAX_CAMERAS )
 	{
@@ -9,7 +9,7 @@ int CameraManager::createNewCamera( const KVE::CameraParams& camParams, const bo
 	}
 
 	//new ( &cameras[ numCameras++ ] ) KVE::Camera( camParams );
-	cameras[ numCameras++ ] = KVE::Camera( camParams );
+	cameras[ numCameras++ ] = KVE::Graphics::Camera( camParams );
 
 	if ( makeActive ) activeIndex = numCameras - 1;
 
@@ -23,7 +23,7 @@ void CameraManager::changeActiveCamera( const uint32_t index )
 	activeIndex = index;
 }
 
-KVE::Camera* const CameraManager::getActiveCamera( void )
+KVE::Graphics::Camera* const CameraManager::getActiveCamera( void )
 {
 	assert( numCameras > 0 );
 

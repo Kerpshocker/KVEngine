@@ -6,51 +6,43 @@
 
 namespace KVE
 {
-	struct Orientation
+	namespace Graphics
 	{
-		DirectX::XMVECTOR forward;
-		DirectX::XMVECTOR up;
-		DirectX::XMVECTOR right;
-	};
+		struct CameraParams
+		{
+			f32					fieldOfView;
+			f32					nearPlane;
+			f32					farPlane;
+			DirectX::XMFLOAT3	initialPos;
+		};
 
-	struct CameraParams
-	{
-		f32					fieldOfView;
-		f32					nearPlane;
-		f32					farPlane;
-		DirectX::XMFLOAT3	initialPos;
-	};
+		class Camera
+		{
+		public:
+			Camera( void );
+			Camera( const CameraParams& params );
 
-	class Camera
-	{
-	public:
-		Camera( void );
-		Camera( const CameraParams& params );
+			const DirectX::XMFLOAT4X4 getProjMatrix( void )const;
+			const DirectX::XMFLOAT4X4 getViewMatrix( void )const;
 
-		const DirectX::XMFLOAT4X4 getProjMatrix( void )const;
-		const DirectX::XMFLOAT4X4 getViewMatrix( void )const;
+			void setProjMatrix( f32 aspectRatio );
+			void setViewMatrix( void );
+			void debugPrint( void );
 
-		void setProjMatrix( f32 aspectRatio );
-		void setViewMatrix( void );
-		void debugPrint( void );
+		protected:
+			DirectX::XMVECTOR position;
+			DirectX::XMVECTOR rotation;
+			DirectX::XMVECTOR scale;
 
-		void move( float amount );
-		void rotatePitch( float radians );
-		void rotateYaw( float radians );
-		void rotateRoll( float radians );
+		private:
+			f32 fieldOfView;
+			f32 nearPlane;
+			f32 farPlane;
 
-	private:
-		f32 fieldOfView;
-		f32 nearPlane;
-		f32 farPlane;
-
-		DirectX::XMVECTOR position;
-		DirectX::XMVECTOR rotation;
-		DirectX::XMVECTOR scale;
-
-		DirectX::XMFLOAT4X4 projMatrix;
-		DirectX::XMFLOAT4X4 viewMatrix;
-	};
+			DirectX::XMFLOAT4X4 projMatrix;
+			DirectX::XMFLOAT4X4 viewMatrix;
+		};
+	}
 }
 
 #endif

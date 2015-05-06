@@ -1,6 +1,7 @@
 #include "Spaceship.h"
 #include "CameraManager.h"
 #include "InputManager.h"
+#include "FirstPersonCamera.h"
 
 #define MAX_ACCEL 3
 #define MAX_YAW_ACCEL 1
@@ -83,10 +84,12 @@ void Spaceship::update( float dt )
 		if ( abs( m_RollAccel ) < 0.000001f ) m_RollAccel = 0.0f;
 	}
 
-	CameraManager::Instance().getActiveCamera()->move( m_Accel * dt );
-	CameraManager::Instance().getActiveCamera()->rotatePitch( m_PitchAccel * dt );
-	CameraManager::Instance().getActiveCamera()->rotateYaw( m_YawAccel * dt );
-	CameraManager::Instance().getActiveCamera()->rotateRoll( m_RollAccel * dt );
+	KVE::GameComponents::FirstPersonCamera* camera = ( KVE::GameComponents::FirstPersonCamera*)CameraManager::Instance().getActiveCamera();
+
+	camera->move( m_Accel * dt );
+	camera->rotatePitch( m_PitchAccel * dt );
+	camera->rotateYaw( m_YawAccel * dt );
+	camera->rotateRoll( m_RollAccel * dt );
 
 	//if ( KVE::Input::IsViewChanged() )
 	//{
@@ -94,7 +97,7 @@ void Spaceship::update( float dt )
 	//}
 }
 
-void Spaceship::mountCamera( KVE::Camera* const camera )
+void Spaceship::mountCamera( KVE::Graphics::Camera* const camera )
 {
 
 }
