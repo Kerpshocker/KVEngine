@@ -7,6 +7,8 @@
 #include "FrameManager.h"
 #include <iostream>
 
+using namespace KVE;
+
 LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	switch ( msg )
@@ -16,11 +18,11 @@ LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		return 0;
 	case WM_KEYDOWN:
 		std::cout << wParam << std::endl;
-		KVE::Input::RegisterKeyPress( wParam );
+		Input::RegisterKeyPress( wParam );
 		return 0;
 	case WM_KEYUP:
 		std::cout << wParam << std::endl;
-		KVE::Input::RegisterKeyRelease( wParam );
+		Input::RegisterKeyRelease( wParam );
 		return 0;
 	default:
 		return DefWindowProc( hwnd, msg, wParam, lParam );
@@ -30,15 +32,15 @@ static WNDPROC MainWndProc = []( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd )
 {
-	KVE::System::WindowParams windowParams;
+	System::WindowParams windowParams;
 	windowParams.HInstance = appInstance;
 	windowParams.Width = 800;
 	windowParams.Height = 600;
 	windowParams.Name = L"ASTEROIDS";
 	windowParams.WndProcedure = MainWndProc;
-	window = new KVE::Graphics::DXWindow( windowParams );
+	window = new Graphics::DXWindow( windowParams );
 
-	timer = new KVE::System::GameTimer();
+	timer = new System::GameTimer();
 
 #ifdef MULTI_THREADED
 	running = new std::atomic_bool();
@@ -53,11 +55,11 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	viewport.MinDepth = 0.0f;
 	viewport.MaxDepth = 1.0f;
 
-	KVE::System::MemoryManager::Instance().initialize();
-	KVE::Graphics::FrameManager::Instance().initialize();
-	KVE::Input::Initialize();
-	KVE::Graphics::RenderManager::Instance().initialize( &viewport, 1 );
-	KVE::Graphics::RenderManager::Instance().setWindow( window );
+	System::MemoryManager::Instance().initialize();
+	Graphics::FrameManager::Instance().initialize();
+	Input::Initialize();
+	Graphics::RenderManager::Instance().initialize( &viewport, 1 );
+	Graphics::RenderManager::Instance().setWindow( window );
 	GameManager::Instance().initialize( window, timer );
 
 	MSG msg = { 0 };
@@ -88,7 +90,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 #ifndef MULTI_THREADED
 				CalculateFrameStats();
 				GameManager::Instance().update();
-				KVE::Graphics::RenderManager::Instance().render();
+				Graphics::RenderManager::Instance().render();
 #endif
 			}
 		}
@@ -107,8 +109,8 @@ void Release( void )
 	tRenderLogic.join();
 #endif
 
-	KVE::Graphics::RenderManager::Instance().release();
-	KVE::System::MemoryManager::Instance().release();
+	Graphics::RenderManager::Instance().release();
+	System::MemoryManager::Instance().release();
 	delete window;
 	delete timer;
 }
@@ -161,7 +163,7 @@ void RunRenderLogicThread( void )
 	{
 		if ( !window->isPaused() )
 		{
-			RenderManager::Instance().render();
+			Graphics::RenderManager::Instance().render();
 			CalculateFrameStats();
 		}
 	}
