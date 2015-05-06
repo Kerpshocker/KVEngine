@@ -36,7 +36,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	windowParams.Height = 600;
 	windowParams.Name = L"ASTEROIDS";
 	windowParams.WndProcedure = MainWndProc;
-	window = new DXWindow( windowParams );
+	window = new KVE::Graphics::DXWindow( windowParams );
 
 	timer = new KVE::System::GameTimer();
 
@@ -54,10 +54,10 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	viewport.MaxDepth = 1.0f;
 
 	KVE::System::MemoryManager::Instance().initialize();
-	FrameManager::Instance().initialize();
+	KVE::Graphics::FrameManager::Instance().initialize();
 	KVE::Input::Initialize();
-	RenderManager::Instance().initialize( &viewport, 1 );
-	RenderManager::Instance().setWindow( window );
+	KVE::Graphics::RenderManager::Instance().initialize( &viewport, 1 );
+	KVE::Graphics::RenderManager::Instance().setWindow( window );
 	GameManager::Instance().initialize( window, timer );
 
 	MSG msg = { 0 };
@@ -88,7 +88,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 #ifndef MULTI_THREADED
 				CalculateFrameStats();
 				GameManager::Instance().update();
-				RenderManager::Instance().render();
+				KVE::Graphics::RenderManager::Instance().render();
 #endif
 			}
 		}
@@ -107,7 +107,7 @@ void Release( void )
 	tRenderLogic.join();
 #endif
 
-	RenderManager::Instance().release();
+	KVE::Graphics::RenderManager::Instance().release();
 	KVE::System::MemoryManager::Instance().release();
 	delete window;
 	delete timer;

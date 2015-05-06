@@ -4,68 +4,71 @@ using namespace DirectX;
 
 namespace KVE
 {
-	GameObject::GameObject( void )
+	namespace GameComponents
 	{
+		GameObject::GameObject( void )
+		{
 
-	}
+		}
 
-	GameObject::GameObject( KVE::Graphics::Mesh gMesh, KVE::Graphics::Material gMaterial )
-	{
-		mesh = gMesh;
-		material = gMaterial;
-	}
+		GameObject::GameObject( Graphics::Mesh gMesh, Graphics::Material gMaterial )
+		{
+			mesh = gMesh;
+			material = gMaterial;
+		}
 
-	GameObject::~GameObject()
-	{
-	}
+		GameObject::~GameObject()
+		{
+		}
 
-	void GameObject::transformWorldMatrix( float dt )
-	{
-		//do some calculations on whichever pos vector based on dt
-	}
+		void GameObject::transformWorldMatrix( float dt )
+		{
+			//do some calculations on whichever pos vector based on dt
+		}
 
-	XMFLOAT4X4 GameObject::getWorldMatrix( void )
-	{
-		return world;
-	}
+		XMFLOAT4X4 GameObject::getWorldMatrix( void )
+		{
+			return world;
+		}
 
-	Vector GameObject::getPosition( void )
-	{
-		return position;
-	}
+		Vector GameObject::getPosition( void )
+		{
+			return position;
+		}
 
-	Vector GameObject::getRotation( void )
-	{
-		return rotation;
-	}
+		Vector GameObject::getRotation( void )
+		{
+			return rotation;
+		}
 
-	Vector GameObject::getScale( void )
-	{
-		return scale;
-	}
+		Vector GameObject::getScale( void )
+		{
+			return scale;
+		}
 
-	void GameObject::setPostion( Vector vPosition )
-	{
-		position = vPosition;
-	}
+		void GameObject::setPostion( Vector vPosition )
+		{
+			position = vPosition;
+		}
 
-	void GameObject::setRotation( Vector vRotation )
-	{
-		rotation = vRotation;
-	}
+		void GameObject::setRotation( Vector vRotation )
+		{
+			rotation = vRotation;
+		}
 
-	void GameObject::setScale( Vector vScale )
-	{
-		scale = vScale;
-	}
+		void GameObject::setScale( Vector vScale )
+		{
+			scale = vScale;
+		}
 
-	void GameObject::saveMesh( KVE::Graphics::Mesh gMesh )
-	{
-		mesh = gMesh;
-	}
+		void GameObject::saveMesh( Graphics::Mesh gMesh )
+		{
+			mesh = gMesh;
+		}
 
-	void GameObject::saveMaterial( KVE::Graphics::Material gMaterial )
-	{
-		material = gMaterial;
+		void GameObject::saveMaterial( Graphics::Material gMaterial )
+		{
+			material = gMaterial;
+		}
 	}
 }

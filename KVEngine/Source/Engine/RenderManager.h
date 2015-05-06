@@ -33,38 +33,44 @@
 
 #define MAX_LAYOUTS 2
 
-class DXWindow;
-struct FrameParams;
-
-class RenderManager : public KVE::Utilities::Manager
+namespace KVE
 {
-	SINGLETON_INSTANCE( RenderManager );
-public:
-	void initialize( const D3D11_VIEWPORT* viewports, const UINT numViewports );
-	void release( void );
-	void render( void );
+	namespace Graphics
+	{
+		class DXWindow;
+		struct FrameParams;
 
-	UINT createShaderLayout( const KVE::Graphics::ShaderProgramDesc& spDesc );
-	void createShaderBuffers( const KVE::Graphics::ShaderBuffersDesc& sbDesc, UINT layoutIndex );
+		class RenderManager : public Utilities::Manager
+		{
+			SINGLETON_INSTANCE( RenderManager );
+		public:
+			void initialize( const D3D11_VIEWPORT* viewports, const UINT numViewports );
+			void release( void );
+			void render( void );
 
-	void setWindow( const DXWindow* const window );
+			UINT createShaderLayout( const ShaderProgramDesc& spDesc );
+			void createShaderBuffers( const ShaderBuffersDesc& sbDesc, UINT layoutIndex );
 
-private:
-	const DXWindow* m_Window;
+			void setWindow( const DXWindow* const window );
 
-	D3D11_VIEWPORT* m_Viewports;
-	UINT m_ViewportCount;
+		private:
+			const DXWindow* m_Window;
 
-	KVE::Graphics::ShaderLayout* m_ShaderLayouts;
-	ID3D11Buffer* m_ConstBuffer;
+			D3D11_VIEWPORT* m_Viewports;
+			UINT m_ViewportCount;
 
-	UINT m_LayoutCount;
+			ShaderLayout* m_ShaderLayouts;
+			ID3D11Buffer* m_ConstBuffer;
 
-	const FrameParams* m_CurrentFrame;
+			UINT m_LayoutCount;
 
-	void createConstBuffer( const UINT stride );
-	void setConstBuffer( void* data );
-	void setInstanceBuffer( const FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
-};
+			const FrameParams* m_CurrentFrame;
+
+			void createConstBuffer( const UINT stride );
+			void setConstBuffer( void* data );
+			void setInstanceBuffer( const FrameParams* frame, ID3D11Buffer* iBuffer, const UINT byteSize, const UINT layoutIndex, const UINT bufferIndex );
+		};
+	}
+}
 
 #endif

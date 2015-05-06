@@ -5,29 +5,31 @@
 
 namespace KVE
 {
-    enum IntersectionValue
-    {
-        CONTAINS,
-        INTERSECTS,
-        NONE
-    };
+	namespace Collisions
+	{
+		enum IntersectionValue
+		{
+			CONTAINS,
+			INTERSECTS,
+			NONE
+		};
 
-    class BoundingVolume : GameObject
-    {
-    public:
-        BoundingVolume();
-        ~BoundingVolume();
+		class BoundingVolume : GameComponents::GameObject
+		{
+		public:
+			BoundingVolume();
+			~BoundingVolume();
 
-        Vector* getCollisionCorners( void ){ return collisionCorners; };
-        Vector* getNormals( void ){ return normals; };
+			GameComponents::Vector* getCollisionCorners( void ){ return collisionCorners; };
+			GameComponents::Vector* getNormals( void ){ return normals; };
 
-        IntersectionValue intersects( BoundingVolume other );
+			IntersectionValue intersects( BoundingVolume other );
 
-    private:
-        Vector* collisionCorners;
-        Vector* normals;
-    };
-
+		private:
+			GameComponents::Vector* collisionCorners;
+			GameComponents::Vector* normals;
+		};
+	}
 }
 
 #endif

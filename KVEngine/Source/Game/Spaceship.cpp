@@ -84,7 +84,7 @@ void Spaceship::update( float dt )
 		if ( abs( m_RollAccel ) < 0.000001f ) m_RollAccel = 0.0f;
 	}
 
-	KVE::GameComponents::FirstPersonCamera* camera = ( KVE::GameComponents::FirstPersonCamera*)CameraManager::Instance().getActiveCamera();
+	KVE::GameComponents::FirstPersonCamera* camera = ( KVE::GameComponents::FirstPersonCamera* )KVE::Graphics::CameraManager::Instance().getActiveCamera();
 
 	camera->move( m_Accel * dt );
 	camera->rotatePitch( m_PitchAccel * dt );
@@ -93,7 +93,7 @@ void Spaceship::update( float dt )
 
 	//if ( KVE::Input::IsViewChanged() )
 	//{
-		CameraManager::Instance().getActiveCamera()->setViewMatrix();
+		KVE::Graphics::CameraManager::Instance().getActiveCamera()->setViewMatrix();
 	//}
 }
 

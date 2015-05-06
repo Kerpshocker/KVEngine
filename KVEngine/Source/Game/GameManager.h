@@ -25,7 +25,7 @@ class GameManager : public KVE::Utilities::Manager
 {
 	SINGLETON_INSTANCE( GameManager );
 public:
-	void initialize( const DXWindow* window, const KVE::System::GameTimer* timer );
+	void initialize( const KVE::Graphics::DXWindow* window, const KVE::System::GameTimer* timer );
 	void release( void ) { }
 	void update( void );
 
@@ -35,7 +35,7 @@ private:
 
 	const KVE::System::GameTimer*	m_Timer;
 
-	FrameParams*					m_CurrentFrame;
+	KVE::Graphics::FrameParams*		m_CurrentFrame;
 
 	MeshInstance*					m_LocalInstances;
 	UINT							m_LocalInstanceCount;

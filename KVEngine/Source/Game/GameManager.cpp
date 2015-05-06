@@ -8,7 +8,7 @@
 
 using namespace DirectX;
 
-void GameManager::initialize( const DXWindow* window, const KVE::System::GameTimer* timer )
+void GameManager::initialize( const KVE::Graphics::DXWindow* window, const KVE::System::GameTimer* timer )
 {
 	m_Timer = timer;
 
@@ -17,9 +17,9 @@ void GameManager::initialize( const DXWindow* window, const KVE::System::GameTim
 	cParams.nearPlane = .01f;
 	cParams.farPlane = 100.0f;
 	cParams.initialPos = XMFLOAT3( 0.0f, 0.0f, -5.0f );
-	CameraManager::Instance().createNewCamera( cParams, true );
-	CameraManager::Instance().getActiveCamera()->setProjMatrix( window->aspectRatio() );
-	CameraManager::Instance().getActiveCamera()->setViewMatrix();
+	KVE::Graphics::CameraManager::Instance().createNewCamera( cParams, true );
+	KVE::Graphics::CameraManager::Instance().getActiveCamera()->setProjMatrix( window->aspectRatio() );
+	KVE::Graphics::CameraManager::Instance().getActiveCamera()->setViewMatrix();
 
 	createShaders();
 	createGeometry();
@@ -29,15 +29,15 @@ void GameManager::initialize( const DXWindow* window, const KVE::System::GameTim
 
 void GameManager::update( void )
 {
-	if ( !FrameManager::Instance().openFrame( &m_CurrentFrame ) ) return;
+	if ( !KVE::Graphics::FrameManager::Instance().openFrame( &m_CurrentFrame ) ) return;
 
 	m_CurrentFrame->DeltaTime = m_Timer->deltaTime();
 	m_CurrentFrame->StartTime = m_Timer->totalTime();
 
 	m_Player.update( (float)m_CurrentFrame->DeltaTime );
 
-	m_CurrentFrame->ViewMatrix = CameraManager::Instance().getActiveCamera()->getViewMatrix();
-	m_CurrentFrame->ProjMatrix = CameraManager::Instance().getActiveCamera()->getProjMatrix();
+	m_CurrentFrame->ViewMatrix = KVE::Graphics::CameraManager::Instance().getActiveCamera()->getViewMatrix();
+	m_CurrentFrame->ProjMatrix = KVE::Graphics::CameraManager::Instance().getActiveCamera()->getProjMatrix();
 	XMStoreFloat4x4( &m_CurrentFrame->WorldMatrix, XMMatrixIdentity() );
 
 	m_LocalInstances[ 0 ].Position.x += 0.0001f;
@@ -47,7 +47,7 @@ void GameManager::update( void )
 
 	m_CurrentFrame->EndTime = m_Timer->totalTime();
 
-	FrameManager::Instance().closeFrame( &m_CurrentFrame );
+	KVE::Graphics::FrameManager::Instance().closeFrame( &m_CurrentFrame );
 }
 
 void GameManager::createShaders( void )
@@ -68,7 +68,7 @@ void GameManager::createShaders( void )
 	spDesc.InputDesc = inputDesc;
 	spDesc.NumVertexElements = ARRAYSIZE( inputDesc );
 
-	RenderManager::Instance().createShaderLayout( spDesc );
+	KVE::Graphics::RenderManager::Instance().createShaderLayout( spDesc );
 }
 
 void GameManager::createGeometry( void )
@@ -90,5 +90,5 @@ void GameManager::createGeometry( void )
 	sbDesc.InstanceOffset = 0;
     sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
-	RenderManager::Instance().createShaderBuffers( sbDesc, 0 );
+	KVE::Graphics::RenderManager::Instance().createShaderBuffers( sbDesc, 0 );
 }

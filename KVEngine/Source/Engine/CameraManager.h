@@ -6,22 +6,27 @@
 
 #define MAX_CAMERAS 1
 
-class CameraManager : public KVE::Utilities::Manager
+namespace KVE
 {
-	SINGLETON_INSTANCE( CameraManager );
-public:
-	void release( void ) { }
+	namespace Graphics
+	{
+		class CameraManager : public Utilities::Manager
+		{
+			SINGLETON_INSTANCE( CameraManager );
+		public:
+			void release( void ) { }
 
-	int createNewCamera( const KVE::Graphics::CameraParams& camParams, const bool makeActive = false );
-	void changeActiveCamera( const uint32_t index );
+			int createNewCamera( const CameraParams& camParams, const bool makeActive = false );
+			void changeActiveCamera( const uint32_t index );
 
-	KVE::Graphics::Camera* const getActiveCamera( void );
+			KVE::Graphics::Camera* const getActiveCamera( void );
 
-private:
-	uint32_t numCameras;
-	int activeIndex;
-	KVE::Graphics::Camera cameras[ MAX_CAMERAS ];
-
-};
+		private:
+			uint32_t numCameras;
+			int activeIndex;
+			Camera cameras[ MAX_CAMERAS ];
+		};
+	}
+}
 
 #endif
