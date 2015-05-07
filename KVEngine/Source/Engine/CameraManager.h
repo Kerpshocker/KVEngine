@@ -24,7 +24,7 @@ namespace KVE
 		private:
 			uint32_t numCameras;
 			int activeIndex;
-			Camera cameras[ MAX_CAMERAS ];
+			Camera* cameras[ MAX_CAMERAS ];
 		};
 	}
 }

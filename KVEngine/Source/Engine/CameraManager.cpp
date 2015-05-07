@@ -13,7 +13,7 @@ namespace KVE
 			}
 
 			//new ( &cameras[ numCameras++ ] ) KVE::Camera( camParams );
-			cameras[ numCameras++ ] = Camera( camParams );
+			cameras[ numCameras++ ] = new Camera( camParams );
 
 			if ( makeActive ) activeIndex = numCameras - 1;
 
@@ -31,7 +31,7 @@ namespace KVE
 		{
 			assert( numCameras > 0 );
 
-			return &cameras[ activeIndex ];
+			return cameras[ activeIndex ];
 		}
 	}
 }

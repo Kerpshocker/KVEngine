@@ -16,9 +16,9 @@ namespace KVE
 			nearPlane = params.nearPlane;
 			farPlane = params.farPlane;
 
-			position = XMLoadFloat3( &params.initialPos );
-			rotation = XMQuaternionIdentity();
-			scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 1.0f );
+			*m_Position = XMLoadFloat3( &params.initialPos );
+			*m_Rotation = DirectX::XMQuaternionIdentity();
+			*m_Scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 1.0f );
 
 			projMatrix = DirectX::XMFLOAT4X4();
 			viewMatrix = DirectX::XMFLOAT4X4();
@@ -49,15 +49,15 @@ namespace KVE
 
 		void Camera::setViewMatrix( void )
 		{
-			XMVECTOR inverse = XMQuaternionInverse( rotation );
+			XMVECTOR inverse = XMQuaternionInverse( *m_Rotation );
 
-			XMVECTOR forward = XMQuaternionMultiply( rotation, XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
+			XMVECTOR forward = XMQuaternionMultiply( *m_Rotation, XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
 			forward = XMQuaternionMultiply( forward, inverse );
-			XMVECTOR up = XMQuaternionMultiply( rotation, XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ) );
+			XMVECTOR up = XMQuaternionMultiply( *m_Rotation, XMVectorSet( 0.0f, 1.0f, 0.0f, 0.0f ) );
 			up = XMQuaternionMultiply( up, inverse );
 
 			XMStoreFloat4x4( &viewMatrix, XMMatrixTranspose( XMMatrixLookAtLH(
-				position, position + forward, up ) ) );
+				*m_Position, *m_Position + forward, up ) ) );
 		}
 	}
 }

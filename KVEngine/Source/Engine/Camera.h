@@ -3,6 +3,7 @@
 
 #include <DirectXMath.h>
 #include "DataTypes.h"
+#include "GameObject.h"
 
 namespace KVE
 {
@@ -16,7 +17,7 @@ namespace KVE
 			DirectX::XMFLOAT3	initialPos;
 		};
 
-		class Camera
+		class Camera : public GameComponents::GameObject
 		{
 		public:
 			Camera( void );
@@ -28,11 +29,6 @@ namespace KVE
 			void setProjMatrix( f32 aspectRatio );
 			void setViewMatrix( void );
 			void debugPrint( void );
-
-		protected:
-			DirectX::XMVECTOR position;
-			DirectX::XMVECTOR rotation;
-			DirectX::XMVECTOR scale;
 
 		private:
 			f32 fieldOfView;

@@ -21,10 +21,10 @@ namespace KVE
 			DirectX::XMVECTOR* const getScale( void ) const;
 
 		protected:
-			const bool					m_Mounted;
-			DirectX::XMVECTOR* const	m_Position;
-			DirectX::XMVECTOR* const	m_Rotation;
-			DirectX::XMVECTOR* const	m_Scale;
+			bool				m_Mounted;
+			DirectX::XMVECTOR*	m_Position;
+			DirectX::XMVECTOR*	m_Rotation;
+			DirectX::XMVECTOR*	m_Scale;
 		};
 	}
 }

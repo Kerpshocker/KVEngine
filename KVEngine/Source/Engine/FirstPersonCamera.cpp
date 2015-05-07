@@ -11,27 +11,27 @@ namespace KVE
 
 		void FirstPersonCamera::move( float amount )
 		{
-			XMVECTOR forward = XMQuaternionMultiply( rotation, XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
-			forward = XMQuaternionMultiply( forward, XMQuaternionInverse( rotation ) );
-			position += forward * amount;
+			XMVECTOR forward = XMQuaternionMultiply( *m_Rotation, XMVectorSet( 0.0f, 0.0f, 1.0f, 0.0f ) );
+			forward = XMQuaternionMultiply( forward, XMQuaternionInverse( *m_Rotation ) );
+			*m_Position += forward * amount;
 		}
 
 		void FirstPersonCamera::rotatePitch( float radians )
 		{
-			rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( -radians, 0.0f, 0.0f ) );
-			rotation = XMQuaternionNormalize( rotation );
+			*m_Rotation = XMQuaternionMultiply( *m_Rotation, XMQuaternionRotationRollPitchYaw( -radians, 0.0f, 0.0f ) );
+			*m_Rotation = XMQuaternionNormalize( *m_Rotation );
 		}
 
 		void FirstPersonCamera::rotateYaw( float radians )
 		{
-			rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, -radians, 0.0f ) );
-			rotation = XMQuaternionNormalize( rotation );
+			*m_Rotation = XMQuaternionMultiply( *m_Rotation, XMQuaternionRotationRollPitchYaw( 0.0f, -radians, 0.0f ) );
+			*m_Rotation = XMQuaternionNormalize( *m_Rotation );
 		}
 
 		void FirstPersonCamera::rotateRoll( float radians )
 		{
-			rotation = XMQuaternionMultiply( rotation, XMQuaternionRotationRollPitchYaw( 0.0f, 0.0f, radians ) );
-			rotation = XMQuaternionNormalize( rotation );
+			*m_Rotation = XMQuaternionMultiply( *m_Rotation, XMQuaternionRotationRollPitchYaw( 0.0f, 0.0f, radians ) );
+			*m_Rotation = XMQuaternionNormalize( *m_Rotation );
 		}
 	}
 }
