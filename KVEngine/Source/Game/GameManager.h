@@ -34,8 +34,8 @@ private:
 	void createGeometry( void );
 
 	const KVE::System::GameTimer*	m_Timer;
-
 	KVE::Graphics::FrameParams*		m_CurrentFrame;
+	double							m_LastFrameEndTime;
 
 	MeshInstance*					m_LocalInstances;
 	UINT							m_LocalInstanceCount;

@@ -31,8 +31,8 @@ void GameManager::update( void )
 {
 	if ( !KVE::Graphics::FrameManager::Instance().openFrame( &m_CurrentFrame ) ) return;
 
-	m_CurrentFrame->DeltaTime = m_Timer->deltaTime();
 	m_CurrentFrame->StartTime = m_Timer->totalTime();
+	m_CurrentFrame->DeltaTime = m_CurrentFrame->StartTime - m_LastFrameEndTime;
 
 	m_Player.update( (float)m_CurrentFrame->DeltaTime );
 
@@ -45,7 +45,7 @@ void GameManager::update( void )
 	m_CurrentFrame->InstanceStride = sizeof( MeshInstance );
 	m_CurrentFrame->InstanceCount = m_LocalInstanceCount;
 
-	m_CurrentFrame->EndTime = m_Timer->totalTime();
+	m_LastFrameEndTime = m_CurrentFrame->EndTime = m_Timer->totalTime();
 
 	KVE::Graphics::FrameManager::Instance().closeFrame( &m_CurrentFrame );
 }

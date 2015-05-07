@@ -3,8 +3,9 @@
 
 #include <DirectXMath.h>
 #include "Camera.h"
+#include "GameObject.h"
 
-class Spaceship
+class Spaceship : public KVE::GameComponents::GameObject
 {
 public:
 	Spaceship( void );
@@ -14,8 +15,6 @@ public:
 	void mountCamera( KVE::Graphics::Camera* const camera );
 
 private:
-	DirectX::XMVECTOR m_Position;
-	DirectX::XMVECTOR m_Rotation;
 
 	float m_Accel;
 	float m_YawAccel;
