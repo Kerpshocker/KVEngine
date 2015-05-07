@@ -20,14 +20,14 @@ namespace KVE
 			BoundingVolume();
 			~BoundingVolume();
 
-			GameComponents::Vector* getCollisionCorners( void ){ return collisionCorners; };
-			GameComponents::Vector* getNormals( void ){ return normals; };
+			DirectX::XMFLOAT3* getCollisionCorners( void ){ return collisionCorners; };
+			DirectX::XMFLOAT3* getNormals( void ){ return normals; };
 
 			virtual IntersectionValue intersects( BoundingVolume other );
 
 		private:
-			GameComponents::Vector* collisionCorners;
-			GameComponents::Vector* normals;
+			DirectX::XMFLOAT3* collisionCorners;
+			DirectX::XMFLOAT3* normals;
 		};
 	}
 }

@@ -9,13 +9,6 @@ namespace KVE
 {
 	namespace GameComponents
 	{
-		struct Vector
-		{
-			f32	x;
-			f32	y;
-			f32	z;
-		};
-
 		class GameObject
 		{
 		public:
@@ -30,22 +23,22 @@ namespace KVE
 			void transformWorldMatrix( float deltaTime );
 
 			DirectX::XMFLOAT4X4 getWorldMatrix( void );
-			Vector getPosition( void );
-			Vector getRotation( void );
-			Vector getScale( void );
+			DirectX::XMFLOAT3	getPosition( void );
+			DirectX::XMFLOAT3	getRotation( void );
+			DirectX::XMFLOAT3	getScale( void );
 
-			void setPostion( Vector position );
-			void setRotation( Vector rotation );
-			void setScale( Vector scale );
+			void setPostion( DirectX::XMFLOAT3 position );
+			void setRotation( DirectX::XMFLOAT3 rotation );
+			void setScale( DirectX::XMFLOAT3 scale );
 
 			void saveMesh( Graphics::Mesh mesh );
 			void saveMaterial( Graphics::Material material );
 
 		private:
 			DirectX::XMFLOAT4X4 world;
-			Vector				position;
-			Vector				rotation;
-			Vector				scale;
+			DirectX::XMFLOAT3	position;
+			DirectX::XMFLOAT3	rotation;
+			DirectX::XMFLOAT3	scale;
 		};
 	}
 }

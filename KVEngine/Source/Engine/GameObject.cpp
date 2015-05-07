@@ -31,32 +31,32 @@ namespace KVE
 			return world;
 		}
 
-		Vector GameObject::getPosition( void )
+		DirectX::XMFLOAT3 GameObject::getPosition( void )
 		{
 			return position;
 		}
 
-		Vector GameObject::getRotation( void )
+		DirectX::XMFLOAT3 GameObject::getRotation( void )
 		{
 			return rotation;
 		}
 
-		Vector GameObject::getScale( void )
+		DirectX::XMFLOAT3 GameObject::getScale( void )
 		{
 			return scale;
 		}
 
-		void GameObject::setPostion( Vector vPosition )
+		void GameObject::setPostion( DirectX::XMFLOAT3 vPosition )
 		{
 			position = vPosition;
 		}
 
-		void GameObject::setRotation( Vector vRotation )
+		void GameObject::setRotation( DirectX::XMFLOAT3 vRotation )
 		{
 			rotation = vRotation;
 		}
 
-		void GameObject::setScale( Vector vScale )
+		void GameObject::setScale( DirectX::XMFLOAT3 vScale )
 		{
 			scale = vScale;
 		}
