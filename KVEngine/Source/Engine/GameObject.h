@@ -12,33 +12,19 @@ namespace KVE
 		class GameObject
 		{
 		public:
-			Graphics::Mesh			mesh;
-			Graphics::Material		material;
-
-		public:
 			GameObject( void );
-			GameObject( Graphics::Mesh mesh, Graphics::Material material );
+			GameObject( GameObject* const mount );
 			~GameObject();
 
-			void transformWorldMatrix( float deltaTime );
-
-			DirectX::XMFLOAT4X4 getWorldMatrix( void );
-			DirectX::XMFLOAT3	getPosition( void );
-			DirectX::XMFLOAT3	getRotation( void );
-			DirectX::XMFLOAT3	getScale( void );
-
-			void setPostion( DirectX::XMFLOAT3 position );
-			void setRotation( DirectX::XMFLOAT3 rotation );
-			void setScale( DirectX::XMFLOAT3 scale );
-
-			void saveMesh( Graphics::Mesh mesh );
-			void saveMaterial( Graphics::Material material );
+			DirectX::XMVECTOR* const getPosition( void ) const;
+			DirectX::XMVECTOR* const getRotation( void ) const;
+			DirectX::XMVECTOR* const getScale( void ) const;
 
 		protected:
-			DirectX::XMFLOAT4X4 world;
-			DirectX::XMFLOAT3	position;
-			DirectX::XMFLOAT3	rotation;
-			DirectX::XMFLOAT3	scale;
+			const bool					m_Mounted;
+			DirectX::XMVECTOR* const	m_Position;
+			DirectX::XMVECTOR* const	m_Rotation;
+			DirectX::XMVECTOR* const	m_Scale;
 		};
 	}
 }

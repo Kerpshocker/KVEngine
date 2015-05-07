@@ -7,68 +7,41 @@ namespace KVE
 	namespace GameComponents
 	{
 		GameObject::GameObject( void )
+			: m_Position( new XMVECTOR() ), m_Rotation( new XMVECTOR() ),
+			m_Scale( new XMVECTOR() ), m_Mounted( false )
 		{
-
+			
 		}
 
-		GameObject::GameObject( Graphics::Mesh gMesh, Graphics::Material gMaterial )
+		GameObject::GameObject( GameObject* const mount )
+			: m_Position( mount->m_Position ), m_Rotation( mount->m_Rotation ),
+			m_Scale( mount->m_Scale ), m_Mounted( true )
 		{
-			mesh = gMesh;
-			material = gMaterial;
+			
 		}
 
 		GameObject::~GameObject()
 		{
+			if ( m_Mounted ) return;
+			
+			if ( m_Position != nullptr ) delete m_Position;
+			if ( m_Rotation != nullptr ) delete m_Rotation;
+			if ( m_Scale != nullptr ) delete m_Scale;
 		}
 
-		void GameObject::transformWorldMatrix( float dt )
+		XMVECTOR* const GameObject::getPosition( void ) const
 		{
-			//do some calculations on whichever pos vector based on dt
+			return m_Position;
 		}
 
-		XMFLOAT4X4 GameObject::getWorldMatrix( void )
+		XMVECTOR* const GameObject::getRotation( void ) const
 		{
-			return world;
+			return m_Rotation;
 		}
 
-		DirectX::XMFLOAT3 GameObject::getPosition( void )
+		XMVECTOR* const GameObject::getScale( void ) const
 		{
-			return position;
-		}
-
-		DirectX::XMFLOAT3 GameObject::getRotation( void )
-		{
-			return rotation;
-		}
-
-		DirectX::XMFLOAT3 GameObject::getScale( void )
-		{
-			return scale;
-		}
-
-		void GameObject::setPostion( DirectX::XMFLOAT3 vPosition )
-		{
-			position = vPosition;
-		}
-
-		void GameObject::setRotation( DirectX::XMFLOAT3 vRotation )
-		{
-			rotation = vRotation;
-		}
-
-		void GameObject::setScale( DirectX::XMFLOAT3 vScale )
-		{
-			scale = vScale;
-		}
-
-		void GameObject::saveMesh( Graphics::Mesh gMesh )
-		{
-			mesh = gMesh;
-		}
-
-		void GameObject::saveMaterial( Graphics::Material gMaterial )
-		{
-			material = gMaterial;
+			return m_Scale;
 		}
 	}
 }
