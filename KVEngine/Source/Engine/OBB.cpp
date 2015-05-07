@@ -1,60 +1,58 @@
 #include "OBB.h"
 
-#include <math.h>
-
 using namespace DirectX;
 
 namespace KVE
 {
 	namespace Collisions
 	{
-		OBB::OBB( )
+		OBB::OBB()
 		{
 		}
 
-		OBB::OBB( XMFLOAT3 vPosition, XMFLOAT3 vFrontTopRight, XMFLOAT3 vBackBottomLeft )
+		OBB::OBB( XMVECTOR* vPosition, XMVECTOR vFrontTopRight, XMVECTOR vBackBottomLeft )
 		{
-			position = vPosition;
-			corners.frontTopRight = vFrontTopRight;
-			corners.frontTopLeft = XMFLOAT3{ corners.backBottomLeft.x, corners.frontTopRight.y, corners.frontTopRight.z };
-			corners.frontBottomRight = XMFLOAT3{ corners.frontTopRight.x, corners.backBottomLeft.y, corners.frontTopRight.z };
-			corners.frontBottomLeft = XMFLOAT3{ corners.backBottomLeft.x, corners.backBottomLeft.y, corners.frontTopRight.z };
+			m_Position = vPosition;
+			m_Corners.frontTopRight = vFrontTopRight;
+			m_Corners.frontTopLeft = XMVectorSet( XMVectorGetIntX( m_Corners.backBottomLeft ), XMVectorGetIntY( m_Corners.frontTopRight ), XMVectorGetIntZ( m_Corners.frontTopRight ), 0.0f );
+			m_Corners.frontBottomRight = XMVectorSet( XMVectorGetIntX( m_Corners.frontTopRight ), XMVectorGetIntY( m_Corners.backBottomLeft ), XMVectorGetIntZ( m_Corners.frontTopRight ), 0.0f );
+			m_Corners.frontBottomLeft = XMVectorSet( XMVectorGetIntX( m_Corners.backBottomLeft ), XMVectorGetIntY( m_Corners.backBottomLeft ), XMVectorGetIntZ( m_Corners.frontTopRight ), 0.0f );
 
-			corners.backTopRight = XMFLOAT3{ corners.frontTopRight.x, corners.frontTopRight.y, corners.backBottomLeft.z };
-			corners.backTopLeft = XMFLOAT3{ corners.backBottomLeft.x, corners.frontTopRight.y, corners.backBottomLeft.z };
-			corners.backBottomRight = XMFLOAT3{ corners.frontTopRight.x, corners.backBottomLeft.y, corners.backBottomLeft.z };
-			corners.backBottomLeft = vBackBottomLeft;
+			m_Corners.backTopRight = XMVectorSet( XMVectorGetIntX( m_Corners.frontTopRight ), XMVectorGetIntY( m_Corners.frontTopRight ), XMVectorGetIntZ( m_Corners.backBottomLeft ), 0.0f );
+			m_Corners.backTopLeft = XMVectorSet( XMVectorGetIntX( m_Corners.backBottomLeft ), XMVectorGetIntY( m_Corners.frontTopRight ), XMVectorGetIntZ( m_Corners.backBottomLeft ), 0.0f );
+			m_Corners.backBottomRight = XMVectorSet( XMVectorGetIntX( m_Corners.frontTopRight ), XMVectorGetIntY( m_Corners.backBottomLeft ), XMVectorGetIntZ( m_Corners.backBottomLeft ), 0.0f );
+			m_Corners.backBottomLeft = vBackBottomLeft;
 
-			scale = XMFLOAT3{ 1.0f, 1.0f, 1.0f };
-			rotation = XMFLOAT3{ 0.0f, 0.0f, 0.0f };
+			m_Scale = &XMVectorSet( 1.0f, 1.0f, 1.0f, 0.0f );
+			m_Rotation = &XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
 
-			width = abs( corners.frontTopRight.x - corners.backBottomLeft.x );
-			height = abs( corners.frontTopRight.y - corners.backBottomLeft.y );
-			depth = abs( corners.frontTopRight.z - corners.backBottomLeft.z );
+			m_Width = XMVectorGetIntX( m_Corners.frontTopRight ) - XMVectorGetIntX( m_Corners.backBottomLeft );
+			m_Height = XMVectorGetIntY( m_Corners.frontTopRight ) - XMVectorGetIntY( m_Corners.backBottomLeft );
+			m_Depth = XMVectorGetIntZ( m_Corners.frontTopRight ) - XMVectorGetIntZ( m_Corners.backBottomLeft );
 
-			UpdateCollisionPoints( );
+			UpdateCollisionPoints();
 		}
 
-		OBB::~OBB( )
+		OBB::~OBB()
 		{
 		}
 
-		void OBB::setPosition( XMFLOAT3 vPosition )
+		void OBB::setPosition( XMVECTOR* vPosition )
 		{
-			position = vPosition;
-			UpdateCollisionPoints( );
+			m_Position = vPosition;
+			UpdateCollisionPoints();
 		}
 
-		void OBB::setRotation( XMFLOAT3 vRotation )
+		void OBB::setRotation( XMVECTOR* vRotation )
 		{
-			position = vRotation;
-			UpdateCollisionPoints( );
+			m_Rotation = vRotation;
+			UpdateCollisionPoints();
 		}
 
-		void OBB::setScale( XMFLOAT3 vScale )
+		void OBB::setScale( XMVECTOR* vScale )
 		{
-			position = vScale;
-			UpdateCollisionPoints( );
+			m_Scale = vScale;
+			UpdateCollisionPoints();
 		}
 
 		XMVECTOR OBB::getSurfaceNormal( XMVECTOR vert1, XMVECTOR vert2, XMVECTOR vert3 )
@@ -63,19 +61,19 @@ namespace KVE
 			XMVECTOR normal;
 
 			XMVECTOR vert1SubVert2 = XMVectorSet(
-					XMVectorGetIntX( vert1 ) - XMVectorGetIntX( vert2 ),
-					XMVectorGetIntY( vert1 ) - XMVectorGetIntY( vert2 ),
-					XMVectorGetIntZ( vert1 ) - XMVectorGetIntZ( vert2 ),
-					XMVectorGetIntW( vert1 ) - XMVectorGetIntW( vert2 )
+				XMVectorGetIntX( vert1 ) - XMVectorGetIntX( vert2 ),
+				XMVectorGetIntY( vert1 ) - XMVectorGetIntY( vert2 ),
+				XMVectorGetIntZ( vert1 ) - XMVectorGetIntZ( vert2 ),
+				XMVectorGetIntW( vert1 ) - XMVectorGetIntW( vert2 )
 				);
 
 			XMVECTOR vert3SubVert2 = XMVectorSet(
-					XMVectorGetIntX( vert3 ) - XMVectorGetIntX( vert2 ),
-					XMVectorGetIntY( vert3 ) - XMVectorGetIntY( vert2 ),
-					XMVectorGetIntZ( vert3 ) - XMVectorGetIntZ( vert2 ),
-					XMVectorGetIntW( vert3 ) - XMVectorGetIntW( vert2 )
+				XMVectorGetIntX( vert3 ) - XMVectorGetIntX( vert2 ),
+				XMVectorGetIntY( vert3 ) - XMVectorGetIntY( vert2 ),
+				XMVectorGetIntZ( vert3 ) - XMVectorGetIntZ( vert2 ),
+				XMVectorGetIntW( vert3 ) - XMVectorGetIntW( vert2 )
 				);
-			
+
 			normal = XMVector3Cross( vert1SubVert2, vert3SubVert2 );
 
 			XMVector3Normalize( normal );

@@ -9,68 +9,68 @@ namespace KVE
 	{
 		struct OABBCorners
 		{
-			DirectX::XMFLOAT3 frontTopRight;				//front top right corner of OABB
-			DirectX::XMFLOAT3 frontTopLeft;					//front top left corner of OABB
-			DirectX::XMFLOAT3 frontBottomRight;				//front bottom right corner of OABB
-			DirectX::XMFLOAT3 frontBottomLeft;				//front bottom left corner of OABB
-			DirectX::XMFLOAT3 backTopRight;					//back top right corner of OABB
-			DirectX::XMFLOAT3 backTopLeft;					//back top left corner of OABB
-			DirectX::XMFLOAT3 backBottomRight;				//back bottom right corner of OABB
-			DirectX::XMFLOAT3 backBottomLeft;				//back bottom left corner of OABB
+			DirectX::XMVECTOR frontTopRight;				//front top right corner of OABB
+			DirectX::XMVECTOR frontTopLeft;					//front top left corner of OABB
+			DirectX::XMVECTOR frontBottomRight;				//front bottom right corner of OABB
+			DirectX::XMVECTOR frontBottomLeft;				//front bottom left corner of OABB
+			DirectX::XMVECTOR backTopRight;					//back top right corner of OABB
+			DirectX::XMVECTOR backTopLeft;					//back top left corner of OABB
+			DirectX::XMVECTOR backBottomRight;				//back bottom right corner of OABB
+			DirectX::XMVECTOR backBottomLeft;				//back bottom left corner of OABB
 		};
 
 		struct OABBCollisionCorners
 		{
-			DirectX::XMFLOAT3 collisionFrontTopRight;		//translated top top right corner of OABB used for collisions
-			DirectX::XMFLOAT3 collisionFrontTopLeft;		//translated top top left corner of OABB used for collisions
-			DirectX::XMFLOAT3 collisionFrontBottomRight;	//translated top bottom right corner of OABB used for collisions
-			DirectX::XMFLOAT3 collisionFrontBottomLeft;		//translated top bottom left corner of OABB used for collisions
-			DirectX::XMFLOAT3 collisionBackTopRight;		//translated back top right corner of OABB used for collisions
-			DirectX::XMFLOAT3 collisionBackTopLeft;			//translated back top left corner of OABB used for collisions
-			DirectX::XMFLOAT3 collisionBackBottomRight;		//translated back bottom right corner of OABB used for collisions
-			DirectX::XMFLOAT3 collisionBackBottomLeft;		//translated back bottom left corner of OABB used for collisions
+			DirectX::XMVECTOR collisionFrontTopRight;		//translated top top right corner of OABB used for collisions
+			DirectX::XMVECTOR collisionFrontTopLeft;		//translated top top left corner of OABB used for collisions
+			DirectX::XMVECTOR collisionFrontBottomRight;	//translated top bottom right corner of OABB used for collisions
+			DirectX::XMVECTOR collisionFrontBottomLeft;		//translated top bottom left corner of OABB used for collisions
+			DirectX::XMVECTOR collisionBackTopRight;		//translated back top right corner of OABB used for collisions
+			DirectX::XMVECTOR collisionBackTopLeft;			//translated back top left corner of OABB used for collisions
+			DirectX::XMVECTOR collisionBackBottomRight;		//translated back bottom right corner of OABB used for collisions
+			DirectX::XMVECTOR collisionBackBottomLeft;		//translated back bottom left corner of OABB used for collisions
 		};
 
 		class OBB : BoundingVolume
 		{
 		public:
 			OBB( );
-			OBB( DirectX::XMFLOAT3 position, DirectX::XMFLOAT3 frontTopRight, DirectX::XMFLOAT3 backBottomLeft );
+			OBB( DirectX::XMVECTOR* position, DirectX::XMVECTOR frontTopRight, DirectX::XMVECTOR backBottomLeft );
 			~OBB( );
 
-			DirectX::XMFLOAT3 getCollisionFrontTopRight( void ){ return collisionCorners.collisionFrontTopRight; };
-			DirectX::XMFLOAT3 getCollisionFrontTopLeft( void ){ return collisionCorners.collisionFrontTopLeft; };
-			DirectX::XMFLOAT3 getCollisionFrontBottomRight( void ){ return collisionCorners.collisionFrontBottomRight; };
-			DirectX::XMFLOAT3 getCollisionFrontBottomLeft( void ){ return collisionCorners.collisionFrontBottomLeft; };
-			DirectX::XMFLOAT3 getCollisionBackTopRight( void ){ return collisionCorners.collisionBackTopRight; };
-			DirectX::XMFLOAT3 getCollisionBackTopLeft( void ){ return collisionCorners.collisionBackTopLeft; };
-			DirectX::XMFLOAT3 getCollisionBackBottomRight( void ){ return collisionCorners.collisionBackBottomRight; };
-			DirectX::XMFLOAT3 getCollisionBackBottomLeft( void ){ return collisionCorners.collisionBackBottomLeft; };
+			DirectX::XMVECTOR getCollisionFrontTopRight( void ){ return m_CollisionCorners.collisionFrontTopRight; };
+			DirectX::XMVECTOR getCollisionFrontTopLeft( void ){ return m_CollisionCorners.collisionFrontTopLeft; };
+			DirectX::XMVECTOR getCollisionFrontBottomRight( void ){ return m_CollisionCorners.collisionFrontBottomRight; };
+			DirectX::XMVECTOR getCollisionFrontBottomLeft( void ){ return m_CollisionCorners.collisionFrontBottomLeft; };
+			DirectX::XMVECTOR getCollisionBackTopRight( void ){ return m_CollisionCorners.collisionBackTopRight; };
+			DirectX::XMVECTOR getCollisionBackTopLeft( void ){ return m_CollisionCorners.collisionBackTopLeft; };
+			DirectX::XMVECTOR getCollisionBackBottomRight( void ){ return m_CollisionCorners.collisionBackBottomRight; };
+			DirectX::XMVECTOR getCollisionBackBottomLeft( void ){ return m_CollisionCorners.collisionBackBottomLeft; };
 			
-			DirectX::XMFLOAT3 getPosition( void ){ return position; };
-			DirectX::XMFLOAT3 getRotation( void ){ return rotation; };
-			DirectX::XMFLOAT3 getScale( void ){ return scale; };
+			DirectX::XMVECTOR* getPosition( void ){ return m_Position; };
+			DirectX::XMVECTOR* getRotation( void ){ return m_Rotation; };
+			DirectX::XMVECTOR* getScale( void ){ return m_Scale; };
 
 			//set pos, rot, scale and update collision points of OABB
-			void setPosition( DirectX::XMFLOAT3 vPosition );
-			void setRotation( DirectX::XMFLOAT3 vRotation );
-			void setScale( DirectX::XMFLOAT3 vScale );
+			void setPosition( DirectX::XMVECTOR* vPosition );
+			void setRotation( DirectX::XMVECTOR* vRotation );
+			void setScale( DirectX::XMVECTOR* vScale );
 
-			f32 getWidth( void ){ return width; };
-			f32 getHeight( void ){ return height; };
-			f32 getDepth( void ){ return depth; };
+			f32 getWidth( void ){ return m_Width; };
+			f32 getHeight( void ){ return m_Height; };
+			f32 getDepth( void ){ return m_Depth; };
 
 			IntersectionValue intersects( BoundingVolume other );
 
 		private:
-			UINT					indices;	//used for the drawing of the OABB
+			UINT					m_Indices;	//used for the drawing of the OABB
 
-			OABBCorners				corners;
-			OABBCollisionCorners	collisionCorners;
+			OABBCorners				m_Corners;
+			OABBCollisionCorners	m_CollisionCorners;
 
-			f32						width;
-			f32						height;
-			f32						depth;
+			f32						m_Width;
+			f32						m_Height;
+			f32						m_Depth;
 
 			//used to keep in sync with the characteristics of the enclosed object
 			void UpdateCollisionPoints( );
