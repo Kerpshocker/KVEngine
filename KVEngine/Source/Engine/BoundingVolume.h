@@ -14,7 +14,7 @@ namespace KVE
 			NONE
 		};
 
-		class BoundingVolume : GameComponents::GameObject
+		class BoundingVolume : public GameComponents::GameObject
 		{
 		public:
 			BoundingVolume();

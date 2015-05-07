@@ -59,10 +59,6 @@ namespace KVE
 			DirectX::XMFLOAT3 collisionBackBottomRight;		//translated back bottom right corner of OABB used for collisions
 			DirectX::XMFLOAT3 collisionBackBottomLeft;		//translated back bottom left corner of OABB used for collisions
 
-			DirectX::XMFLOAT3 position;
-			DirectX::XMFLOAT3 rotation;
-			DirectX::XMFLOAT3 scale;
-
 			f32 width;
 			f32 height;
 			f32 depth;

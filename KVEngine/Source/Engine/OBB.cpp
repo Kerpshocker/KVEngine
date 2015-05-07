@@ -10,21 +10,21 @@ namespace KVE
 		{
 		}
 
-		OBB::OBB( Vector vPosition, Vector vFrontTopRight, Vector vBackBottomLeft )
+		OBB::OBB( DirectX::XMFLOAT3 vPosition, DirectX::XMFLOAT3 vFrontTopRight, DirectX::XMFLOAT3 vBackBottomLeft )
 		{
 			position = vPosition;
 			frontTopRight = vFrontTopRight;
-			frontTopLeft = Vector{ backBottomLeft.x, frontTopRight.y, frontTopRight.z };
-			frontBottomRight = Vector{ frontTopRight.x, backBottomLeft.y, frontTopRight.z };
-			frontBottomLeft = Vector{ backBottomLeft.x, backBottomLeft.y, frontTopRight.z };
+			frontTopLeft = DirectX::XMFLOAT3{ backBottomLeft.x, frontTopRight.y, frontTopRight.z };
+			frontBottomRight = DirectX::XMFLOAT3{ frontTopRight.x, backBottomLeft.y, frontTopRight.z };
+			frontBottomLeft = DirectX::XMFLOAT3{ backBottomLeft.x, backBottomLeft.y, frontTopRight.z };
 
-			backTopRight = Vector{ frontTopRight.x, frontTopRight.y, backBottomLeft.z };
-			backTopLeft = Vector{ backBottomLeft.x, frontTopRight.y, backBottomLeft.z };
-			backBottomRight = Vector{ frontTopRight.x, backBottomLeft.y, backBottomLeft.z };
+			backTopRight = DirectX::XMFLOAT3{ frontTopRight.x, frontTopRight.y, backBottomLeft.z };
+			backTopLeft = DirectX::XMFLOAT3{ backBottomLeft.x, frontTopRight.y, backBottomLeft.z };
+			backBottomRight = DirectX::XMFLOAT3{ frontTopRight.x, backBottomLeft.y, backBottomLeft.z };
 			backBottomLeft = vBackBottomLeft;
 
-			scale = Vector{ 1.0f, 1.0f, 1.0f };
-			rotation = Vector{ 0.0f, 0.0f, 0.0f };
+			scale = DirectX::XMFLOAT3{ 1.0f, 1.0f, 1.0f };
+			rotation = DirectX::XMFLOAT3{ 0.0f, 0.0f, 0.0f };
 
 			width = abs( frontTopRight.x - backBottomLeft.x );
 			height = abs( frontTopRight.y - backBottomLeft.y );
@@ -37,19 +37,19 @@ namespace KVE
 		{
 		}
 
-		void OBB::setPosition( Vector vPosition )
+		void OBB::setPosition( DirectX::XMFLOAT3 vPosition )
 		{
 			position = vPosition;
 			UpdateCollisionPoints( );
 		}
 
-		void OBB::setRotation( Vector vRotation )
+		void OBB::setRotation( DirectX::XMFLOAT3 vRotation )
 		{
 			position = vRotation;
 			UpdateCollisionPoints( );
 		}
 
-		void OBB::setScale( Vector vScale )
+		void OBB::setScale( DirectX::XMFLOAT3 vScale )
 		{
 			position = vScale;
 			UpdateCollisionPoints( );
