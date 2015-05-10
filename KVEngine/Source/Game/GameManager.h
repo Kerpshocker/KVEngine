@@ -19,6 +19,12 @@ struct MeshInstance
 	DirectX::XMFLOAT4 Color;
 };
 
+struct OABBInstance
+{
+	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT4 Color;
+};
+
 struct FrameParams;
 
 class GameManager : public KVE::Utilities::Manager
@@ -39,6 +45,9 @@ private:
 
 	MeshInstance*					m_LocalInstances;
 	UINT							m_LocalInstanceCount;
+
+	OABBInstance*					m_LocalOABBInstances;
+	UINT							m_LocalOABBInstanceCount;
 
 	Spaceship						m_Player;
 };

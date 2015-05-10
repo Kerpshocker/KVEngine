@@ -4,6 +4,7 @@
 #include "FrameManager.h"
 #include "InputManager.h"
 #include "GameTimer.h"
+#include "OBB.h"
 #include <d3dcompiler.h>
 
 using namespace DirectX;
@@ -83,12 +84,25 @@ void GameManager::createGeometry( void )
 	m_LocalInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), green };
 	m_LocalInstances[ 2 ] = { XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue };
 
-	KVE::Graphics::ShaderBuffersDesc sbDesc;
-	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &sbDesc, sizeof( Vertex ) );
-	sbDesc.InstanceCount = m_LocalInstanceCount;
-	sbDesc.InstanceStride = sizeof( MeshInstance );
-	sbDesc.InstanceOffset = 0;
-    sbDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	m_LocalOABBInstanceCount = 1;
+	m_LocalOABBInstances = new OABBInstance[ m_LocalOABBInstanceCount ];
+	m_LocalOABBInstances[ 0 ].Position = m_LocalInstances[ 0 ].Position;
+	m_LocalOABBInstances[ 0 ].Color = m_LocalInstances[ 0 ].Color;
 
-	KVE::Graphics::RenderManager::Instance().createShaderBuffers( sbDesc, 0 );
+	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
+	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
+
+	XMVECTOR* oabbPosition = new XMVECTOR();
+	*oabbPosition = XMLoadFloat3( &m_LocalInstances[ 0 ].Position );
+
+	KVE::Collisions::OBB( oabbPosition, frontTopRight, backBottomLeft );
+
+	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
+	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &meshSBDesc, sizeof( Vertex ) );
+	meshSBDesc.InstanceCount = m_LocalInstanceCount;
+	meshSBDesc.InstanceStride = sizeof( MeshInstance );
+	meshSBDesc.InstanceOffset = 0;
+	meshSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+
+	KVE::Graphics::RenderManager::Instance().createShaderBuffers( meshSBDesc, 0 );
 }
