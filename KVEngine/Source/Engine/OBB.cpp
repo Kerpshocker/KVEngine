@@ -15,13 +15,13 @@ namespace KVE
 			m_Position = vPosition;
 
 			m_OABBCorners.frontTopRight = vFrontTopRight;
-			m_OABBCorners.frontTopLeft = XMVectorSet( XMVectorGetX( m_OABBCorners.backBottomLeft ), XMVectorGetY( m_OABBCorners.frontTopRight ), XMVectorGetZ( m_OABBCorners.frontTopRight ), 0.0f );
-			m_OABBCorners.frontBottomRight = XMVectorSet( XMVectorGetX( m_OABBCorners.frontTopRight ), XMVectorGetY( m_OABBCorners.backBottomLeft ), XMVectorGetZ( m_OABBCorners.frontTopRight ), 0.0f );
-			m_OABBCorners.frontBottomLeft = XMVectorSet( XMVectorGetX( m_OABBCorners.backBottomLeft ), XMVectorGetY( m_OABBCorners.backBottomLeft ), XMVectorGetZ( m_OABBCorners.frontTopRight ), 0.0f );
+			m_OABBCorners.frontTopLeft = XMVectorSet( XMVectorGetX( vBackBottomLeft ), XMVectorGetY( vFrontTopRight ), XMVectorGetZ( vFrontTopRight ), 0.0f );
+			m_OABBCorners.frontBottomRight = XMVectorSet( XMVectorGetX( vFrontTopRight ), XMVectorGetY( vBackBottomLeft ), XMVectorGetZ( vFrontTopRight ), 0.0f );
+			m_OABBCorners.frontBottomLeft = XMVectorSet( XMVectorGetX( vBackBottomLeft ), XMVectorGetY( vBackBottomLeft ), XMVectorGetZ( vFrontTopRight ), 0.0f );
 
-			m_OABBCorners.backTopRight = XMVectorSet( XMVectorGetX( m_OABBCorners.frontTopRight ), XMVectorGetY( m_OABBCorners.frontTopRight ), XMVectorGetZ( m_OABBCorners.backBottomLeft ), 0.0f );
-			m_OABBCorners.backTopLeft = XMVectorSet( XMVectorGetX( m_OABBCorners.backBottomLeft ), XMVectorGetY( m_OABBCorners.frontTopRight ), XMVectorGetZ( m_OABBCorners.backBottomLeft ), 0.0f );
-			m_OABBCorners.backBottomRight = XMVectorSet( XMVectorGetX( m_OABBCorners.frontTopRight ), XMVectorGetY( m_OABBCorners.backBottomLeft ), XMVectorGetZ( m_OABBCorners.backBottomLeft ), 0.0f );
+			m_OABBCorners.backTopRight = XMVectorSet( XMVectorGetX( vFrontTopRight ), XMVectorGetY( vFrontTopRight ), XMVectorGetZ( vBackBottomLeft ), 0.0f );
+			m_OABBCorners.backTopLeft = XMVectorSet( XMVectorGetX( vBackBottomLeft ), XMVectorGetY( vFrontTopRight ), XMVectorGetZ( vBackBottomLeft ), 0.0f );
+			m_OABBCorners.backBottomRight = XMVectorSet( XMVectorGetX( vFrontTopRight ), XMVectorGetY( vBackBottomLeft ), XMVectorGetZ( vBackBottomLeft ), 0.0f );
 			m_OABBCorners.backBottomLeft = vBackBottomLeft;
 
 			m_Scale = &XMVectorSet( 1.0f, 1.0f, 1.0f, 0.0f );
@@ -33,19 +33,32 @@ namespace KVE
 
 			//may need faces? fr, back, left, right, top, bot
 
+			m_CollisionCorners = (XMVECTOR*)_mm_malloc( sizeof( XMVECTOR ) * 8, 16 );
+			
 			UpdateCollisionPoints();
-
-			m_Normals = new XMVECTOR[ 6 ];
+			
+			m_Normals = (XMVECTOR*)_mm_malloc( sizeof( XMVECTOR ) * 6, 16 );
 			m_Normals[ 0 ] = getFrontNormal();
 			m_Normals[ 1 ] = getBackNormal();
 			m_Normals[ 2 ] = getTopNormal();
 			m_Normals[ 3 ] = getBottomNormal();
 			m_Normals[ 4 ] = getLeftNormal();
 			m_Normals[ 5 ] = getRightNormal();
+
 		}
 
 		OBB::~OBB()
 		{
+			if ( m_CollisionCorners != nullptr )
+			{
+				_mm_free( m_CollisionCorners );
+				m_CollisionCorners = nullptr;
+			}
+			if ( m_Normals != nullptr )
+			{
+				_mm_free( m_Normals );
+				m_Normals = nullptr;
+			}
 		}
 
 		void OBB::setPosition( XMVECTOR* vPosition )
@@ -85,9 +98,7 @@ namespace KVE
 			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.frontTopLeft, worldMatrix );
 			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.frontBottomRight, worldMatrix );
 			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.frontBottomLeft, worldMatrix );
-
-			m_CollisionCorners = nullptr;
-			m_CollisionCorners = new XMVECTOR[ 8 ];
+			
 			m_CollisionCorners[ 0 ] = getCollisionBackTopRight();
 			m_CollisionCorners[ 1 ] = getCollisionBackTopLeft();
 			m_CollisionCorners[ 2 ] = getCollisionBackBottomRight();

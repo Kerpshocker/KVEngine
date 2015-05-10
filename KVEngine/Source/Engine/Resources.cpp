@@ -212,7 +212,6 @@ namespace KVE
 				indices[ i ] = i;
 			}
 
-			sbDesc->Topology = D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 			sbDesc->Vertices = vertexData;
 			sbDesc->VertexCount = numIndices;
 			sbDesc->VertexOffset = 0;

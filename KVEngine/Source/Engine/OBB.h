@@ -50,6 +50,11 @@ namespace KVE
 			f32 getWidth( void ){ return m_Width; };
 			f32 getHeight( void ){ return m_Height; };
 			f32 getDepth( void ){ return m_Depth; };
+
+			UINT* getIndices( void ){ return m_Indices; };
+
+			DirectX::XMVECTOR* getCollisionCorners( void ){ return m_CollisionCorners; };
+			DirectX::XMVECTOR* getNormals( void ){ return m_Normals; };
 			
 			DirectX::XMVECTOR* getPosition( void ){ return m_Position; };
 			DirectX::XMVECTOR* getRotation( void ){ return m_Rotation; };
@@ -65,7 +70,7 @@ namespace KVE
 			OABBCollisionCorners	m_OABBCollisionCorners;
 
 			UINT					m_IndicesCount;
-			UINT					m_Indices;					//used for the drawing of the OABB
+			UINT*					m_Indices;					//used for the drawing of the OABB
 
 			f32						m_Width;
 			f32						m_Height;

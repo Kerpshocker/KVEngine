@@ -87,15 +87,27 @@ void GameManager::createGeometry( void )
 	m_LocalOABBInstanceCount = 1;
 	m_LocalOABBInstances = new OABBInstance[ m_LocalOABBInstanceCount ];
 	m_LocalOABBInstances[ 0 ].Position = m_LocalInstances[ 0 ].Position;
-	m_LocalOABBInstances[ 0 ].Color = m_LocalInstances[ 0 ].Color;
+	m_LocalOABBInstances[ 0 ].Color = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
 
-	XMVECTOR* oabbPosition = new XMVECTOR();
+	/*XMVECTOR* oabbPosition = new XMVECTOR();
 	*oabbPosition = XMLoadFloat3( &m_LocalInstances[ 0 ].Position );
 
-	KVE::Collisions::OBB( oabbPosition, frontTopRight, backBottomLeft );
+	KVE::Collisions::OBB obb = KVE::Collisions::OBB( oabbPosition, frontTopRight, backBottomLeft );
+	
+	KVE::Graphics::ShaderBuffersDesc oabbSBDesc;
+	oabbSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+	oabbSBDesc.Vertices = obb.getCollisionCorners();
+	oabbSBDesc.VertexCount = 8;
+	oabbSBDesc.VertexOffset = 0;
+	oabbSBDesc.VertexStride = sizeof( Vertex );
+	oabbSBDesc.VertexIndexCount = 8;
+	oabbSBDesc.VertexIndices = obb.getIndices();
+	oabbSBDesc.InstanceCount = m_LocalOABBInstanceCount;
+	oabbSBDesc.InstanceStride = sizeof( OABBInstance );
+	oabbSBDesc.InstanceOffset = 0;*/
 
 	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
 	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &meshSBDesc, sizeof( Vertex ) );
@@ -105,4 +117,5 @@ void GameManager::createGeometry( void )
 	meshSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	KVE::Graphics::RenderManager::Instance().createShaderBuffers( meshSBDesc, 0 );
+	//KVE::Graphics::RenderManager::Instance().createShaderBuffers( oabbSBDesc, 0 );
 }
