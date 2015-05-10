@@ -28,21 +28,22 @@ namespace KVE
 		{
 			SINGLETON_INSTANCE( FrameManager );
 		public:
-			static const uint16_t MAX_FRAMES = 10;
+			static const uint8_t MAX_FRAMES = 10;
+			static const uint8_t MAX_QUEUED = 2;
 
 			void initialize( void );
 			void release( void );
 			bool openFrame( FrameParams** out );
 			bool closeFrame( FrameParams** in );
 			bool readNextFrame( const FrameParams** const out );
-			bool isEmpty( void ) const;
-			bool isFull( void ) const;
+			bool isWriteReady( void ) const;
+			bool isReadReady( void ) const;
 
 		private:
 			FrameParams m_Data[ MAX_FRAMES ];
 
-			std::atomic<uint16_t>	m_ReadIndex;
-			std::atomic<uint16_t>	m_WriteIndex;
+			std::atomic<uint8_t>	m_ReadIndex;
+			std::atomic<uint8_t>	m_WriteIndex;
 			std::atomic<bool>		m_Writing;
 		};
 	}

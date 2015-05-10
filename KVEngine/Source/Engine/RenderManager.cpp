@@ -52,8 +52,6 @@ namespace KVE
 			// make sure there is a window to draw to
 			assert( m_Window );
 
-			if ( FrameManager::Instance().isEmpty() ) return;
-
 			FrameManager::Instance().readNextFrame( &m_CurrentFrame );
 
 			// draw background

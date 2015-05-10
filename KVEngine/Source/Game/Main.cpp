@@ -149,7 +149,7 @@ void RunGameLogicThread( void )
 {
 	while ( running->load() )
 	{
-		if ( !window->isPaused() )
+		if ( !window->isPaused() && KVE::Graphics::FrameManager::Instance().isWriteReady() )
 		{
 			GameManager::Instance().update();
 			//CalculateFrameStats();
@@ -161,7 +161,7 @@ void RunRenderLogicThread( void )
 {
 	while ( running->load() )
 	{
-		if ( !window->isPaused() )
+		if ( !window->isPaused() && KVE::Graphics::FrameManager::Instance().isReadReady() )
 		{
 			Graphics::RenderManager::Instance().render();
 			CalculateFrameStats();

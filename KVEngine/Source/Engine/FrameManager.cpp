@@ -80,20 +80,16 @@ namespace KVE
 			return true;
 		}
 
-		bool FrameManager::isEmpty( void ) const
+		bool FrameManager::isWriteReady( void ) const
 		{
-			return m_ReadIndex.load() == m_WriteIndex.load();
+			// to the left ot MAX_QUEUED in the return is a modulo equation that works with negative values
+			const int diff = (INT)m_WriteIndex - (INT)m_ReadIndex;
+			return !m_Writing && ( ( diff % MAX_FRAMES + MAX_FRAMES ) % MAX_FRAMES <= MAX_QUEUED );
 		}
 
-		bool FrameManager::isFull( void ) const
+		bool FrameManager::isReadReady( void ) const
 		{
-			uint32_t nextRecord = m_WriteIndex.load() + 1;
-			if ( nextRecord == MAX_FRAMES )
-			{
-				nextRecord = 0;
-			}
-
-			return nextRecord == m_ReadIndex.load();
+			return m_ReadIndex != m_WriteIndex;
 		}
 	}
 }

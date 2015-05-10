@@ -29,7 +29,7 @@ void GameManager::initialize( const KVE::Graphics::DXWindow* window, const KVE::
 
 void GameManager::update( void )
 {
-	if ( !KVE::Graphics::FrameManager::Instance().openFrame( &m_CurrentFrame ) ) return;
+	KVE::Graphics::FrameManager::Instance().openFrame( &m_CurrentFrame );
 
 	m_CurrentFrame->StartTime = m_Timer->totalTime();
 	m_CurrentFrame->DeltaTime = m_CurrentFrame->StartTime - m_LastFrameEndTime;
