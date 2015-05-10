@@ -9,9 +9,9 @@ namespace KVE
 		GameObject::GameObject( void ) : m_Mounted( false )
 		{
 			m_Mounted = false;
-			m_Position = new XMVECTOR();
-			m_Rotation = new XMVECTOR();
-			m_Scale = new XMVECTOR();
+			m_Position = (XMVECTOR*)_mm_malloc( sizeof( XMVECTOR ), 16 );
+			m_Rotation = (XMVECTOR*) _mm_malloc( sizeof( XMVECTOR ), 16 );
+			m_Scale = (XMVECTOR*) _mm_malloc( sizeof( XMVECTOR ), 16 );
 		}
 
 		GameObject::GameObject( GameObject* const mount )
@@ -28,17 +28,17 @@ namespace KVE
 			{
 				if ( m_Position != nullptr )
 				{
-					delete m_Position;
+					_mm_free( m_Position );
 					m_Position = nullptr;
 				}
 				if ( m_Rotation != nullptr )
 				{
-					delete m_Rotation;
+					_mm_free( m_Rotation );
 					m_Rotation = nullptr;
 				}
 				if ( m_Scale != nullptr )
 				{
-					delete m_Scale;
+					_mm_free( m_Scale );
 					m_Scale = nullptr;
 				}
 			}
