@@ -16,10 +16,10 @@ public:
 
 private:
 
-	float m_Accel;
-	float m_YawAccel;
-	float m_PitchAccel;
-	float m_RollAccel;
+	float m_Vel;
+	float m_YawVel;
+	float m_PitchVel;
+	float m_RollVel;
 
 };
 

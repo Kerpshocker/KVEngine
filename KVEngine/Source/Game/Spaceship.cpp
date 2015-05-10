@@ -20,81 +20,85 @@ Spaceship::~Spaceship( void )
 
 void Spaceship::update( float dt )
 {
-	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_MOVE_FORWARD ) )
+	const int inputKeyData = Input::GetKeyInputData();
+
+	if ( inputKeyData & Input::KEY_MOVE_FORWARD )
 	{
-		m_Accel += 0.0025f;
-		if ( m_Accel > MAX_ACCEL ) m_Accel = MAX_ACCEL;
+		m_Vel += 0.0025f;
+		if ( m_Vel > MAX_ACCEL ) m_Vel = MAX_ACCEL;
 	}
-	else if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_MOVE_BACKWARD ) )
+	else if ( inputKeyData & Input::KEY_MOVE_BACKWARD )
 	{
-		m_Accel -= 0.0025f;
-		if ( m_Accel < -MAX_ACCEL ) m_Accel = -MAX_ACCEL;
+		m_Vel -= 0.0025f;
+		if ( m_Vel < -MAX_ACCEL ) m_Vel = -MAX_ACCEL;
 	}
 	else
 	{
-		m_Accel *= 0.99975f;
-		if ( abs( m_Accel ) < 0.000001f ) m_Accel = 0.0f;
+		m_Vel *= 0.99975f;
+		if ( abs( m_Vel ) < 0.000001f ) m_Vel = 0.0f;
 	}
 
-	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_PITCH_POS ) )
+	if ( inputKeyData & Input::KEY_PITCH_POS )
 	{
-		m_PitchAccel += 0.00025f;
-		if ( m_PitchAccel > MAX_PITCH_ACCEL ) m_PitchAccel = MAX_PITCH_ACCEL;
+		m_PitchVel += 0.00025f;
+		if ( m_PitchVel > MAX_PITCH_ACCEL ) m_PitchVel = MAX_PITCH_ACCEL;
 	}
-	else if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_PITCH_NEG ) )
+	else if ( inputKeyData & Input::KEY_PITCH_NEG )
 	{
-		m_PitchAccel -= 0.00025f;
-		if ( m_PitchAccel < -MAX_PITCH_ACCEL ) m_PitchAccel = -MAX_PITCH_ACCEL;
+		m_PitchVel -= 0.00025f;
+		if ( m_PitchVel < -MAX_PITCH_ACCEL ) m_PitchVel = -MAX_PITCH_ACCEL;
 	}
 	else
 	{
-		m_PitchAccel *= 0.99975f;
-		if ( abs( m_PitchAccel ) < 0.000001f ) m_PitchAccel = 0.0f;
+		m_PitchVel *= 0.99975f;
+		if ( abs( m_PitchVel ) < 0.000001f ) m_PitchVel = 0.0f;
 	}
 
-	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_YAW_POS ) )
+	if ( inputKeyData & Input::KEY_YAW_POS )
 	{
-		m_YawAccel += 0.00025f;
-		if ( m_YawAccel > MAX_YAW_ACCEL ) m_YawAccel = MAX_YAW_ACCEL;
+		m_YawVel += 0.00025f;
+		if ( m_YawVel > MAX_YAW_ACCEL ) m_YawVel = MAX_YAW_ACCEL;
 	}
-	else if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_YAW_NEG ) )
+	else if ( inputKeyData &  Input::KEY_YAW_NEG )
 	{
-		m_YawAccel -= 0.00025f;
-		if ( m_YawAccel > MAX_YAW_ACCEL ) m_YawAccel = MAX_YAW_ACCEL;
+		m_YawVel -= 0.00025f;
+		if ( m_YawVel > MAX_YAW_ACCEL ) m_YawVel = MAX_YAW_ACCEL;
 	}
 	else
 	{
-		m_YawAccel *= 0.99975f;
-		if ( abs( m_YawAccel ) < 0.000001f ) m_YawAccel = 0.0f;
+		m_YawVel *= 0.99975f;
+		if ( abs( m_YawVel ) < 0.000001f ) m_YawVel = 0.0f;
 	}
 
-	if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_ROLL_POS ) )
+	if ( inputKeyData & Input::KEY_ROLL_POS )
 	{
-		m_RollAccel += 0.00025f;
-		if ( m_RollAccel > MAX_ROLL_ACCEL ) m_RollAccel = MAX_ROLL_ACCEL;
+		m_RollVel += 0.00025f;
+		if ( m_RollVel > MAX_ROLL_ACCEL ) m_RollVel = MAX_ROLL_ACCEL;
 	}
-	else if ( KVE::Input::IsKeyPressed( KVE::Input::KEY_ROLL_NEG ) )
+	else if ( inputKeyData & Input::KEY_ROLL_NEG )
 	{
-		m_RollAccel -= 0.00025f;
-		if ( m_RollAccel < -MAX_ROLL_ACCEL ) m_RollAccel = -MAX_ROLL_ACCEL;
+		m_RollVel -= 0.00025f;
+		if ( m_RollVel < -MAX_ROLL_ACCEL ) m_RollVel = -MAX_ROLL_ACCEL;
 	}
 	else
 	{
-		m_RollAccel *= 0.99975f;
-		if ( abs( m_RollAccel ) < 0.000001f ) m_RollAccel = 0.0f;
+		m_RollVel *= 0.99975f;
+		if ( abs( m_RollVel ) < 0.000001f ) m_RollVel = 0.0f;
 	}
 
 	KVE::GameComponents::FirstPersonCamera* camera = ( KVE::GameComponents::FirstPersonCamera* )KVE::Graphics::CameraManager::Instance().getActiveCamera();
 
-	camera->move( m_Accel * dt );
-	camera->rotatePitch( m_PitchAccel * dt );
-	camera->rotateYaw( m_YawAccel * dt );
-	camera->rotateRoll( m_RollAccel * dt );
+	camera->move( m_Vel * dt );
+	camera->rotatePitch( m_PitchVel * dt );
+	camera->rotateYaw( m_YawVel * dt );
+	camera->rotateRoll( m_RollVel * dt );
 
-	//if ( KVE::Input::IsViewChanged() )
-	//{
+	// negatives and positives here could result in 0-value, but that possibility
+	// is so rare for our purposes we can consider it negligible
+	if ( ( m_Vel + m_PitchVel ) + ( m_YawVel + m_RollVel ) )
+	{
 		KVE::Graphics::CameraManager::Instance().getActiveCamera()->setViewMatrix();
-	//}
+	}
 }
 
 void Spaceship::mountCamera( KVE::Graphics::Camera* const camera )
