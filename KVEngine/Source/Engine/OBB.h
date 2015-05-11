@@ -9,26 +9,27 @@ namespace KVE
 	{
 		struct OABBCorners
 		{
-			DirectX::XMVECTOR frontTopRight;				//front top right corner of OABB
-			DirectX::XMVECTOR frontTopLeft;					//front top left corner of OABB
-			DirectX::XMVECTOR frontBottomRight;				//front bottom right corner of OABB
-			DirectX::XMVECTOR frontBottomLeft;				//front bottom left corner of OABB
-			DirectX::XMVECTOR backTopRight;					//back top right corner of OABB
-			DirectX::XMVECTOR backTopLeft;					//back top left corner of OABB
-			DirectX::XMVECTOR backBottomRight;				//back bottom right corner of OABB
-			DirectX::XMVECTOR backBottomLeft;				//back bottom left corner of OABB
+			DirectX::XMVECTOR frontTopRight;				
+			DirectX::XMVECTOR frontTopLeft;					
+			DirectX::XMVECTOR frontBottomRight;				
+			DirectX::XMVECTOR frontBottomLeft;				
+			DirectX::XMVECTOR backTopRight;					
+			DirectX::XMVECTOR backTopLeft;					
+			DirectX::XMVECTOR backBottomRight;				
+			DirectX::XMVECTOR backBottomLeft;				
 		};
 
+		//translasted collision corners
 		struct OABBCollisionCorners
 		{
-			DirectX::XMVECTOR collisionFrontTopRight;		//translated top top right corner of OABB used for collisions
-			DirectX::XMVECTOR collisionFrontTopLeft;		//translated top top left corner of OABB used for collisions
-			DirectX::XMVECTOR collisionFrontBottomRight;	//translated top bottom right corner of OABB used for collisions
-			DirectX::XMVECTOR collisionFrontBottomLeft;		//translated top bottom left corner of OABB used for collisions
-			DirectX::XMVECTOR collisionBackTopRight;		//translated back top right corner of OABB used for collisions
-			DirectX::XMVECTOR collisionBackTopLeft;			//translated back top left corner of OABB used for collisions
-			DirectX::XMVECTOR collisionBackBottomRight;		//translated back bottom right corner of OABB used for collisions
-			DirectX::XMVECTOR collisionBackBottomLeft;		//translated back bottom left corner of OABB used for collisions
+			DirectX::XMVECTOR collisionFrontTopRight;		
+			DirectX::XMVECTOR collisionFrontTopLeft;		
+			DirectX::XMVECTOR collisionFrontBottomRight;	
+			DirectX::XMVECTOR collisionFrontBottomLeft;		
+			DirectX::XMVECTOR collisionBackTopRight;		
+			DirectX::XMVECTOR collisionBackTopLeft;			
+			DirectX::XMVECTOR collisionBackBottomRight;
+			DirectX::XMVECTOR collisionBackBottomLeft;		
 		};
 
 		class OBB : BoundingVolume
@@ -69,8 +70,7 @@ namespace KVE
 			OABBCorners				m_OABBCorners;
 			OABBCollisionCorners	m_OABBCollisionCorners;
 
-			UINT					m_IndicesCount;
-			UINT*					m_Indices;					//used for the drawing of the OABB
+			UINT*					m_Indices;
 
 			f32						m_Width;
 			f32						m_Height;

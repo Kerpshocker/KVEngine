@@ -45,6 +45,15 @@ namespace KVE
 			m_Normals[ 4 ] = getLeftNormal();
 			m_Normals[ 5 ] = getRightNormal();
 
+			m_Indices = new UINT[ 8 ];
+			m_Indices[ 0 ] = 0;
+			m_Indices[ 1 ] = 1;
+			m_Indices[ 2 ] = 1;
+			m_Indices[ 3 ] = 2;
+			m_Indices[ 4 ] = 2;
+			m_Indices[ 5 ] = 3;
+			m_Indices[ 6 ] = 3;
+			m_Indices[ 7 ] = 4;
 		}
 
 		OBB::~OBB()

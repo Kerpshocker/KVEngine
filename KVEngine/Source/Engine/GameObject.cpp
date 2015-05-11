@@ -9,7 +9,7 @@ namespace KVE
 		GameObject::GameObject( void ) : m_Mounted( false )
 		{
 			m_Mounted = false;
-			m_Position = (XMVECTOR*)_mm_malloc( sizeof( XMVECTOR ), 16 );
+			m_Position = (XMVECTOR*) _mm_malloc( sizeof( XMVECTOR ), 16 );
 			m_Rotation = (XMVECTOR*) _mm_malloc( sizeof( XMVECTOR ), 16 );
 			m_Scale = (XMVECTOR*) _mm_malloc( sizeof( XMVECTOR ), 16 );
 		}
