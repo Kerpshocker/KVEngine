@@ -27,9 +27,9 @@ namespace KVE
 			*m_Scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 0.0f );
 			*m_Rotation = XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
 
-			m_Width = XMVectorGetX( m_OABBCorners.frontTopRight ) - XMVectorGetX( m_OABBCorners.backBottomLeft );
-			m_Height = XMVectorGetY( m_OABBCorners.frontTopRight ) - XMVectorGetY( m_OABBCorners.backBottomLeft );
-			m_Depth = XMVectorGetZ( m_OABBCorners.frontTopRight ) - XMVectorGetZ( m_OABBCorners.backBottomLeft );
+			m_Width = XMVectorGetX( XMVectorAbs( XMVectorSubtract( m_OABBCorners.frontTopRight, m_OABBCorners.backBottomLeft ) ) );
+			m_Height = XMVectorGetY( XMVectorAbs( XMVectorSubtract( m_OABBCorners.frontTopRight, m_OABBCorners.backBottomLeft ) ) );
+			m_Depth = XMVectorGetZ( XMVectorAbs( XMVectorSubtract( m_OABBCorners.frontTopRight, m_OABBCorners.backBottomLeft ) ) );
 
 			//may need faces? fr, back, left, right, top, bot
 
