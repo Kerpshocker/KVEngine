@@ -12,7 +12,7 @@ namespace KVE
 
 		OBB::OBB( XMVECTOR* vPosition, XMVECTOR vFrontTopRight, XMVECTOR vBackBottomLeft )
 		{
-			m_Position = vPosition;
+			*m_Position = *vPosition;
 
 			m_OABBCorners.frontTopRight = vFrontTopRight;
 			m_OABBCorners.frontTopLeft = XMVectorSet( XMVectorGetX( vBackBottomLeft ), XMVectorGetY( vFrontTopRight ), XMVectorGetZ( vFrontTopRight ), 0.0f );
@@ -24,8 +24,8 @@ namespace KVE
 			m_OABBCorners.backBottomRight = XMVectorSet( XMVectorGetX( vFrontTopRight ), XMVectorGetY( vBackBottomLeft ), XMVectorGetZ( vBackBottomLeft ), 0.0f );
 			m_OABBCorners.backBottomLeft = vBackBottomLeft;
 
-			m_Scale = &XMVectorSet( 1.0f, 1.0f, 1.0f, 0.0f );
-			m_Rotation = &XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
+			*m_Scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 0.0f );
+			*m_Rotation = XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
 
 			m_Width = XMVectorGetX( m_OABBCorners.frontTopRight ) - XMVectorGetX( m_OABBCorners.backBottomLeft );
 			m_Height = XMVectorGetY( m_OABBCorners.frontTopRight ) - XMVectorGetY( m_OABBCorners.backBottomLeft );

@@ -92,7 +92,7 @@ void GameManager::createGeometry( void )
 	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
 
-	/*XMVECTOR* oabbPosition = new XMVECTOR();
+	XMVECTOR* oabbPosition = new XMVECTOR();
 	*oabbPosition = XMLoadFloat3( &m_LocalInstances[ 0 ].Position );
 
 	KVE::Collisions::OBB obb = KVE::Collisions::OBB( oabbPosition, frontTopRight, backBottomLeft );
@@ -107,7 +107,7 @@ void GameManager::createGeometry( void )
 	oabbSBDesc.VertexIndices = obb.getIndices();
 	oabbSBDesc.InstanceCount = m_LocalOABBInstanceCount;
 	oabbSBDesc.InstanceStride = sizeof( OABBInstance );
-	oabbSBDesc.InstanceOffset = 0;*/
+	oabbSBDesc.InstanceOffset = 0;
 
 	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
 	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &meshSBDesc, sizeof( Vertex ) );
