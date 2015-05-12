@@ -44,25 +44,25 @@ namespace KVE
 		{
 			SINGLETON_INSTANCE( RenderManager );
 		public:
-			void initialize( const D3D11_VIEWPORT* viewports, const UINT numViewports );
+			void initialize( const UINT numShaderLayouts, const D3D11_VIEWPORT* viewports, const UINT numViewports );
 			void release( void );
 			void render( void );
 
 			UINT createShaderLayout( const ShaderProgramDesc& spDesc );
-			void createShaderBuffers( const ShaderBuffersDesc& sbDesc, UINT layoutIndex );
+			void createShaderBuffers( const ShaderBuffersDesc& sbDesc, const UINT layoutIndex );
 
 			void setWindow( const DXWindow* const window );
 
 		private:
 			const DXWindow* m_Window;
 
+			UINT			m_ViewportCount;
 			D3D11_VIEWPORT* m_Viewports;
-			UINT m_ViewportCount;
 
-			ShaderLayout* m_ShaderLayouts;
-			ID3D11Buffer* m_ConstBuffer;
-
-			UINT m_LayoutCount;
+			UINT			m_ShaderLayoutCount;
+			UINT			m_ShaderLayoutMaxCount;
+			ShaderLayout**	m_ShaderLayouts;
+			ID3D11Buffer*	m_ConstBuffer;
 
 			const FrameParams* m_CurrentFrame;
 

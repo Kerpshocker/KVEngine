@@ -9,11 +9,15 @@ namespace KVE
 {
 	namespace Graphics
 	{
-		void RenderManager::initialize( const D3D11_VIEWPORT* viewports, const UINT numViewports )
+		void RenderManager::initialize( const UINT numShaderLayouts, const D3D11_VIEWPORT* viewports, const UINT numViewports )
 		{
 			m_ViewportCount = numViewports;
 			m_Viewports = new D3D11_VIEWPORT[ m_ViewportCount ];
 			memcpy( m_Viewports, viewports, sizeof( D3D11_VIEWPORT ) * m_ViewportCount );
+
+			m_ShaderLayoutCount = 0;
+			m_ShaderLayoutMaxCount = numShaderLayouts;
+			m_ShaderLayouts = new ShaderLayout*[ m_ShaderLayoutMaxCount ];
 
 			Manager::initialize();
 		}
@@ -28,8 +32,8 @@ namespace KVE
 
 			if ( m_ShaderLayouts != nullptr )
 			{
-				for ( int i = 0; i < 1; i++ )
-					m_ShaderLayouts[ i ].Release();
+				for ( int i = 0; i < m_ShaderLayoutCount; i++ )
+					m_ShaderLayouts[ i ]->Release();
 
 				delete m_ShaderLayouts;
 				m_ShaderLayouts = nullptr;
@@ -51,6 +55,9 @@ namespace KVE
 		{
 			// make sure there is a window to draw to
 			assert( m_Window );
+
+			// make sure the max count has been set properly, otherwise memory is being wasted
+			assert( m_ShaderLayoutCount == m_ShaderLayoutMaxCount );
 
 			FrameManager::Instance().readNextFrame( &m_CurrentFrame );
 
@@ -76,32 +83,32 @@ namespace KVE
 			};
 			setConstBuffer( &ccBuffer );
 
-			for ( UINT i = 0; i < m_LayoutCount; i++ )
+			for ( UINT i = 0; i < m_ShaderLayoutCount; i++ )
 			{
 				// Set up the input assembler and set the current vertex and pixel shaders
-				m_Window->m_DeviceContext->IASetInputLayout( m_ShaderLayouts[ i ].Program.InputLayout );
-				m_Window->m_DeviceContext->VSSetShader( m_ShaderLayouts[ i ].Program.VertexShader, NULL, 0 );
-				m_Window->m_DeviceContext->PSSetShader( m_ShaderLayouts[ i ].Program.PixelShader, NULL, 0 );
+				m_Window->m_DeviceContext->IASetInputLayout( m_ShaderLayouts[ i ]->Program.InputLayout );
+				m_Window->m_DeviceContext->VSSetShader( m_ShaderLayouts[ i ]->Program.VertexShader, NULL, 0 );
+				m_Window->m_DeviceContext->PSSetShader( m_ShaderLayouts[ i ]->Program.PixelShader, NULL, 0 );
 
-				for ( UINT j = 0; j < m_ShaderLayouts[ i ].NumBuffers; j++ )
+				for ( UINT j = 0; j < m_ShaderLayouts[ i ]->NumBuffers; j++ )
 				{
-					m_Window->m_DeviceContext->IASetPrimitiveTopology( m_ShaderLayouts[ i ].Buffers[ j ].Mesh.Topology );
+					m_Window->m_DeviceContext->IASetPrimitiveTopology( m_ShaderLayouts[ i ]->Buffers[ j ].Mesh.Topology );
 					m_Window->m_DeviceContext->IASetVertexBuffers(
 						0,
 						1,
-						&m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexBuffer,
-						&m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexStride,
-						&m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexOffset
+						&m_ShaderLayouts[ i ]->Buffers[ j ].Mesh.VertexBuffer,
+						&m_ShaderLayouts[ i ]->Buffers[ j ].Mesh.VertexStride,
+						&m_ShaderLayouts[ i ]->Buffers[ j ].Mesh.VertexOffset
 						);
 					m_Window->m_DeviceContext->IASetIndexBuffer(
-						m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexIndexBuffer,
+						m_ShaderLayouts[ i ]->Buffers[ j ].Mesh.VertexIndexBuffer,
 						DXGI_FORMAT_R32_UINT,
 						0
 						);
 
 					setInstanceBuffer(
 						m_CurrentFrame,
-						m_ShaderLayouts[ i ].Buffers[ j ].InstanceBuffer,
+						m_ShaderLayouts[ i ]->Buffers[ j ].InstanceBuffer,
 						m_CurrentFrame->InstanceStride * m_CurrentFrame->InstanceCount,
 						i,
 						j
@@ -109,14 +116,14 @@ namespace KVE
 					m_Window->m_DeviceContext->IASetVertexBuffers(
 						1,
 						1,
-						&m_ShaderLayouts[ i ].Buffers[ j ].InstanceBuffer,
-						&m_ShaderLayouts[ i ].Buffers[ j ].InstanceStride,
-						&m_ShaderLayouts[ i ].Buffers[ j ].InstanceOffset
+						&m_ShaderLayouts[ i ]->Buffers[ j ].InstanceBuffer,
+						&m_ShaderLayouts[ i ]->Buffers[ j ].InstanceStride,
+						&m_ShaderLayouts[ i ]->Buffers[ j ].InstanceOffset
 						);
 
 					m_Window->m_DeviceContext->DrawIndexedInstanced(
-						m_ShaderLayouts[ i ].Buffers[ j ].Mesh.VertexIndexCount,
-						m_ShaderLayouts[ i ].Buffers[ j ].InstanceCount,
+						m_ShaderLayouts[ i ]->Buffers[ j ].Mesh.VertexIndexCount,
+						m_ShaderLayouts[ i ]->Buffers[ j ].InstanceCount,
 						0,
 						0,
 						0
@@ -132,9 +139,16 @@ namespace KVE
 		{
 			assert( m_Window );
 
-			m_ShaderLayouts = new ShaderLayout[ 1 ];
+			if ( m_ShaderLayoutCount >= m_ShaderLayoutMaxCount )
+			{
+				//max num of layouts reached
+				return -1;
+			}
 
-			m_ShaderLayouts[ 0 ].NumBuffers = 0;
+			m_ShaderLayouts[ m_ShaderLayoutCount ] = new ShaderLayout;
+			m_ShaderLayouts[ m_ShaderLayoutCount ]->NumBuffers = 0;
+
+			ShaderProgram* program = &m_ShaderLayouts[ m_ShaderLayoutCount ]->Program;
 
 			// Load Vertex Shader --------------------------------------
 			ID3DBlob* vsBlob;
@@ -145,7 +159,7 @@ namespace KVE
 				vsBlob->GetBufferPointer(),
 				vsBlob->GetBufferSize(),
 				NULL,
-				&m_ShaderLayouts[ 0 ].Program.VertexShader ) );
+				&program->VertexShader ) );
 
 			// Before cleaning up the data, create the input layout
 			HR( m_Window->m_Device->CreateInputLayout(
@@ -153,7 +167,7 @@ namespace KVE
 				spDesc.NumVertexElements,
 				vsBlob->GetBufferPointer(),
 				vsBlob->GetBufferSize(),
-				&m_ShaderLayouts[ 0 ].Program.InputLayout ) );
+				&program->InputLayout ) );
 
 			// Clean up
 			ReleaseMacro( vsBlob );
@@ -167,37 +181,30 @@ namespace KVE
 				psBlob->GetBufferPointer(),
 				psBlob->GetBufferSize(),
 				NULL,
-				&m_ShaderLayouts[ 0 ].Program.PixelShader ) );
+				&program->PixelShader ) );
 
 			// Clean up
 			ReleaseMacro( psBlob );
 
-			if ( m_LayoutCount >= MAX_LAYOUTS )
-			{
-				//max num of layouts reached
-				return -1;
-			}
-			else
-			{
-				return m_LayoutCount++;
-			}
+			return m_ShaderLayoutCount++;
 		}
 
-		void RenderManager::createShaderBuffers( const ShaderBuffersDesc& sbDesc, UINT layoutIndex )
+		void RenderManager::createShaderBuffers( const ShaderBuffersDesc& sbDesc, const UINT layoutIndex )
 		{
 			assert( m_Window );
 
-			m_ShaderLayouts[ layoutIndex ].Buffers = new ShaderBuffers();
+			m_ShaderLayouts[ layoutIndex ]->Buffers = new ShaderBuffers();
 
-			UINT buffNum = m_ShaderLayouts[ layoutIndex ].NumBuffers++;
+			UINT buffNum = m_ShaderLayouts[ layoutIndex ]->NumBuffers++;
+			ShaderBuffers* buffers = m_ShaderLayouts[ layoutIndex ]->Buffers;
 
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].Mesh.VertexStride = sbDesc.VertexStride;
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].Mesh.VertexOffset = sbDesc.VertexOffset;
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].Mesh.VertexIndexCount = sbDesc.VertexIndexCount;
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceCount = sbDesc.InstanceCount;
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceStride = sbDesc.InstanceStride;
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceOffset = sbDesc.InstanceOffset;
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].Mesh.Topology = sbDesc.Topology;
+			buffers[ buffNum ].Mesh.VertexStride = sbDesc.VertexStride;
+			buffers[ buffNum ].Mesh.VertexOffset = sbDesc.VertexOffset;
+			buffers[ buffNum ].Mesh.VertexIndexCount = sbDesc.VertexIndexCount;
+			buffers[ buffNum ].InstanceCount = sbDesc.InstanceCount;
+			buffers[ buffNum ].InstanceStride = sbDesc.InstanceStride;
+			buffers[ buffNum ].InstanceOffset = sbDesc.InstanceOffset;
+			buffers[ buffNum ].Mesh.Topology = sbDesc.Topology;
 
 			// Create the vertex buffer
 			D3D11_BUFFER_DESC vbd;
@@ -212,7 +219,7 @@ namespace KVE
 			HR( m_Window->m_Device->CreateBuffer(
 				&vbd,
 				&initialVertexData,
-				&m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].Mesh.VertexBuffer ) );
+				&buffers[ buffNum ].Mesh.VertexBuffer ) );
 
 			// Create the index buffer
 			D3D11_BUFFER_DESC ibd;
@@ -227,7 +234,7 @@ namespace KVE
 			HR( m_Window->m_Device->CreateBuffer(
 				&ibd,
 				&initialIndexData,
-				&m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].Mesh.VertexIndexBuffer ) );
+				&buffers[ buffNum ].Mesh.VertexIndexBuffer ) );
 
 			// Create the instance buffer
 			D3D11_BUFFER_DESC instbd;
@@ -240,22 +247,7 @@ namespace KVE
 			HR( m_Window->m_Device->CreateBuffer(
 				&instbd,
 				0,
-				&m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceBuffer ) );
-
-			/*D3D11_MAPPED_SUBRESOURCE mappedInstanceData;
-
-			m_Window->m_DeviceContext->Map(
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceBuffer,
-			0,
-			D3D11_MAP_WRITE_DISCARD,
-			0,
-			&mappedInstanceData
-			);
-			memcpy( mappedInstanceData.pData, sbDesc.Instances, sbDesc.InstanceStride * sbDesc.InstanceCount );
-			m_Window->m_DeviceContext->Unmap(
-			m_ShaderLayouts[ layoutIndex ].Buffers[ buffNum ].InstanceBuffer,
-			0
-			);*/
+				&buffers[ buffNum ].InstanceBuffer ) );
 		}
 
 		void RenderManager::createConstBuffer( const UINT stride )
@@ -298,7 +290,7 @@ namespace KVE
 
 			// maps the underlying InstanceBuffer's data to the local D3D11_MAPPED_SUBRESOURCE 'pData' variable
 			m_Window->m_DeviceContext->Map(
-				m_ShaderLayouts[ layoutIndex ].Buffers[ bufferIndex ].InstanceBuffer,
+				m_ShaderLayouts[ layoutIndex ]->Buffers[ bufferIndex ].InstanceBuffer,
 				0,
 				D3D11_MAP_WRITE_DISCARD, // discard any instance data that was previously here (i.e. in this 'InstanceBuffer')
 				0,
@@ -308,7 +300,7 @@ namespace KVE
 			// because the local D3D11_MAPPED_SUBRESOURCE is mapped to the InstanceBuffer data this fills this buffer's data
 			memcpy( mappedInstanceData.pData, frame->Instances, frame->InstanceStride * frame->InstanceCount );
 			m_Window->m_DeviceContext->Unmap(
-				m_ShaderLayouts[ layoutIndex ].Buffers[ bufferIndex ].InstanceBuffer,
+				m_ShaderLayouts[ layoutIndex ]->Buffers[ bufferIndex ].InstanceBuffer,
 				0
 				);
 		}

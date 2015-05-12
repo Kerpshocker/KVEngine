@@ -58,7 +58,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	System::MemoryManager::Instance().initialize();
 	Graphics::FrameManager::Instance().initialize();
 	Input::Initialize();
-	Graphics::RenderManager::Instance().initialize( &viewport, 1 );
+	Graphics::RenderManager::Instance().initialize( 1, &viewport, 1 );
 	Graphics::RenderManager::Instance().setWindow( window );
 	GameManager::Instance().initialize( window, timer );
 
