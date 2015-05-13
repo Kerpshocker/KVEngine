@@ -69,7 +69,7 @@ void GameManager::createShaders( void )
 	spDesc.InputDesc = inputDesc;
 	spDesc.NumVertexElements = ARRAYSIZE( inputDesc );
 
-	KVE::Graphics::RenderManager::Instance().createShaderLayout( spDesc );
+	KVE::Graphics::RenderManager::Instance().createShaderLayout( spDesc, 1 );
 }
 
 void GameManager::createGeometry( void )
@@ -86,10 +86,18 @@ void GameManager::createGeometry( void )
 	m_LocalInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), green };
 	m_LocalInstances[ 2 ] = { XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue };
 
+	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
+	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &meshSBDesc, sizeof( Vertex ) );
+	meshSBDesc.InstanceCount = m_LocalInstanceCount;
+	meshSBDesc.InstanceStride = sizeof( MeshInstance );
+	meshSBDesc.InstanceOffset = 0;
+	meshSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+	KVE::Graphics::RenderManager::Instance().createShaderBuffers( meshSBDesc, 0 );
+
 	m_LocalOABBInstanceCount = 1;
 	m_LocalOABBInstances = new OABBInstance[ m_LocalOABBInstanceCount ];
 	m_LocalOABBInstances[ 0 ].Position = m_LocalInstances[ 0 ].Position;
-	m_LocalOABBInstances[ 0 ].Color = XMFLOAT4(0.0f, 0.0f, 0.0f, 0.0f);
+	m_LocalOABBInstances[ 0 ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 
 	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
@@ -98,7 +106,7 @@ void GameManager::createGeometry( void )
 	*oabbPosition = XMLoadFloat3( &m_LocalInstances[ 0 ].Position );
 
 	KVE::Collisions::OBB obb = KVE::Collisions::OBB( oabbPosition, frontTopRight, backBottomLeft );
-	
+
 	KVE::Graphics::ShaderBuffersDesc oabbSBDesc;
 	oabbSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
 	oabbSBDesc.Vertices = obb.getCollisionCorners();
@@ -111,13 +119,5 @@ void GameManager::createGeometry( void )
 	oabbSBDesc.InstanceStride = sizeof( OABBInstance );
 	oabbSBDesc.InstanceOffset = 0;
 
-	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
-	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &meshSBDesc, sizeof( Vertex ) );
-	meshSBDesc.InstanceCount = m_LocalInstanceCount;
-	meshSBDesc.InstanceStride = sizeof( MeshInstance );
-	meshSBDesc.InstanceOffset = 0;
-	meshSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-
-	KVE::Graphics::RenderManager::Instance().createShaderBuffers( meshSBDesc, 0 );
 	KVE::Graphics::RenderManager::Instance().createShaderBuffers( oabbSBDesc, 0 );
 }

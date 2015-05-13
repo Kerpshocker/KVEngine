@@ -110,9 +110,10 @@ namespace KVE
 
 		struct ShaderLayout
 		{
+			UINT BufferCount;
+			UINT BufferMaxCount;
 			ShaderProgram Program;
-			UINT NumBuffers;
-			ShaderBuffers* Buffers;
+			ShaderBuffers** Buffers;
 
 			void Release( void )
 			{
@@ -120,8 +121,8 @@ namespace KVE
 
 				if ( Buffers != nullptr )
 				{
-					for ( UINT i = 0; i < NumBuffers; i++ )
-						Buffers->Release();
+					for ( UINT i = 0; i < BufferCount; i++ )
+						Buffers[ i ]->Release();
 
 					//delete[] Buffers;
 					Buffers = nullptr;

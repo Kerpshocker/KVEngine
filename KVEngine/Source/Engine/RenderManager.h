@@ -48,7 +48,7 @@ namespace KVE
 			void release( void );
 			void render( void );
 
-			UINT createShaderLayout( const ShaderProgramDesc& spDesc );
+			UINT createShaderLayout( const ShaderProgramDesc& spDesc, const UINT bufferCount );
 			void createShaderBuffers( const ShaderBuffersDesc& sbDesc, const UINT layoutIndex );
 
 			void setWindow( const DXWindow* const window );
