@@ -7,36 +7,38 @@ namespace KVE
 {
 	namespace System
 	{
-		class Allocator
+		struct Page
+		{
+			Page* next;
+			void* data;
+		};
+
+		class PageAllocator
 		{
 		public:
-			Allocator( void );
-			~Allocator( void );
+			PageAllocator( void );
+			~PageAllocator( void );
 
 			void* alloc( const size_t size );
-			void  free( void* const ptr );
+			void  free( void );
 
 		private:
 			unsigned int m_NextFreeByte;
-			void* m_Page;
+			unsigned int m_AllocatedPageCount;
+			Page** m_AllocatedPages;
 
 		};
 
-		void* operator new( const size_t size, Allocator& a );
+		void* operator new( const size_t size, PageAllocator& a );
 
 		class MemoryManager
 		{
-			friend class Allocator;
+			friend class PageAllocator;
 			SINGLETON_INSTANCE( MemoryManager );
 
-			const unsigned int MEM_POOL_SIZE = 65536;	// 64MB
-			const unsigned int PAGE_SIZE = 1024;		// 1MB
-			const unsigned int PAGE_COUNT = MEM_POOL_SIZE / PAGE_SIZE;
-
-			struct Page
-			{
-				Page* next;
-			};
+			static const unsigned int MEM_POOL_SIZE = 65536;	// 64MB
+			static const unsigned int PAGE_SIZE = 1024;		// 1MB
+			static const unsigned int PAGE_COUNT = MEM_POOL_SIZE / PAGE_SIZE;
 
 			char* m_Memory;
 			Page* m_FreePages;
@@ -46,8 +48,8 @@ namespace KVE
 			void release( void );
 
 		private:
-			void* allocPage( void );
-			void  freePage( void* const ptr );
+			Page* allocPage( void );
+			void  freePage( Page* const page );
 		};
 	}
 }
