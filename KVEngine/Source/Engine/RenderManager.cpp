@@ -1,5 +1,6 @@
 #include "DXWindow.h"
 #include "RenderManager.h"
+#include "MemoryManager.h"
 #include <d3dcompiler.h>
 #include <DirectXMath.h>
 
@@ -9,15 +10,21 @@ namespace KVE
 {
 	namespace Graphics
 	{
+		static System::PageAllocator* graphicsMemory;
+
 		void RenderManager::initialize( const UINT numShaderLayouts, const D3D11_VIEWPORT* viewports, const UINT numViewports )
 		{
+			graphicsMemory = new System::PageAllocator();
+
 			m_ViewportCount = numViewports;
-			m_Viewports = new D3D11_VIEWPORT[ m_ViewportCount ];
+			m_Viewports = (D3D11_VIEWPORT*)graphicsMemory->alloc( sizeof( D3D11_VIEWPORT ) * m_ViewportCount );
+			//m_Viewports = new D3D11_VIEWPORT[ m_ViewportCount ];
 			memcpy( m_Viewports, viewports, sizeof( D3D11_VIEWPORT ) * m_ViewportCount );
 
 			m_ShaderLayoutCount = 0;
 			m_ShaderLayoutMaxCount = numShaderLayouts;
-			m_ShaderLayouts = new ShaderLayout*[ m_ShaderLayoutMaxCount ];
+			m_ShaderLayouts = (ShaderLayout**)graphicsMemory->alloc( sizeof( ShaderLayout* ) * m_ShaderLayoutMaxCount );
+			//m_ShaderLayouts = new ShaderLayout*[ m_ShaderLayoutMaxCount ];
 
 			Manager::initialize();
 		}
@@ -26,7 +33,8 @@ namespace KVE
 		{
 			if ( m_Viewports != nullptr )
 			{
-				delete[] m_Viewports;
+				
+				//delete[] m_Viewports;
 				m_Viewports = nullptr;
 			}
 
@@ -35,9 +43,11 @@ namespace KVE
 				for ( int i = 0; i < m_ShaderLayoutCount; i++ )
 					m_ShaderLayouts[ i ]->Release();
 
-				delete m_ShaderLayouts;
+				//delete m_ShaderLayouts;
 				m_ShaderLayouts = nullptr;
 			}
+
+			graphicsMemory->free();
 
 			ReleaseMacro( m_ConstBuffer );
 		}
@@ -145,7 +155,8 @@ namespace KVE
 				return -1;
 			}
 
-			m_ShaderLayouts[ m_ShaderLayoutCount ] = new ShaderLayout;
+			//m_ShaderLayouts[ m_ShaderLayoutCount ] = new ShaderLayout;
+			m_ShaderLayouts[ m_ShaderLayoutCount ] = (ShaderLayout*)graphicsMemory->alloc( sizeof( ShaderLayout ) );
 			m_ShaderLayouts[ m_ShaderLayoutCount ]->NumBuffers = 0;
 
 			ShaderProgram* program = &m_ShaderLayouts[ m_ShaderLayoutCount ]->Program;
@@ -193,7 +204,8 @@ namespace KVE
 		{
 			assert( m_Window );
 
-			m_ShaderLayouts[ layoutIndex ]->Buffers = new ShaderBuffers();
+			//m_ShaderLayouts[ layoutIndex ]->Buffers = new ShaderBuffers();
+			m_ShaderLayouts[ layoutIndex ]->Buffers = (ShaderBuffers*)graphicsMemory->alloc( sizeof( ShaderBuffers ) );
 
 			UINT buffNum = m_ShaderLayouts[ layoutIndex ]->NumBuffers++;
 			ShaderBuffers* buffers = m_ShaderLayouts[ layoutIndex ]->Buffers;

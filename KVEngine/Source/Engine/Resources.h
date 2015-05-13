@@ -123,7 +123,7 @@ namespace KVE
 					for ( UINT i = 0; i < NumBuffers; i++ )
 						Buffers->Release();
 
-					delete[] Buffers;
+					//delete[] Buffers;
 					Buffers = nullptr;
 				}
 			}

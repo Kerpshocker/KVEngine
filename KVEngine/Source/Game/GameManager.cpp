@@ -78,11 +78,17 @@ void GameManager::createGeometry( void )
 	XMFLOAT4 red = XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f );
 	XMFLOAT4 green = XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f );
 	XMFLOAT4 blue = XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f );
-	m_LocalInstanceCount = 3;
+	m_LocalInstanceCount = 1000;
+	m_LocalInstances = new MeshInstance[ m_LocalInstanceCount ];
+	for ( int i = 0; i < m_LocalInstanceCount; i++ )
+	{
+		m_LocalInstances[ i ] = { XMFLOAT3( rand() % 80 - 40.0f, rand() % 80 - 40.0f, rand() % 80 ), red };
+	}
+	/*m_LocalInstanceCount = 3;
 	m_LocalInstances = new MeshInstance[ m_LocalInstanceCount ];
 	m_LocalInstances[ 0 ] = { XMFLOAT3( -1.5f, -1.0f, 0.0f ), red };
 	m_LocalInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), green };
-	m_LocalInstances[ 2 ] = { XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue };
+	m_LocalInstances[ 2 ] = { XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue };*/
 
 	m_LocalOABBInstanceCount = 1;
 	m_LocalOABBInstances = new OABBInstance[ m_LocalOABBInstanceCount ];
