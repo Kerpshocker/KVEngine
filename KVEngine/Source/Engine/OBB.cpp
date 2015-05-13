@@ -99,14 +99,14 @@ namespace KVE
 				);
 
 			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.backTopRight, worldMatrix );
-			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.backTopLeft, worldMatrix );
-			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.backBottomRight, worldMatrix );
-			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.backBottomLeft, worldMatrix );
+			m_OABBCollisionCorners.collisionBackTopLeft = XMVector3Transform( m_OABBCorners.backTopLeft, worldMatrix );
+			m_OABBCollisionCorners.collisionBackBottomRight = XMVector3Transform( m_OABBCorners.backBottomRight, worldMatrix );
+			m_OABBCollisionCorners.collisionBackBottomLeft = XMVector3Transform( m_OABBCorners.backBottomLeft, worldMatrix );
 
-			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.frontTopRight, worldMatrix );
-			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.frontTopLeft, worldMatrix );
-			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.frontBottomRight, worldMatrix );
-			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.frontBottomLeft, worldMatrix );
+			m_OABBCollisionCorners.collisionFrontTopRight = XMVector3Transform( m_OABBCorners.frontTopRight, worldMatrix );
+			m_OABBCollisionCorners.collisionFrontTopLeft = XMVector3Transform( m_OABBCorners.frontTopLeft, worldMatrix );
+			m_OABBCollisionCorners.collisionFrontBottomRight = XMVector3Transform( m_OABBCorners.frontBottomRight, worldMatrix );
+			m_OABBCollisionCorners.collisionFrontBottomLeft = XMVector3Transform( m_OABBCorners.frontBottomLeft, worldMatrix );
 			
 			m_CollisionCorners[ 0 ] = getCollisionBackTopRight();
 			m_CollisionCorners[ 1 ] = getCollisionBackTopLeft();
