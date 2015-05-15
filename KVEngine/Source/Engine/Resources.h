@@ -24,6 +24,7 @@ namespace KVE
 
 		struct Mesh
 		{
+			UINT padding;
 			D3D_PRIMITIVE_TOPOLOGY		Topology;
 			UINT						VertexStride;
 			UINT						VertexOffset;

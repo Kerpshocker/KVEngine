@@ -5,13 +5,20 @@ namespace KVE
 {
 	namespace Graphics
 	{
-		void FrameManager::initialize( void )
+		void FrameManager::initialize( const UINT buffersPerFrame )
 		{
 			m_ReadIndex = 0;
 			m_WriteIndex = 0;
 			m_Writing = false;
 
 			if ( !m_Data ) throw std::bad_alloc();
+
+			for ( int i = 0; i < MAX_FRAMES; i++ )
+			{
+				m_Data[ i ].InstanceStrides = new UINT[ buffersPerFrame ];
+				m_Data[ i ].InstanceCounts  = new UINT[ buffersPerFrame ];
+				m_Data[ i ].InstanceOffsets	= new UINT[ buffersPerFrame ];
+			}
 		}
 
 		void FrameManager::release( void )

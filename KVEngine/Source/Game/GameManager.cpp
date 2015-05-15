@@ -48,8 +48,12 @@ void GameManager::update( void )
 
 	m_MeshInstances[ 0 ].Position.x += 0.0001f;
 	m_CurrentFrame->Instances = m_MeshInstances;
-	m_CurrentFrame->InstanceStride = sizeof( MeshInstance );
-	m_CurrentFrame->InstanceCount = m_MeshInstanceCount;
+	m_CurrentFrame->InstanceStrides[ 0 ] = sizeof( MeshInstance );
+	m_CurrentFrame->InstanceCounts[ 0 ] = m_MeshInstanceCount;
+	m_CurrentFrame->InstanceOffsets[ 0 ] = 0;
+	m_CurrentFrame->InstanceStrides[ 1 ] = sizeof( OABBInstance );
+	m_CurrentFrame->InstanceCounts[ 1 ] = m_OABBInstanceCount;
+	m_CurrentFrame->InstanceOffsets[ 1 ] = sizeof( MeshInstance ) * m_MeshInstanceCount;
 
 	m_LastFrameEndTime = m_CurrentFrame->EndTime = m_Timer->totalTime();
 
@@ -100,7 +104,7 @@ void GameManager::createGeometry( void )
 	m_OABBInstanceCount = 1;
 	m_OABBInstances = (OABBInstance*)gameMemory->alloc( sizeof( OABBInstance ) * m_OABBInstanceCount );
 	m_OABBInstances[ 0 ].Position = m_MeshInstances[ 0 ].Position;
-	m_OABBInstances[ 0 ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+	m_OABBInstances[ 0 ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 
 	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
@@ -122,5 +126,5 @@ void GameManager::createGeometry( void )
 	oabbSBDesc.InstanceStride = sizeof( OABBInstance );
 	oabbSBDesc.InstanceOffset = 0;
 
-	//KVE::Graphics::RenderManager::Instance().createShaderBuffers( oabbSBDesc, 0 );
+	KVE::Graphics::RenderManager::Instance().createShaderBuffers( oabbSBDesc, 0 );
 }

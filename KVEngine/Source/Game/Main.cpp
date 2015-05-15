@@ -56,7 +56,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	viewport.MaxDepth = 1.0f;
 
 	System::MemoryManager::Instance().initialize();
-	Graphics::FrameManager::Instance().initialize();
+	Graphics::FrameManager::Instance().initialize( 2 );
 	Input::Initialize();
 	Graphics::RenderManager::Instance().initialize( 1, &viewport, 1 );
 	Graphics::RenderManager::Instance().setWindow( window );

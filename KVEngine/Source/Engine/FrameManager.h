@@ -20,8 +20,9 @@ namespace KVE
 			DirectX::XMFLOAT4X4 ProjMatrix;
 
 			void*	Instances;
-			UINT	InstanceStride;
-			UINT	InstanceCount;
+			UINT*	InstanceStrides;
+			UINT*	InstanceCounts;
+			UINT*	InstanceOffsets;
 		};
 
 		class FrameManager
@@ -31,7 +32,7 @@ namespace KVE
 			static const uint8_t MAX_FRAMES = 10;
 			static const uint8_t MAX_QUEUED = 2;
 
-			void initialize( void );
+			void initialize( const UINT buffersPerFrame );
 			void release( void );
 			bool openFrame( FrameParams** out );
 			bool closeFrame( FrameParams** in );
