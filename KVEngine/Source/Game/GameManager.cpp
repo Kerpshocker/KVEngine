@@ -5,12 +5,17 @@
 #include "InputManager.h"
 #include "GameTimer.h"
 #include "OBB.h"
+#include "MemoryManager.h"
 #include <d3dcompiler.h>
 
 using namespace DirectX;
 
+static KVE::System::PageAllocator* gameMemory;
+
 void GameManager::initialize( const KVE::Graphics::DXWindow* window, const KVE::System::GameTimer* timer )
 {
+	gameMemory = new KVE::System::PageAllocator();
+
 	m_Timer = timer;
 
 	KVE::Graphics::CameraParams cParams;
@@ -41,10 +46,10 @@ void GameManager::update( void )
 	m_CurrentFrame->ProjMatrix = KVE::Graphics::CameraManager::Instance().getActiveCamera()->getProjMatrix();
 	XMStoreFloat4x4( &m_CurrentFrame->WorldMatrix, XMMatrixIdentity() );
 
-	m_LocalInstances[ 0 ].Position.x += 0.0001f;
-	m_CurrentFrame->Instances = m_LocalInstances;
+	m_MeshInstances[ 0 ].Position.x += 0.0001f;
+	m_CurrentFrame->Instances = m_MeshInstances;
 	m_CurrentFrame->InstanceStride = sizeof( MeshInstance );
-	m_CurrentFrame->InstanceCount = m_LocalInstanceCount;
+	m_CurrentFrame->InstanceCount = m_MeshInstanceCount;
 
 	m_LastFrameEndTime = m_CurrentFrame->EndTime = m_Timer->totalTime();
 
@@ -74,36 +79,34 @@ void GameManager::createShaders( void )
 
 void GameManager::createGeometry( void )
 {
-	// Set up the instances
-	XMFLOAT4 red = XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f );
-	XMFLOAT4 green = XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f );
-	XMFLOAT4 blue = XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f );
-	m_LocalInstanceCount = 3;
-	m_LocalInstances = new MeshInstance[ m_LocalInstanceCount ];
-	m_LocalInstanceCount = 3;
-	m_LocalInstances = new MeshInstance[ m_LocalInstanceCount ];
-	m_LocalInstances[ 0 ] = { XMFLOAT3( -1.5f, -1.0f, 0.0f ), red };
-	m_LocalInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), green };
-	m_LocalInstances[ 2 ] = { XMFLOAT3( 0.0f, 1.0f, 0.0f ), blue };
-
+	// Set up the mesh instances
+	m_MeshInstanceCount = 3;
+	m_MeshInstances = (MeshInstance*)gameMemory->alloc( sizeof( MeshInstance ) * m_MeshInstanceCount );
+	// Position, Color
+	m_MeshInstances[ 0 ] = { XMFLOAT3( -1.5f, -1.0f, 0.0f ), XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) };
+	m_MeshInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) };
+	m_MeshInstances[ 2 ] = { XMFLOAT3(  0.0f, +1.0f, 0.0f ), XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) };
+	
+	// Create shader buffers - vertices, indices, and instances
 	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
 	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &meshSBDesc, sizeof( Vertex ) );
-	meshSBDesc.InstanceCount = m_LocalInstanceCount;
+	meshSBDesc.InstanceCount = m_MeshInstanceCount;
 	meshSBDesc.InstanceStride = sizeof( MeshInstance );
 	meshSBDesc.InstanceOffset = 0;
 	meshSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	KVE::Graphics::RenderManager::Instance().createShaderBuffers( meshSBDesc, 0 );
 
-	m_LocalOABBInstanceCount = 1;
-	m_LocalOABBInstances = new OABBInstance[ m_LocalOABBInstanceCount ];
-	m_LocalOABBInstances[ 0 ].Position = m_LocalInstances[ 0 ].Position;
-	m_LocalOABBInstances[ 0 ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+	// Set up the obb instances
+	m_OABBInstanceCount = 1;
+	m_OABBInstances = (OABBInstance*)gameMemory->alloc( sizeof( OABBInstance ) * m_OABBInstanceCount );
+	m_OABBInstances[ 0 ].Position = m_MeshInstances[ 0 ].Position;
+	m_OABBInstances[ 0 ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 
 	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
 
 	XMVECTOR* oabbPosition = new XMVECTOR();
-	*oabbPosition = XMLoadFloat3( &m_LocalInstances[ 0 ].Position );
+	*oabbPosition = XMLoadFloat3( &m_MeshInstances[ 0 ].Position );
 
 	KVE::Collisions::OBB obb = KVE::Collisions::OBB( oabbPosition, frontTopRight, backBottomLeft );
 
@@ -115,9 +118,9 @@ void GameManager::createGeometry( void )
 	oabbSBDesc.VertexStride = sizeof( Vertex );
 	oabbSBDesc.VertexIndexCount = 8;
 	oabbSBDesc.VertexIndices = obb.getIndices();
-	oabbSBDesc.InstanceCount = m_LocalOABBInstanceCount;
+	oabbSBDesc.InstanceCount = m_OABBInstanceCount;
 	oabbSBDesc.InstanceStride = sizeof( OABBInstance );
 	oabbSBDesc.InstanceOffset = 0;
 
-	KVE::Graphics::RenderManager::Instance().createShaderBuffers( oabbSBDesc, 0 );
+	//KVE::Graphics::RenderManager::Instance().createShaderBuffers( oabbSBDesc, 0 );
 }

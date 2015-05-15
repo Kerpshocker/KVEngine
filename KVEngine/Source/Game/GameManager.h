@@ -43,11 +43,11 @@ private:
 	KVE::Graphics::FrameParams*		m_CurrentFrame;
 	double							m_LastFrameEndTime;
 
-	MeshInstance*					m_LocalInstances;
-	UINT							m_LocalInstanceCount;
+	MeshInstance*					m_MeshInstances;
+	UINT							m_MeshInstanceCount;
 
-	OABBInstance*					m_LocalOABBInstances;
-	UINT							m_LocalOABBInstanceCount;
+	OABBInstance*					m_OABBInstances;
+	UINT							m_OABBInstanceCount;
 
 	Spaceship						m_Player;
 };
