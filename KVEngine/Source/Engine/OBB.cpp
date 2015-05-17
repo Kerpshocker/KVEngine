@@ -48,12 +48,12 @@ namespace KVE
 			m_Indices = new UINT[ 8 ];
 			m_Indices[ 0 ] = 0;
 			m_Indices[ 1 ] = 1;
-			m_Indices[ 2 ] = 1;
-			m_Indices[ 3 ] = 2;
-			m_Indices[ 4 ] = 2;
-			m_Indices[ 5 ] = 3;
-			m_Indices[ 6 ] = 3;
-			m_Indices[ 7 ] = 4;
+			m_Indices[ 2 ] = 2;
+			m_Indices[ 3 ] = 3;
+			m_Indices[ 4 ] = 4;
+			m_Indices[ 5 ] = 5;
+			m_Indices[ 6 ] = 6;
+			m_Indices[ 7 ] = 7;
 		}
 
 		OBB::~OBB()
@@ -90,13 +90,14 @@ namespace KVE
 
 		void OBB::UpdateCollisionPoints( void )
 		{
-			XMMATRIX worldMatrix =
-				XMMatrixScaling( XMVectorGetX( *m_Scale ), XMVectorGetY( *m_Scale ), XMVectorGetZ( *m_Scale ) ) *
-				XMMatrixRotationX( XMVectorGetX( *m_Rotation ) ) *
-				XMMatrixRotationY( XMVectorGetY( *m_Rotation ) ) *
-				XMMatrixRotationZ( XMVectorGetZ( *m_Rotation ) ) *
-				XMMatrixTranslation( XMVectorGetX( *m_Position ), XMVectorGetY( *m_Position ), XMVectorGetZ( *m_Position ) 
-				);
+			XMMATRIX worldMatrix = 
+				XMMatrixTranspose(
+					XMMatrixScaling( XMVectorGetX( *m_Scale ), XMVectorGetY( *m_Scale ), XMVectorGetZ( *m_Scale ) ) *
+					XMMatrixRotationX( XMVectorGetX( *m_Rotation ) ) *
+					XMMatrixRotationY( XMVectorGetY( *m_Rotation ) ) *
+					XMMatrixRotationZ( XMVectorGetZ( *m_Rotation ) ) *
+					XMMatrixTranslation( XMVectorGetX( *m_Position ), XMVectorGetY( *m_Position ), XMVectorGetZ( *m_Position ) 
+				));
 
 			m_OABBCollisionCorners.collisionBackTopRight = XMVector3Transform( m_OABBCorners.backTopRight, worldMatrix );
 			m_OABBCollisionCorners.collisionBackTopLeft = XMVector3Transform( m_OABBCorners.backTopLeft, worldMatrix );
@@ -108,14 +109,14 @@ namespace KVE
 			m_OABBCollisionCorners.collisionFrontBottomRight = XMVector3Transform( m_OABBCorners.frontBottomRight, worldMatrix );
 			m_OABBCollisionCorners.collisionFrontBottomLeft = XMVector3Transform( m_OABBCorners.frontBottomLeft, worldMatrix );
 			
-			m_CollisionCorners[ 0 ] = getCollisionBackTopRight();
-			m_CollisionCorners[ 1 ] = getCollisionBackTopLeft();
-			m_CollisionCorners[ 2 ] = getCollisionBackBottomRight();
-			m_CollisionCorners[ 3 ] = getCollisionBackBottomLeft();
-			m_CollisionCorners[ 4 ] = getCollisionFrontTopRight();
-			m_CollisionCorners[ 5 ] = getCollisionFrontTopLeft();
-			m_CollisionCorners[ 6 ] = getCollisionFrontBottomRight();
-			m_CollisionCorners[ 7 ] = getCollisionFrontBottomLeft();
+			m_CollisionCorners[ 0 ] = getCollisionFrontTopRight();
+			m_CollisionCorners[ 1 ] = getCollisionFrontTopLeft();
+			m_CollisionCorners[ 2 ] = getCollisionFrontBottomLeft();
+			m_CollisionCorners[ 3 ] = getCollisionFrontBottomRight();
+			m_CollisionCorners[ 4 ] = getCollisionBackTopRight();
+			m_CollisionCorners[ 5 ] = getCollisionBackTopLeft();
+			m_CollisionCorners[ 6 ] = getCollisionBackBottomLeft();
+			m_CollisionCorners[ 7 ] = getCollisionBackBottomRight();
 		}
 	}
 }
