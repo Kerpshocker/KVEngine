@@ -16,14 +16,14 @@
 #if defined(DEBUG) | defined(_DEBUG)
 #ifndef HR
 #define HR(x)													\
-		{															\
+	{															\
 		HRESULT hr = (x);										\
 		if(FAILED(hr))											\
-				{														\
+		{														\
 			DXTrace(__FILEW__, (DWORD)__LINE__, hr, L#x, true);	\
 			PostQuitMessage(0);									\
-				}														\
-		}														
+		}														\
+	}														
 #endif
 #else
 #ifndef HR
@@ -64,7 +64,7 @@ namespace KVE
 			ShaderLayout**	m_ShaderLayouts;
 			ID3D11Buffer*	m_ConstBuffer;
 
-			const FrameParams* m_CurrentFrame;
+			FrameParams*	m_CurrentFrame;
 
 			void createConstBuffer( const UINT stride );
 			void setConstBuffer( void* data );

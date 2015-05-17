@@ -39,6 +39,16 @@ namespace KVE
 			}
 		}
 
+		void PageAllocator::reset( void )
+		{
+			for ( int i = 0; i < m_AllocatedPageCount; i++ )
+			{
+				memset( m_AllocatedPages[ i ]->data, 0, m_NextFreeByte );
+			}
+
+			m_NextFreeByte = 0;
+		}
+
 		void* operator new( const size_t size, PageAllocator& a )
 		{
 			return a.alloc( size );;

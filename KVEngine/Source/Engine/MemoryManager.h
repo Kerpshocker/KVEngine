@@ -21,6 +21,7 @@ namespace KVE
 
 			void* alloc( const size_t size );
 			void  free( void );
+			void  reset( void );
 
 		private:
 			unsigned int m_NextFreeByte;

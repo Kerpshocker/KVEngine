@@ -46,14 +46,32 @@ void GameManager::update( void )
 	m_CurrentFrame->ProjMatrix = KVE::Graphics::CameraManager::Instance().getActiveCamera()->getProjMatrix();
 	XMStoreFloat4x4( &m_CurrentFrame->WorldMatrix, XMMatrixIdentity() );
 
-	m_MeshInstances[ 0 ].Position.x += 0.0001f;
-	m_CurrentFrame->Instances = m_MeshInstances;
+	m_CurrentFrame->Allocator->reset();
+	m_CurrentFrame->Instances = m_CurrentFrame->Allocator->alloc(
+		sizeof( MeshInstance ) * m_MeshInstanceCount +
+		sizeof( OABBInstance ) * m_OABBInstanceCount
+		);
 	m_CurrentFrame->InstanceStrides[ 0 ] = sizeof( MeshInstance );
-	m_CurrentFrame->InstanceCounts[ 0 ] = m_MeshInstanceCount;
-	m_CurrentFrame->InstanceOffsets[ 0 ] = 0;
 	m_CurrentFrame->InstanceStrides[ 1 ] = sizeof( OABBInstance );
+	m_CurrentFrame->InstanceCounts[ 0 ] = m_MeshInstanceCount;
 	m_CurrentFrame->InstanceCounts[ 1 ] = m_OABBInstanceCount;
+	m_CurrentFrame->InstanceOffsets[ 0 ] = 0;
 	m_CurrentFrame->InstanceOffsets[ 1 ] = sizeof( MeshInstance ) * m_MeshInstanceCount;
+	
+	MeshInstance* frameMeshInstances = (MeshInstance*) m_CurrentFrame->Instances;
+	OABBInstance* frameOABBInstances = (OABBInstance*) &frameMeshInstances[ m_MeshInstanceCount ];
+	for ( int i = 0; i < m_MeshInstanceCount; i++ )
+	{
+		m_MeshInstances[ i ].Position.x += 0.0001f;
+
+		frameMeshInstances[ i ] = m_MeshInstances[ i ];
+
+		if ( i < m_OABBInstanceCount )
+		{
+			frameOABBInstances[ i ].Position = m_MeshInstances[ i ].Position;
+			frameOABBInstances[ i ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+		}
+	}
 
 	m_LastFrameEndTime = m_CurrentFrame->EndTime = m_Timer->totalTime();
 
@@ -101,18 +119,13 @@ void GameManager::createGeometry( void )
 	KVE::Graphics::RenderManager::Instance().createShaderBuffers( meshSBDesc, 0 );
 
 	// Set up the obb instances
-	m_OABBInstanceCount = 1;
+	m_OABBInstanceCount = m_MeshInstanceCount;
 	m_OABBInstances = (OABBInstance*)gameMemory->alloc( sizeof( OABBInstance ) * m_OABBInstanceCount );
-	m_OABBInstances[ 0 ].Position = m_MeshInstances[ 0 ].Position;
-	m_OABBInstances[ 0 ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 
 	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
 
-	XMVECTOR* oabbPosition = new XMVECTOR();
-	*oabbPosition = XMLoadFloat3( &m_MeshInstances[ 0 ].Position );
-
-	KVE::Collisions::OBB obb = KVE::Collisions::OBB( oabbPosition, frontTopRight, backBottomLeft );
+	KVE::Collisions::OBB obb = KVE::Collisions::OBB( &XMLoadFloat3( &m_MeshInstances[ 0 ].Position ), frontTopRight, backBottomLeft );
 
 	KVE::Graphics::ShaderBuffersDesc oabbSBDesc;
 	oabbSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;

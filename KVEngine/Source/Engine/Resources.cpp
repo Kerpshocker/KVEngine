@@ -139,8 +139,11 @@ namespace KVE
 					// we done fucked up
 				}
 
-				delete[] s;
-				s = nullptr;
+				if ( s != nullptr )
+				{
+					delete[] s;
+					s = nullptr;
+				}
 			}
 
 			int numIndices = std::count( faces.begin(), faces.end(), 'f' ) * 3; // 3 vertices in each face
@@ -193,8 +196,11 @@ namespace KVE
 						//	tail += sizeof( XMFLOAT4 );
 						//}
 
-						delete[] s2;
-						s2 = nullptr;
+						if ( s2 != nullptr )
+						{
+							delete[] s2;
+							s2 = nullptr;
+						}
 					}
 				}
 				else
@@ -202,8 +208,11 @@ namespace KVE
 					// we done fucked up again
 				}
 
-				delete[] s;
-				s = nullptr;
+				if ( s != nullptr )
+				{
+					delete[] s;
+					s = nullptr;
+				}
 			}
 
 			UINT* indices = new UINT[ numIndices ];

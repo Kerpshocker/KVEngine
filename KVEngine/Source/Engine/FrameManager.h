@@ -5,6 +5,7 @@
 #include <d3d11.h>
 #include <DirectXMath.h>
 #include "Singleton.h"
+#include "MemoryManager.h"
 
 namespace KVE
 {
@@ -19,6 +20,7 @@ namespace KVE
 			DirectX::XMFLOAT4X4 ViewMatrix;
 			DirectX::XMFLOAT4X4 ProjMatrix;
 
+			System::PageAllocator*	Allocator;
 			void*	Instances;
 			UINT*	InstanceStrides;
 			UINT*	InstanceCounts;
@@ -36,15 +38,18 @@ namespace KVE
 			void release( void );
 			bool openFrame( FrameParams** out );
 			bool closeFrame( FrameParams** in );
-			bool readNextFrame( const FrameParams** const out );
+			bool readNextFrame( FrameParams** const out );
 			bool isWriteReady( void ) const;
 			bool isReadReady( void ) const;
 
 		private:
-			FrameParams m_Data[ MAX_FRAMES ];
+			FrameParams				m_Data[ MAX_FRAMES ];
+			System::PageAllocator	m_FrameAllocators[ MAX_QUEUED ];
 
-			std::atomic<uint8_t>	m_ReadIndex;
-			std::atomic<uint8_t>	m_WriteIndex;
+			std::atomic<uint8_t>	m_FrameReadIndex;
+			std::atomic<uint8_t>	m_FrameWriteIndex;
+			std::atomic<uint8_t>	m_AllocReadIndex;
+			std::atomic<uint8_t>	m_AllocWriteIndex;
 			std::atomic<bool>		m_Writing;
 		};
 	}
