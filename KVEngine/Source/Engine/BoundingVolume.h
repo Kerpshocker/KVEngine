@@ -7,13 +7,6 @@ namespace KVE
 {
 	namespace Collisions
 	{
-		enum IntersectionValue
-		{
-			CONTAINS,
-			INTERSECTS,
-			NONE
-		};
-
 		class BoundingVolume : public GameComponents::GameObject
 		{
 		public:
@@ -22,8 +15,6 @@ namespace KVE
 
 			DirectX::XMVECTOR* getCollisionCorners( void ){ return m_CollisionCorners; };
 			DirectX::XMVECTOR* getNormals( void ){ return m_Normals; };
-
-			IntersectionValue intersects( BoundingVolume other );
 
 		protected:
 			DirectX::XMVECTOR* m_CollisionCorners;

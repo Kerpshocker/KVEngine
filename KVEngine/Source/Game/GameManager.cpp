@@ -127,13 +127,21 @@ void GameManager::createGeometry( void )
 
 	KVE::Collisions::OBB obb = KVE::Collisions::OBB( &XMLoadFloat3( &m_MeshInstances[ 0 ].Position ), frontTopRight, backBottomLeft );
 
+	XMVECTOR* obbCorners = obb.getCollisionCorners();
+	XMFLOAT3 corners[ 8 ];
+	for ( int i = 0; i < 8; i++ )
+	{
+		corners[i] = { XMVectorGetX( obbCorners[ i ] ), XMVectorGetY( obbCorners[ i ] ), XMVectorGetZ( obbCorners[ i ] ) };
+		XMLoadFloat3( &corners[ i ] );
+	}
+
 	KVE::Graphics::ShaderBuffersDesc oabbSBDesc;
-	oabbSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
-	oabbSBDesc.Vertices = obb.getCollisionCorners();
-	oabbSBDesc.VertexCount = 4;
+	oabbSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
+	oabbSBDesc.Vertices = corners;
+	oabbSBDesc.VertexCount = 8;
 	oabbSBDesc.VertexOffset = 0;
 	oabbSBDesc.VertexStride = sizeof( Vertex );
-	oabbSBDesc.VertexIndexCount = 4;
+	oabbSBDesc.VertexIndexCount = 24;
 	oabbSBDesc.VertexIndices = obb.getIndices();
 	oabbSBDesc.InstanceCount = m_OABBInstanceCount;
 	oabbSBDesc.InstanceStride = sizeof( OABBInstance );

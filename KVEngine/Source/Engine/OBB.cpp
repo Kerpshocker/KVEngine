@@ -45,15 +45,32 @@ namespace KVE
 			m_Normals[ 4 ] = getLeftNormal();
 			m_Normals[ 5 ] = getRightNormal();
 
-			m_Indices = new UINT[ 8 ];
+			m_Indices = new UINT[ 24 ];
 			m_Indices[ 0 ] = 0;
 			m_Indices[ 1 ] = 1;
-			m_Indices[ 2 ] = 2;
-			m_Indices[ 3 ] = 3;
-			m_Indices[ 4 ] = 4;
-			m_Indices[ 5 ] = 5;
-			m_Indices[ 6 ] = 6;
-			m_Indices[ 7 ] = 7;
+			m_Indices[ 2 ] = 0;
+			m_Indices[ 3 ] = 7;
+			m_Indices[ 4 ] = 1;
+			m_Indices[ 5 ] = 6;
+			m_Indices[ 6 ] = 1;
+			m_Indices[ 7 ] = 2;
+			m_Indices[ 8 ] = 2;
+			m_Indices[ 9 ] = 3;
+			m_Indices[ 10 ] = 2;
+			m_Indices[ 11 ] = 5;
+			m_Indices[ 12 ] = 3;
+			m_Indices[ 13 ] = 4;
+			m_Indices[ 14 ] = 3;
+			m_Indices[ 15 ] = 0;
+			m_Indices[ 16 ] = 4;
+			m_Indices[ 17 ] = 5;
+			m_Indices[ 18 ] = 4;
+			m_Indices[ 19 ] = 7;
+			m_Indices[ 20 ] = 5;
+			m_Indices[ 21 ] = 6;
+			m_Indices[ 22 ] = 6;
+			m_Indices[ 23 ] = 7;
+
 		}
 
 		OBB::~OBB()
@@ -113,10 +130,26 @@ namespace KVE
 			m_CollisionCorners[ 1 ] = getCollisionFrontTopLeft();
 			m_CollisionCorners[ 2 ] = getCollisionFrontBottomLeft();
 			m_CollisionCorners[ 3 ] = getCollisionFrontBottomRight();
-			m_CollisionCorners[ 4 ] = getCollisionBackTopRight();
-			m_CollisionCorners[ 5 ] = getCollisionBackTopLeft();
-			m_CollisionCorners[ 6 ] = getCollisionBackBottomLeft();
-			m_CollisionCorners[ 7 ] = getCollisionBackBottomRight();
+			m_CollisionCorners[ 4 ] = getCollisionBackBottomRight();
+			m_CollisionCorners[ 5 ] = getCollisionBackBottomLeft();
+			m_CollisionCorners[ 6 ] = getCollisionBackTopLeft();
+			m_CollisionCorners[ 7 ] = getCollisionBackTopRight();
+		}
+
+		IntersectionValue OBB::intersects( XMVECTOR instance, XMVECTOR other )
+		{
+			f32 myX		= abs(XMVectorGetX( instance )); 
+			f32 myY		= abs(XMVectorGetY( instance ));
+			f32 myZ		= abs(XMVectorGetZ( instance ));
+
+			f32 otherX	= abs(XMVectorGetX( other ));
+			f32 otherY	= abs(XMVectorGetY( other ));
+			f32 otherZ	= abs(XMVectorGetZ( other ));
+
+			if ( abs(myX - otherX) <= m_Width && abs(myY - otherY) <= m_Height && abs(myZ - otherZ) <= m_Depth )
+				return INTERSECTS;
+
+			return NONE;
 		}
 	}
 }
