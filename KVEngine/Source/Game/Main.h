@@ -7,7 +7,7 @@
 #include "GameTimer.h"
 #include "DXWindow.h"
 
-#define MULTI_THREADED
+//#define MULTI_THREADED
 
 static KVE::Graphics::DXWindow* window;
 static KVE::System::GameTimer* timer;

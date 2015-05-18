@@ -6,6 +6,7 @@
 #include "DXWindow.h"
 #include <DirectXMath.h>
 #include "Spaceship.h"
+#include "OBB.h"
 #include "GameTimer.h"
 
 struct Vertex
@@ -51,6 +52,8 @@ private:
 	UINT							m_OABBInstanceCount;
 
 	Spaceship						m_Player;
+
+	KVE::Collisions::OBB			m_OBB;
 };
 
 #endif

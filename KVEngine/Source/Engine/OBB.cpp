@@ -71,6 +71,7 @@ namespace KVE
 			m_Indices[ 22 ] = 6;
 			m_Indices[ 23 ] = 7;
 
+			intersectsValue = NONE;
 		}
 
 		OBB::~OBB()
@@ -138,13 +139,13 @@ namespace KVE
 
 		IntersectionValue OBB::intersects( XMVECTOR instance, XMVECTOR other )
 		{
-			f32 myX		= abs(XMVectorGetX( instance )); 
-			f32 myY		= abs(XMVectorGetY( instance ));
-			f32 myZ		= abs(XMVectorGetZ( instance ));
+			f32 myX		= XMVectorGetX( instance ); 
+			f32 myY		= XMVectorGetY( instance );
+			f32 myZ		= XMVectorGetZ( instance );
 
-			f32 otherX	= abs(XMVectorGetX( other ));
-			f32 otherY	= abs(XMVectorGetY( other ));
-			f32 otherZ	= abs(XMVectorGetZ( other ));
+			f32 otherX	= XMVectorGetX( other );
+			f32 otherY	= XMVectorGetY( other );
+			f32 otherZ	= XMVectorGetZ( other );
 
 			if ( abs(myX - otherX) <= m_Width && abs(myY - otherY) <= m_Height && abs(myZ - otherZ) <= m_Depth )
 				return INTERSECTS;

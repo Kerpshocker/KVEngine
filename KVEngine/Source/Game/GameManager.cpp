@@ -4,7 +4,6 @@
 #include "FrameManager.h"
 #include "InputManager.h"
 #include "GameTimer.h"
-#include "OBB.h"
 #include "MemoryManager.h"
 #include <d3dcompiler.h>
 
@@ -60,16 +59,36 @@ void GameManager::update( void )
 	
 	MeshInstance* frameMeshInstances = (MeshInstance*) m_CurrentFrame->Instances;
 	OABBInstance* frameOABBInstances = (OABBInstance*) &frameMeshInstances[ m_MeshInstanceCount ];
+
+	m_MeshInstances[ 0 ].Position.x += 0.5f * (float)m_CurrentFrame->DeltaTime;
+
 	for ( int i = 0; i < m_MeshInstanceCount; i++ )
 	{
-		m_MeshInstances[ i ].Position.x += 0.5f * (float)m_CurrentFrame->DeltaTime;
-
 		frameMeshInstances[ i ] = m_MeshInstances[ i ];
 
 		if ( i < m_OABBInstanceCount )
 		{
 			frameOABBInstances[ i ].Position = m_MeshInstances[ i ].Position;
 			frameOABBInstances[ i ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+		}
+	}
+
+	for ( int i = 0; i < m_MeshInstanceCount; i++ )
+	{
+		for ( int j = i + 1; j < m_OABBInstanceCount - 1; j++ )
+		{
+			KVE::Collisions::IntersectionValue iValue = m_OBB.intersects( XMLoadFloat3( &frameMeshInstances[ i ].Position ), XMLoadFloat3( &frameMeshInstances[ j ].Position ) );
+
+			if ( iValue == KVE::Collisions::INTERSECTS )
+			{
+				frameOABBInstances[ 0 ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+				frameOABBInstances[ 1 ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+			}
+			else
+			{
+				frameOABBInstances[ 0 ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+				frameOABBInstances[ 1 ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+			}
 		}
 	}
 
@@ -127,14 +146,14 @@ void GameManager::createGeometry( void )
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
 
 	KVE::Collisions::OBB obb = KVE::Collisions::OBB( &XMLoadFloat3( &m_MeshInstances[ 0 ].Position ), frontTopRight, backBottomLeft );
+	m_OBB = obb;
 
-	XMVECTOR* obbCorners = obb.getCollisionCorners();
+	XMVECTOR* obbCorners = m_OBB.getCollisionCorners();
 	Vertex corners[ 8 ];
 	for ( int i = 0; i < 8; i++ )
 	{
 		corners[ i ].Position = { XMVectorGetX( obbCorners[ i ] ), XMVectorGetY( obbCorners[ i ] ), XMVectorGetZ( obbCorners[ i ] ) };
 		corners[ i ].Normal = { 0, 0, -1 };
-		//XMLoadFloat3( &corners[ i ] );
 	}
 
 	KVE::Graphics::ShaderBuffersDesc oabbSBDesc;
@@ -144,7 +163,7 @@ void GameManager::createGeometry( void )
 	oabbSBDesc.VertexOffset = 0;
 	oabbSBDesc.VertexStride = sizeof( Vertex );
 	oabbSBDesc.VertexIndexCount = 24;
-	oabbSBDesc.VertexIndices = obb.getIndices();
+	oabbSBDesc.VertexIndices = m_OBB.getIndices();
 	oabbSBDesc.InstanceCount = m_OABBInstanceCount;
 	oabbSBDesc.InstanceStride = sizeof( OABBInstance );
 	oabbSBDesc.InstanceOffset = 0;

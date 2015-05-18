@@ -75,6 +75,8 @@ namespace KVE
 
 			IntersectionValue intersectsValue;
 
+			IntersectionValue intersects( DirectX::XMVECTOR instance, DirectX::XMVECTOR other );
+
 		private:
 			OABBCorners				m_OABBCorners;
 			OABBCollisionCorners	m_OABBCollisionCorners;
@@ -88,8 +90,6 @@ namespace KVE
 			//used to keep in sync with the characteristics of the enclosed object
 			void UpdateCollisionPoints( void );
 			//void UpdateDrawingVectors( void );
-
-			IntersectionValue intersects( DirectX::XMVECTOR instance, DirectX::XMVECTOR other );
 
 		protected:
 			DirectX::XMVECTOR getFrontNormal( void ){
