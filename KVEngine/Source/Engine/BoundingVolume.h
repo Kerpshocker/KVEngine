@@ -17,8 +17,8 @@ namespace KVE
 			DirectX::XMVECTOR* getNormals( void ){ return m_Normals; };
 
 		protected:
-			DirectX::XMVECTOR* m_CollisionCorners;
-			DirectX::XMVECTOR* m_Normals;
+			DirectX::XMVECTOR m_CollisionCorners[ 8 ];
+			DirectX::XMVECTOR m_Normals[ 6 ];
 		};
 	}
 }
