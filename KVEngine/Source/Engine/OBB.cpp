@@ -70,7 +70,6 @@ namespace KVE
 
 		OBB::~OBB()
 		{
-				_mm_free( m_CollisionCorners );
 			
 		}
 
