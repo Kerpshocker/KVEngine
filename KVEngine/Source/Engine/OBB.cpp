@@ -32,12 +32,9 @@ namespace KVE
 			m_Depth = XMVectorGetZ( XMVectorAbs( XMVectorSubtract( m_OABBCorners.frontTopRight, m_OABBCorners.backBottomLeft ) ) );
 
 			//may need faces? fr, back, left, right, top, bot
-
-			m_CollisionCorners = (XMVECTOR*)_mm_malloc( sizeof( XMVECTOR ) * 8, 16 );
 			
 			UpdateCollisionPoints();
 			
-			m_Normals = (XMVECTOR*)_mm_malloc( sizeof( XMVECTOR ) * 6, 16 );
 			m_Normals[ 0 ] = getFrontNormal();
 			m_Normals[ 1 ] = getBackNormal();
 			m_Normals[ 2 ] = getTopNormal();
@@ -45,7 +42,6 @@ namespace KVE
 			m_Normals[ 4 ] = getLeftNormal();
 			m_Normals[ 5 ] = getRightNormal();
 
-			m_Indices = new UINT[ 24 ];
 			m_Indices[ 0 ] = 0;
 			m_Indices[ 1 ] = 1;
 			m_Indices[ 2 ] = 0;
@@ -76,16 +72,7 @@ namespace KVE
 
 		OBB::~OBB()
 		{
-			if ( m_CollisionCorners != nullptr )
-			{
-				_mm_free( m_CollisionCorners );
-				m_CollisionCorners = nullptr;
-			}
-			if ( m_Normals != nullptr )
-			{
-				_mm_free( m_Normals );
-				m_Normals = nullptr;
-			}
+			
 		}
 
 		void OBB::setPosition( XMVECTOR* vPosition )

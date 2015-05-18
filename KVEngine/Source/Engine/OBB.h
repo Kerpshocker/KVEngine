@@ -81,7 +81,7 @@ namespace KVE
 			OABBCorners				m_OABBCorners;
 			OABBCollisionCorners	m_OABBCollisionCorners;
 
-			UINT*					m_Indices;
+			UINT					m_Indices[ 24 ];
 
 			f32						m_Width;
 			f32						m_Height;
