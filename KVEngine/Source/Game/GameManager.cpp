@@ -26,6 +26,12 @@ void GameManager::initialize( const KVE::Graphics::DXWindow* window, const KVE::
 	KVE::Graphics::CameraManager::Instance().getActiveCamera()->setProjMatrix( window->aspectRatio() );
 	KVE::Graphics::CameraManager::Instance().getActiveCamera()->setViewMatrix();
 
+	m_ObjectData = (ObjectData*)gameMemory->alloc( sizeof( ObjectData ) * 3 );
+
+	m_ObjectData[ 0 ] = { { 1.0f, 1.0f, 1.0f }, 0.5f, 0.8f };
+	m_ObjectData[ 1 ] = { { 1.0f, 1.0f, 1.0f }, 0.5f, 0.8f };
+	m_ObjectData[ 2 ] = { { 1.0f, 1.0f, 1.0f }, 0.5f, 0.8f };
+
 	createShaders();
 	createGeometry();
 
@@ -60,10 +66,11 @@ void GameManager::update( void )
 	MeshInstance* frameMeshInstances = (MeshInstance*) m_CurrentFrame->Instances;
 	OABBInstance* frameOABBInstances = (OABBInstance*) &frameMeshInstances[ m_InstanceCount ];
 
-	m_MeshInstances[ 0 ].Position.x += 0.5f * (float)m_CurrentFrame->DeltaTime;
+	m_MeshInstances[ 0 ].Position.x += m_ObjectData[ 0 ].velocity * (f32)m_CurrentFrame->DeltaTime;
 
 	for ( int i = 0; i < m_InstanceCount; i++ )
 	{
+		
 		frameMeshInstances[ i ] = m_MeshInstances[ i ];
 
 		frameOABBInstances[ i ].Position = m_MeshInstances[ i ].Position;
@@ -78,13 +85,15 @@ void GameManager::update( void )
 
 			if ( iValue == KVE::Collisions::INTERSECTS )
 			{
-				frameOABBInstances[ 0 ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-				frameOABBInstances[ 1 ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+				m_ObjectData[ i ].velocity = 0.0f;
+				m_ObjectData[ j ].velocity = 0.0f;
+				frameOABBInstances[ i ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
+				frameOABBInstances[ j ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
 			}
 			else
 			{
-				frameOABBInstances[ 0 ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-				frameOABBInstances[ 1 ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+				frameOABBInstances[ i ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
+				frameOABBInstances[ j ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 			}
 		}
 	}

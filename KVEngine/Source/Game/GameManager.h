@@ -27,6 +27,13 @@ struct OABBInstance
 	DirectX::XMFLOAT4 Color;
 };
 
+struct ObjectData
+{
+	f32 dir[ 3 ];
+	f32 velocity;
+	f32 mass;
+};
+
 struct FrameParams;
 
 class GameManager : public KVE::Utilities::Manager
@@ -45,11 +52,13 @@ private:
 	KVE::Graphics::FrameParams*		m_CurrentFrame;
 	double							m_LastFrameEndTime;
 
-	KVE::Collisions::OBB			m_OBB;
+	KVE::Collisions::OBB			m_OBB; 
 
 	UINT							m_InstanceCount;
 	MeshInstance*					m_MeshInstances;
 	OABBInstance*					m_OABBInstances;
+
+	ObjectData*						m_ObjectData;
 
 	Spaceship						m_Player;
 };

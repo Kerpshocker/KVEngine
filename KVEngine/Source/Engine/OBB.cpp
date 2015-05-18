@@ -138,6 +138,8 @@ namespace KVE
 				return INTERSECTS;
 
 			return NONE;
+
+			//http://www.atmos.illinois.edu/courses/atmos100/userdocs/3Dcollisions.html
 		}
 	}
 }
