@@ -62,7 +62,7 @@ void GameManager::update( void )
 	OABBInstance* frameOABBInstances = (OABBInstance*) &frameMeshInstances[ m_MeshInstanceCount ];
 	for ( int i = 0; i < m_MeshInstanceCount; i++ )
 	{
-		m_MeshInstances[ i ].Position.x += 0.0001f;
+		m_MeshInstances[ i ].Position.x += 0.5f * (float)m_CurrentFrame->DeltaTime;
 
 		frameMeshInstances[ i ] = m_MeshInstances[ i ];
 
@@ -84,6 +84,7 @@ void GameManager::createShaders( void )
 	{
 		// vertex buffer
 		{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+		{ "TEXCOORD", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 12, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 
 		// instance buffer
 		{ "POSITION", 1, DXGI_FORMAT_R32G32B32_FLOAT, 1, 0, D3D11_INPUT_PER_INSTANCE_DATA, 1 },
@@ -128,11 +129,12 @@ void GameManager::createGeometry( void )
 	KVE::Collisions::OBB obb = KVE::Collisions::OBB( &XMLoadFloat3( &m_MeshInstances[ 0 ].Position ), frontTopRight, backBottomLeft );
 
 	XMVECTOR* obbCorners = obb.getCollisionCorners();
-	XMFLOAT3 corners[ 8 ];
+	Vertex corners[ 8 ];
 	for ( int i = 0; i < 8; i++ )
 	{
-		corners[i] = { XMVectorGetX( obbCorners[ i ] ), XMVectorGetY( obbCorners[ i ] ), XMVectorGetZ( obbCorners[ i ] ) };
-		XMLoadFloat3( &corners[ i ] );
+		corners[ i ].Position = { XMVectorGetX( obbCorners[ i ] ), XMVectorGetY( obbCorners[ i ] ), XMVectorGetZ( obbCorners[ i ] ) };
+		corners[ i ].Normal = { 0, 0, -1 };
+		//XMLoadFloat3( &corners[ i ] );
 	}
 
 	KVE::Graphics::ShaderBuffersDesc oabbSBDesc;

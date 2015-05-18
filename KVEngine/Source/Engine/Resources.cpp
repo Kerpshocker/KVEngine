@@ -149,9 +149,10 @@ namespace KVE
 			int numIndices = std::count( faces.begin(), faces.end(), 'f' ) * 3; // 3 vertices in each face
 
 			//delete when adding normals and uvs of the obj
-			Normals = 0;
+			//Normals = 0;
 			UVs = 0;
-			int byteSize = ( Positions != 0 ) * sizeof( DirectX::XMFLOAT3 ) +
+			int byteSize = 
+				( Positions != 0 ) * sizeof( DirectX::XMFLOAT3 ) +
 				( Normals != 0 ) * sizeof( DirectX::XMFLOAT3 ) +
 				( UVs != 0 ) * sizeof( DirectX::XMFLOAT2 );
 
@@ -178,11 +179,11 @@ namespace KVE
 						*(XMFLOAT3*)( (byte*)vertexData + tail ) = tempVerts[ atoi( s2[ 0 ].c_str() ) - 1 ];
 						tail += sizeof( XMFLOAT3 );
 
-						//if ( s2[ 2 ].length() > 0 ) // if there is a normal
-						//{
-						//	*(XMFLOAT3*)( (byte*)vertexData + tail ) = tempNorms[ atoi( s2[ 2 ].c_str() ) - 1 ];
-						//	tail += sizeof( XMFLOAT3 );
-						//}
+						if ( s2[ 2 ].length() > 0 ) // if there is a normal
+						{
+							*(XMFLOAT3*)( (byte*)vertexData + tail ) = tempNorms[ atoi( s2[ 2 ].c_str() ) - 1 ];
+							tail += sizeof( XMFLOAT3 );
+						}
 
 						//if ( s2[ 1 ].length() > 0 ) // if there is a uv
 						//{
