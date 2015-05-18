@@ -77,19 +77,19 @@ namespace KVE
 
 		void OBB::setPosition( XMVECTOR* vPosition )
 		{
-			m_Position = vPosition;
+			*m_Position = *vPosition;
 			UpdateCollisionPoints();
 		}
 
 		void OBB::setRotation( XMVECTOR* vRotation )
 		{
-			m_Rotation = vRotation;
+			*m_Rotation = *vRotation;
 			UpdateCollisionPoints();
 		}
 
 		void OBB::setScale( XMVECTOR* vScale )
 		{
-			m_Scale = vScale;
+			*m_Scale = *vScale;
 			UpdateCollisionPoints();
 		}
 

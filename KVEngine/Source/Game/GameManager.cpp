@@ -47,35 +47,32 @@ void GameManager::update( void )
 
 	m_CurrentFrame->Allocator->reset();
 	m_CurrentFrame->Instances = m_CurrentFrame->Allocator->alloc(
-		sizeof( MeshInstance ) * m_MeshInstanceCount +
-		sizeof( OABBInstance ) * m_OABBInstanceCount
+		sizeof( MeshInstance ) * m_InstanceCount +
+		sizeof( OABBInstance ) * m_InstanceCount
 		);
 	m_CurrentFrame->InstanceStrides[ 0 ] = sizeof( MeshInstance );
 	m_CurrentFrame->InstanceStrides[ 1 ] = sizeof( OABBInstance );
-	m_CurrentFrame->InstanceCounts[ 0 ] = m_MeshInstanceCount;
-	m_CurrentFrame->InstanceCounts[ 1 ] = m_OABBInstanceCount;
+	m_CurrentFrame->InstanceCounts[ 0 ] = m_InstanceCount;
+	m_CurrentFrame->InstanceCounts[ 1 ] = m_InstanceCount;
 	m_CurrentFrame->InstanceOffsets[ 0 ] = 0;
-	m_CurrentFrame->InstanceOffsets[ 1 ] = sizeof( MeshInstance ) * m_MeshInstanceCount;
+	m_CurrentFrame->InstanceOffsets[ 1 ] = sizeof( MeshInstance ) * m_InstanceCount;
 	
 	MeshInstance* frameMeshInstances = (MeshInstance*) m_CurrentFrame->Instances;
-	OABBInstance* frameOABBInstances = (OABBInstance*) &frameMeshInstances[ m_MeshInstanceCount ];
+	OABBInstance* frameOABBInstances = (OABBInstance*) &frameMeshInstances[ m_InstanceCount ];
 
 	m_MeshInstances[ 0 ].Position.x += 0.5f * (float)m_CurrentFrame->DeltaTime;
 
-	for ( int i = 0; i < m_MeshInstanceCount; i++ )
+	for ( int i = 0; i < m_InstanceCount; i++ )
 	{
 		frameMeshInstances[ i ] = m_MeshInstances[ i ];
 
-		if ( i < m_OABBInstanceCount )
-		{
-			frameOABBInstances[ i ].Position = m_MeshInstances[ i ].Position;
-			frameOABBInstances[ i ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-		}
+		frameOABBInstances[ i ].Position = m_MeshInstances[ i ].Position;
+		frameOABBInstances[ i ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 	}
 
-	for ( int i = 0; i < m_MeshInstanceCount; i++ )
+	for ( int i = 0; i < m_InstanceCount; i++ )
 	{
-		for ( int j = i + 1; j < m_OABBInstanceCount - 1; j++ )
+		for ( int j = i + 1; j < m_InstanceCount - 1; j++ )
 		{
 			KVE::Collisions::IntersectionValue iValue = m_OBB.intersects( XMLoadFloat3( &frameMeshInstances[ i ].Position ), XMLoadFloat3( &frameMeshInstances[ j ].Position ) );
 
@@ -121,9 +118,10 @@ void GameManager::createShaders( void )
 
 void GameManager::createGeometry( void )
 {
+	m_InstanceCount = 3;
+
 	// Set up the mesh instances
-	m_MeshInstanceCount = 3;
-	m_MeshInstances = (MeshInstance*)gameMemory->alloc( sizeof( MeshInstance ) * m_MeshInstanceCount );
+	m_MeshInstances = (MeshInstance*) gameMemory->alloc( sizeof( MeshInstance ) * m_InstanceCount );
 	// Position, Color
 	m_MeshInstances[ 0 ] = { XMFLOAT3( -1.5f, -1.0f, 0.0f ), XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) };
 	m_MeshInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) };
@@ -132,21 +130,19 @@ void GameManager::createGeometry( void )
 	// Create shader buffers - vertices, indices, and instances
 	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
 	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &meshSBDesc, sizeof( Vertex ) );
-	meshSBDesc.InstanceCount = m_MeshInstanceCount;
+	meshSBDesc.InstanceCount = m_InstanceCount;
 	meshSBDesc.InstanceStride = sizeof( MeshInstance );
 	meshSBDesc.InstanceOffset = 0;
 	meshSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 	KVE::Graphics::RenderManager::Instance().createShaderBuffers( meshSBDesc, 0 );
 
 	// Set up the obb instances
-	m_OABBInstanceCount = m_MeshInstanceCount;
-	m_OABBInstances = (OABBInstance*)gameMemory->alloc( sizeof( OABBInstance ) * m_OABBInstanceCount );
+	m_OABBInstances = (OABBInstance*) gameMemory->alloc( sizeof( OABBInstance ) * m_InstanceCount );
 
 	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
 
-	KVE::Collisions::OBB obb = KVE::Collisions::OBB( &XMLoadFloat3( &m_MeshInstances[ 0 ].Position ), frontTopRight, backBottomLeft );
-	m_OBB = obb;
+	m_OBB = KVE::Collisions::OBB( &XMLoadFloat3( &m_MeshInstances[ 0 ].Position ), frontTopRight, backBottomLeft );
 
 	XMVECTOR* obbCorners = m_OBB.getCollisionCorners();
 	Vertex corners[ 8 ];
@@ -164,7 +160,7 @@ void GameManager::createGeometry( void )
 	oabbSBDesc.VertexStride = sizeof( Vertex );
 	oabbSBDesc.VertexIndexCount = 24;
 	oabbSBDesc.VertexIndices = m_OBB.getIndices();
-	oabbSBDesc.InstanceCount = m_OABBInstanceCount;
+	oabbSBDesc.InstanceCount = m_InstanceCount;
 	oabbSBDesc.InstanceStride = sizeof( OABBInstance );
 	oabbSBDesc.InstanceOffset = 0;
 

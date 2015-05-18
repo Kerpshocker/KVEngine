@@ -45,15 +45,13 @@ private:
 	KVE::Graphics::FrameParams*		m_CurrentFrame;
 	double							m_LastFrameEndTime;
 
-	MeshInstance*					m_MeshInstances;
-	UINT							m_MeshInstanceCount;
+	KVE::Collisions::OBB			m_OBB;
 
+	UINT							m_InstanceCount;
+	MeshInstance*					m_MeshInstances;
 	OABBInstance*					m_OABBInstances;
-	UINT							m_OABBInstanceCount;
 
 	Spaceship						m_Player;
-
-	KVE::Collisions::OBB			m_OBB;
 };
 
 #endif
