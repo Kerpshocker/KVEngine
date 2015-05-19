@@ -16,6 +16,11 @@ namespace KVE
 			DXWindow( const System::WindowParams& params );
 			~DXWindow( void );
 
+			void resize( void );
+
+			D3D11_VIEWPORT getWindowViewport( void );
+			void setViewports( D3D11_VIEWPORT* viewports, UINT numViewports );
+
 		private:
 			bool					m_Enable4xMsaa;
 			UINT					m_Msaa4xQuality;
@@ -26,8 +31,6 @@ namespace KVE
 			ID3D11Texture2D*		m_DepthStencilBuffer;
 			ID3D11DepthStencilView* m_DepthStencilView;
 			ID3D11RenderTargetView* m_RenderTargetView;
-
-			void onResize( void );
 		};
 	}
 }

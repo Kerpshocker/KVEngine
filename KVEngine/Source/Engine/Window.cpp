@@ -89,5 +89,35 @@ namespace KVE
 		{
 			return &m_HWindow;
 		}
+
+		void Window::setWidth( u16 width )
+		{
+			m_Width = width;
+		}
+
+		void Window::setHeight( u16 height )
+		{
+			m_Height = height;
+		}
+
+		void Window::setMinimized( bool minimized )
+		{
+			m_Minimized = minimized;
+		}
+
+		void Window::setMaximized( bool maximized )
+		{
+			m_Maximized = maximized;
+		}
+
+		void Window::setResizing( bool resizing )
+		{
+			m_Resizing = resizing;
+		}
+
+		void Window::setPaused( bool paused )
+		{
+			m_Paused = paused;
+		}
 	}
 }

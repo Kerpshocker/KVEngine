@@ -56,9 +56,16 @@ namespace KVE
 		{
 			m_Window = window;
 
-			window->m_DeviceContext->RSSetViewports( m_ViewportCount, m_Viewports );
+			m_Window->m_DeviceContext->RSSetViewports( m_ViewportCount, m_Viewports );
 
 			createConstBuffer( sizeof( CameraBuffer ) );
+		}
+
+		void RenderManager::setViewport( const D3D11_VIEWPORT* viewport, UINT index )
+		{
+			memcpy( &m_Viewports[ index ], viewport, sizeof( D3D11_VIEWPORT ) * m_ViewportCount );
+
+			m_Window->m_DeviceContext->RSSetViewports( m_ViewportCount, m_Viewports );
 		}
 
 		void RenderManager::render( void )

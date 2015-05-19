@@ -34,6 +34,13 @@ namespace KVE
 			const bool isPaused( void ) const;
 			const HWND* const getHandle( void ) const;
 
+			void setWidth( u16 width );
+			void setHeight( u16 height );
+			void setMinimized( bool minimized );
+			void setMaximized( bool maximized );
+			void setResizing( bool resizing );
+			void setPaused( bool paused );
+
 		protected:
 			Window( const WindowParams& params );
 

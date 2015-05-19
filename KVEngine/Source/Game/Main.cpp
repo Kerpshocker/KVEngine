@@ -5,16 +5,99 @@
 #include "MemoryManager.h"
 #include "InputManager.h"
 #include "FrameManager.h"
+#include "CameraManager.h"
 #include <iostream>
 
 using namespace KVE;
+
+void RefreshScreen( void )
+{
+	Graphics::CameraManager::Instance().getActiveCamera()->setProjMatrix( window->aspectRatio() );
+	Graphics::RenderManager::Instance().setViewport( &window->getWindowViewport(), 0 );
+}
 
 LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 {
 	switch ( msg )
 	{
+	case WM_ACTIVATE:
+		if ( window == nullptr ) return 0;
+		if ( LOWORD( wParam ) == WA_INACTIVE )
+		{
+			window->setPaused( true );
+			timer->stop();
+		}
+		else
+		{
+			window->setPaused( false );
+			timer->start();
+		}
+		return 0;
+	case WM_SIZE:
+		if ( window == nullptr ) return 0;
+		window->setWidth( LOWORD( lParam ) );
+		window->setHeight( HIWORD( lParam ) );
+
+		if ( wParam == SIZE_MINIMIZED )
+		{
+			window->setPaused( true );
+			window->setMinimized( true );
+			window->setMaximized( false );
+		}
+		else if ( wParam == SIZE_MAXIMIZED )
+		{
+			window->setPaused( false );
+			window->setMinimized( false );
+			window->setMaximized( true );
+		}
+		else if ( wParam == SIZE_RESTORED )
+		{
+			if ( window->isMinimized() )
+			{
+				window->setPaused( false );
+				window->setMinimized( false );
+				window->resize();
+				RefreshScreen();
+			}
+			else if ( window->isMaximized() )
+			{
+				window->setPaused( false );
+				window->setMaximized( false );
+				window->resize();
+				RefreshScreen();
+			}
+			else if ( window->isResizing() )
+			{
+				// do nothing until done
+			}
+			else
+			{
+				window->resize();
+				RefreshScreen();
+			}
+		}
+
+		return 0;
+	case WM_ENTERSIZEMOVE:
+		window->setPaused( true );
+		window->setResizing( true );
+		timer->stop();
+		return 0;
+	case WM_EXITSIZEMOVE:
+		window->setPaused( false );
+		window->setResizing( false );
+		timer->start();
+		window->resize();
+		RefreshScreen();
+		return 0;
 	case WM_DESTROY:
 		PostQuitMessage( 0 );
+		return 0;
+	case WM_MENUCHAR:
+		return MAKELRESULT( 0, MNC_CLOSE );
+	case WM_GETMINMAXINFO:
+		((MINMAXINFO*)lParam)->ptMinTrackSize.x = 200;
+		((MINMAXINFO*)lParam)->ptMinTrackSize.y = 200;
 		return 0;
 	case WM_KEYDOWN:
 		std::cout << wParam << std::endl;

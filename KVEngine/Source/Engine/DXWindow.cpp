@@ -73,7 +73,7 @@ namespace KVE
 				);
 			assert( m_Msaa4xQuality > 0 );
 
-			onResize();
+			resize();
 		}
 
 		DXWindow::~DXWindow( void )
@@ -86,7 +86,7 @@ namespace KVE
 			ReleaseMacro( m_DepthStencilBuffer );
 		}
 
-		void DXWindow::onResize( void )
+		void DXWindow::resize( void )
 		{
 			ReleaseMacro( m_RenderTargetView );
 			ReleaseMacro( m_DepthStencilView );
@@ -131,6 +131,24 @@ namespace KVE
 			m_DeviceContext->OMSetRenderTargets( 1, &m_RenderTargetView, m_DepthStencilView );
 
 			Window::onResize( m_Width, m_Height );
+		}
+
+		D3D11_VIEWPORT DXWindow::getWindowViewport( void )
+		{
+			D3D11_VIEWPORT windowScreen;
+			windowScreen.TopLeftX	= 0;
+			windowScreen.TopLeftY	= 0;
+			windowScreen.Width		= (float)m_Width;
+			windowScreen.Height		= (float)m_Height;
+			windowScreen.MinDepth	= 0.0f;
+			windowScreen.MaxDepth	= 1.0f;
+
+			return windowScreen;
+		}
+
+		void DXWindow::setViewports( D3D11_VIEWPORT* viewports, UINT numViewports )
+		{
+			m_DeviceContext->RSSetViewports( numViewports, viewports );
 		}
 	}
 }

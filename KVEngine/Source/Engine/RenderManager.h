@@ -52,6 +52,7 @@ namespace KVE
 			void createShaderBuffers( const ShaderBuffersDesc& sbDesc, const UINT layoutIndex );
 
 			void setWindow( const DXWindow* const window );
+			void setViewport( const D3D11_VIEWPORT* viewport, UINT index );
 
 		private:
 			const DXWindow* m_Window;
