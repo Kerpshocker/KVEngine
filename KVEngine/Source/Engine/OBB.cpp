@@ -10,9 +10,11 @@ namespace KVE
 		{
 		}
 
-		OBB::OBB( XMVECTOR* vPosition, XMVECTOR vFrontTopRight, XMVECTOR vBackBottomLeft )
+		OBB::OBB( XMVECTOR vPosition, XMVECTOR vFrontTopRight, XMVECTOR vBackBottomLeft )
 		{
-			*m_Position = *vPosition;
+			*m_Position = vPosition;
+			*m_Rotation = XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
+			*m_Scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 0.0f );
 
 			m_OABBCorners.frontTopRight = vFrontTopRight;
 			m_OABBCorners.frontTopLeft = XMVectorSet( XMVectorGetX( vBackBottomLeft ), XMVectorGetY( vFrontTopRight ), XMVectorGetZ( vFrontTopRight ), 0.0f );
@@ -23,9 +25,6 @@ namespace KVE
 			m_OABBCorners.backTopLeft = XMVectorSet( XMVectorGetX( vBackBottomLeft ), XMVectorGetY( vFrontTopRight ), XMVectorGetZ( vBackBottomLeft ), 0.0f );
 			m_OABBCorners.backBottomRight = XMVectorSet( XMVectorGetX( vFrontTopRight ), XMVectorGetY( vBackBottomLeft ), XMVectorGetZ( vBackBottomLeft ), 0.0f );
 			m_OABBCorners.backBottomLeft = vBackBottomLeft;
-
-			*m_Scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 0.0f );
-			*m_Rotation = XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
 
 			m_Width = XMVectorGetX( XMVectorAbs( XMVectorSubtract( m_OABBCorners.frontTopRight, m_OABBCorners.backBottomLeft ) ) );
 			m_Height = XMVectorGetY( XMVectorAbs( XMVectorSubtract( m_OABBCorners.frontTopRight, m_OABBCorners.backBottomLeft ) ) );
@@ -75,7 +74,7 @@ namespace KVE
 			
 		}
 
-		void OBB::setPosition( XMVECTOR* vPosition )
+		/*void OBB::setPosition( XMVECTOR* vPosition )
 		{
 			*m_Position = *vPosition;
 			UpdateCollisionPoints();
@@ -91,7 +90,7 @@ namespace KVE
 		{
 			*m_Scale = *vScale;
 			UpdateCollisionPoints();
-		}
+		}*/
 
 		void OBB::UpdateCollisionPoints( void )
 		{
@@ -141,5 +140,54 @@ namespace KVE
 
 			//http://www.atmos.illinois.edu/courses/atmos100/userdocs/3Dcollisions.html
 		}
+
+		DirectX::XMVECTOR OBB::getFrontNormal( void ){
+			DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontTopRight, m_OABBCollisionCorners.collisionFrontBottomRight ),
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontBottomLeft, m_OABBCollisionCorners.collisionFrontBottomRight )
+				);
+
+			return normal;
+		};
+		DirectX::XMVECTOR OBB::getBackNormal( void ){
+			DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackTopLeft, m_OABBCollisionCorners.collisionBackBottomLeft ),
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackBottomRight, m_OABBCollisionCorners.collisionBackBottomLeft )
+				);
+
+			return normal;
+		};
+		DirectX::XMVECTOR OBB::getTopNormal( void ){
+			DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontTopRight, m_OABBCollisionCorners.collisionBackTopLeft ),
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackTopRight, m_OABBCollisionCorners.collisionBackTopLeft )
+				);
+
+			return normal;
+		};
+		DirectX::XMVECTOR OBB::getBottomNormal( void ){
+			DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackBottomRight, m_OABBCollisionCorners.collisionBackBottomLeft ),
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontBottomRight, m_OABBCollisionCorners.collisionBackBottomLeft )
+				);
+
+			return normal;
+		};
+		DirectX::XMVECTOR OBB::getRightNormal( void ){
+			DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontTopRight, m_OABBCollisionCorners.collisionBackTopRight ),
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontBottomRight, m_OABBCollisionCorners.collisionFrontTopRight )
+				);
+
+			return normal;
+		};
+		DirectX::XMVECTOR OBB::getLeftNormal( void ){
+			DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontTopLeft, m_OABBCollisionCorners.collisionBackTopLeft ),
+				DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackTopLeft, m_OABBCollisionCorners.collisionBackBottomLeft )
+				);
+
+			return normal;
+		};
 	}
 }

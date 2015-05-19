@@ -52,7 +52,7 @@ private:
 	KVE::Graphics::FrameParams*		m_CurrentFrame;
 	double							m_LastFrameEndTime;
 
-	KVE::Collisions::OBB			m_OBB; 
+	KVE::Collisions::OBB*			m_OBB; 
 
 	UINT							m_InstanceCount;
 	MeshInstance*					m_MeshInstances;

@@ -43,7 +43,7 @@ namespace KVE
 		{
 		public:
 			OBB( );
-			OBB( DirectX::XMVECTOR* position, DirectX::XMVECTOR frontTopRight, DirectX::XMVECTOR backBottomLeft );
+			OBB( DirectX::XMVECTOR position, DirectX::XMVECTOR frontTopRight, DirectX::XMVECTOR backBottomLeft );
 			~OBB( );
 
 			DirectX::XMVECTOR getCollisionFrontTopRight( void ){ return m_OABBCollisionCorners.collisionFrontTopRight; };
@@ -69,9 +69,9 @@ namespace KVE
 			DirectX::XMVECTOR* getScale( void ){ return m_Scale; };
 
 			//set pos, rot, scale and update collision points of OABB
-			void setPosition( DirectX::XMVECTOR* vPosition );
+			/*void setPosition( DirectX::XMVECTOR* vPosition );
 			void setRotation( DirectX::XMVECTOR* vRotation );
-			void setScale( DirectX::XMVECTOR* vScale );
+			void setScale( DirectX::XMVECTOR* vScale );*/
 
 			IntersectionValue intersectsValue;
 
@@ -92,54 +92,12 @@ namespace KVE
 			//void UpdateDrawingVectors( void );
 
 		protected:
-			DirectX::XMVECTOR getFrontNormal( void ){
-				DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontTopRight, m_OABBCollisionCorners.collisionFrontBottomRight ),
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontBottomLeft, m_OABBCollisionCorners.collisionFrontBottomRight )
-					);
-
-				return normal;
-			};
-			DirectX::XMVECTOR getBackNormal( void ){
-				DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackTopLeft, m_OABBCollisionCorners.collisionBackBottomLeft ),
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackBottomRight, m_OABBCollisionCorners.collisionBackBottomLeft )
-					);
-
-				return normal;
-			};
-			DirectX::XMVECTOR getTopNormal( void ){
-				DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontTopRight, m_OABBCollisionCorners.collisionBackTopLeft ),
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackTopRight, m_OABBCollisionCorners.collisionBackTopLeft )
-					);
-
-				return normal;
-			};
-			DirectX::XMVECTOR getBottomNormal( void ){
-				DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackBottomRight, m_OABBCollisionCorners.collisionBackBottomLeft ),
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontBottomRight, m_OABBCollisionCorners.collisionBackBottomLeft )
-					);
-
-				return normal;
-			};
-			DirectX::XMVECTOR getRightNormal( void ){
-				DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontTopRight, m_OABBCollisionCorners.collisionBackTopRight ),
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontBottomRight, m_OABBCollisionCorners.collisionFrontTopRight )
-					);
-
-				return normal;
-			};
-			DirectX::XMVECTOR getLeftNormal( void ){
-				DirectX::XMVECTOR normal = DirectX::XMVector3Cross(
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionFrontTopLeft, m_OABBCollisionCorners.collisionBackTopLeft ),
-					DirectX::XMVectorSubtract( m_OABBCollisionCorners.collisionBackTopLeft, m_OABBCollisionCorners.collisionBackBottomLeft )
-					);
-
-				return normal;
-			};
+			DirectX::XMVECTOR getFrontNormal( void );
+			DirectX::XMVECTOR getBackNormal( void );
+			DirectX::XMVECTOR getTopNormal( void );
+			DirectX::XMVECTOR getBottomNormal( void );
+			DirectX::XMVECTOR getRightNormal( void );
+			DirectX::XMVECTOR getLeftNormal( void );
 		};
 	}
 }
