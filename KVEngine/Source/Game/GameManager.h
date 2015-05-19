@@ -11,26 +11,27 @@
 
 struct Vertex
 {
-	DirectX::XMFLOAT3	Position;
-	DirectX::XMFLOAT3	Normal;
+	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT3 Normal;
 };
 
 struct MeshInstance
 {
-	DirectX::XMFLOAT3	Position;
-	DirectX::XMFLOAT4	Color;
+	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT4 Color;
 };
 
 struct OABBInstance
 {
-	DirectX::XMFLOAT3	Position;
-	DirectX::XMFLOAT4	Color;
+	DirectX::XMFLOAT3 Position;
+	DirectX::XMFLOAT4 Color;
 };
 
 struct ObjectData
 {
-	DirectX::XMVECTOR	dir;
-	f32					velocity;
+	f32 dir[ 3 ];
+	f32 velocity;
+	f32 mass;
 };
 
 struct FrameParams;
@@ -46,13 +47,12 @@ public:
 private:
 	void createShaders( void );
 	void createGeometry( void );
-	void collides( ObjectData* instance, ObjectData* other, DirectX::XMVECTOR instancePos, DirectX::XMVECTOR otherPos );
 
 	const KVE::System::GameTimer*	m_Timer;
 	KVE::Graphics::FrameParams*		m_CurrentFrame;
 	double							m_LastFrameEndTime;
 
-	KVE::Collisions::OBB*			m_OBB; 
+	KVE::Collisions::OBB*			m_OBB;
 
 	UINT							m_InstanceCount;
 	MeshInstance*					m_MeshInstances;
