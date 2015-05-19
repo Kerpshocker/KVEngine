@@ -165,7 +165,7 @@ void GameManager::createGeometry( void )
 	
 	// Create shader buffers - vertices, indices, and instances
 	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
-	KVE::Graphics::createSBDescFromOBJFile( "crate_obj.obj", &meshSBDesc, sizeof( Vertex ) );
+	KVE::Graphics::createSBDescFromOBJFile( "asteroid_obj.obj", &meshSBDesc, sizeof( Vertex ) );
 	meshSBDesc.InstanceCount = m_InstanceCount;
 	meshSBDesc.InstanceStride = sizeof( MeshInstance );
 	meshSBDesc.InstanceOffset = 0;
@@ -187,7 +187,7 @@ void GameManager::createGeometry( void )
 	for ( int i = 0; i < 8; i++ )
 	{
 		corners[ i ].Position = { XMVectorGetX( obbCorners[ i ] ), XMVectorGetY( obbCorners[ i ] ), XMVectorGetZ( obbCorners[ i ] ) };
-		corners[ i ].Normal = { 0, 0, -1 };
+		XMStoreFloat3( &corners[ i ].Normal, XMVector3Normalize( XMLoadFloat3( &corners[ i ].Position ) ) );
 	}
 
 	KVE::Graphics::ShaderBuffersDesc oabbSBDesc;

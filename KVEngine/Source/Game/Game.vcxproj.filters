@@ -60,5 +60,8 @@
     <None Include="..\..\Assets\crate_obj.obj">
       <Filter>Resource Files\Assets</Filter>
     </None>
+    <None Include="..\..\Assets\asteroid_obj.obj">
+      <Filter>Resource Files\Assets</Filter>
+    </None>
   </ItemGroup>
 </Project>
