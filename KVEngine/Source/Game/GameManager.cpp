@@ -19,7 +19,7 @@ void GameManager::initialize( const KVE::Graphics::DXWindow* window, const KVE::
 
 	f32 randNum;
 
-	m_InstanceCount = 5;
+	m_InstanceCount = 18;
 
 	KVE::Graphics::CameraParams cParams;
 	cParams.fieldOfView = 45.0f * ( 3.1415f / 180.0f );
@@ -40,7 +40,7 @@ void GameManager::initialize( const KVE::Graphics::DXWindow* window, const KVE::
 				(f32)( rand() % 100 ) / 99.0f,
 				(f32)( rand() % 100 ) / 99.0f
 			) ),
-			randNum = (f32)( rand() % 100 ) / 70.0f != 0 ? (f32)( rand() % 100 ) / 70.0f : 0.5f,
+			randNum = (f32)( rand() % 100 ) / 70.0f != 0 ? (f32)( rand() % 100 ) / 70.0f : 2.0f,
 		};
 	}
 
@@ -95,6 +95,66 @@ void GameManager::update( void )
 			XMVectorGetY( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
 			XMVectorGetZ( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime )
 			) ) );
+
+		if ( m_MeshInstances[ i ].Position.x >= 50.0f )
+		{
+			m_MeshInstances[ i ].Position.x = (f32)( rand() % 10 - 5 );
+			XMStoreFloat3( &newPos, XMLoadFloat3( &XMFLOAT3(
+				XMVectorGetX( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetY( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetZ( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime )
+				) ) );
+		}
+
+		if ( m_MeshInstances[ i ].Position.x <= -50.0f )
+		{
+			m_MeshInstances[ i ].Position.x = (f32)( rand() % 10 - 5 );
+			XMStoreFloat3( &newPos, XMLoadFloat3( &XMFLOAT3(
+				XMVectorGetX( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetY( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetZ( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime )
+				) ) );
+		}
+
+		if ( m_MeshInstances[ i ].Position.y >= 50.0f )
+		{
+			m_MeshInstances[ i ].Position.y = (f32)( rand() % 10 - 5 );
+			XMStoreFloat3( &newPos, XMLoadFloat3( &XMFLOAT3(
+				XMVectorGetX( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetY( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetZ( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime )
+				) ) );
+		}
+
+		if ( m_MeshInstances[ i ].Position.y <= -50.0f )
+		{
+			m_MeshInstances[ i ].Position.y = (f32)( rand() % 10 - 5 );
+			XMStoreFloat3( &newPos, XMLoadFloat3( &XMFLOAT3(
+				XMVectorGetX( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetY( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetZ( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime )
+				) ) );
+		}
+
+		if ( m_MeshInstances[ i ].Position.z >= 50.0f )
+		{
+			m_MeshInstances[ i ].Position.z = (f32)( rand() % 10 - 5 );
+			XMStoreFloat3( &newPos, XMLoadFloat3( &XMFLOAT3(
+				XMVectorGetX( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetY( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetZ( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime )
+				) ) );
+		}
+
+		if ( m_MeshInstances[ i ].Position.z <= -50.0f )
+		{
+			m_MeshInstances[ i ].Position.z = (f32)( rand() % 10 - 5 );
+			XMStoreFloat3( &newPos, XMLoadFloat3( &XMFLOAT3(
+				XMVectorGetX( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetY( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime ),
+				XMVectorGetZ( m_ObjectData[ i ].dir ) * ( m_ObjectData[ i ].velocity * (f32)m_CurrentFrame->DeltaTime )
+				) ) );
+		}
 
 		m_MeshInstances[ i ].Position.x += newPos.x;
 		m_MeshInstances[ i ].Position.y += newPos.y;
@@ -196,19 +256,6 @@ void GameManager::createGeometry( void )
 		corners[ i ].Position = { XMVectorGetX( obbCorners[ i ] ), XMVectorGetY( obbCorners[ i ] ), XMVectorGetZ( obbCorners[ i ] ) };
 		XMStoreFloat3( &corners[ i ].Normal, XMVector3Normalize( XMLoadFloat3( &corners[ i ].Position ) ) );
 	}
-
-	KVE::Graphics::ShaderBuffersDesc oabbSBDesc;
-	oabbSBDesc.Topology = D3D_PRIMITIVE_TOPOLOGY_LINELIST;
-	oabbSBDesc.Vertices = corners;
-	oabbSBDesc.VertexCount = 8;
-	oabbSBDesc.VertexOffset = 0;
-	oabbSBDesc.VertexStride = sizeof( Vertex );
-	oabbSBDesc.VertexIndexCount = 24;
-	oabbSBDesc.VertexIndices = m_OBB->getIndices();
-	oabbSBDesc.InstanceCount = m_InstanceCount;
-	oabbSBDesc.InstanceStride = sizeof( OABBInstance );
-	oabbSBDesc.InstanceOffset = 0;
-	KVE::Graphics::RenderManager::Instance().createShaderBuffers( oabbSBDesc, 0 );
 }
 
 void GameManager::collides( ObjectData* instance, ObjectData* other, DirectX::XMVECTOR instancePos, DirectX::XMVECTOR otherPos )
