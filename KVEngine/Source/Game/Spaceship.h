@@ -11,7 +11,7 @@ public:
 	Spaceship( void );
 	~Spaceship( void );
 
-	void update( float dt );
+	void update( double dt );
 	void mountCamera( KVE::Graphics::Camera* const camera );
 
 private:

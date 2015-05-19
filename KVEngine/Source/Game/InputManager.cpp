@@ -29,7 +29,7 @@ namespace Input
 
 	bool InputManager::isKeyPressed( Keys key ) const
 	{
-		return keyData & key;
+		return ( keyData & key ) != 0;
 	}
 
 	void InputManager::registerKeyPress( int key )

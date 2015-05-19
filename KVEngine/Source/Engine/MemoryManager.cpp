@@ -33,7 +33,7 @@ namespace KVE
 
 		void PageAllocator::free( void )
 		{
-			for ( int i = 0; i < m_AllocatedPageCount; i++ )
+			for ( unsigned int i = 0; i < m_AllocatedPageCount; i++ )
 			{
 				MemoryManager::Instance().freePage( m_AllocatedPages[ i ] );
 			}
@@ -41,7 +41,7 @@ namespace KVE
 
 		void PageAllocator::reset( void )
 		{
-			for ( int i = 0; i < m_AllocatedPageCount; i++ )
+			for ( unsigned int i = 0; i < m_AllocatedPageCount; i++ )
 			{
 				memset( m_AllocatedPages[ i ]->data, 0, m_NextFreeByte );
 			}

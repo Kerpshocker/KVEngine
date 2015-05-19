@@ -68,7 +68,7 @@ void GameManager::update( void )
 
 	m_MeshInstances[ 0 ].Position.x += m_ObjectData[ 0 ].velocity * (f32)m_CurrentFrame->DeltaTime;
 
-	for ( int i = 0; i < m_InstanceCount; i++ )
+	for ( UINT i = 0; i < m_InstanceCount; i++ )
 	{
 		
 		frameMeshInstances[ i ] = m_MeshInstances[ i ];
@@ -77,9 +77,9 @@ void GameManager::update( void )
 		frameOABBInstances[ i ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
 	}
 
-	for ( int i = 0; i < m_InstanceCount; i++ )
+	for ( UINT i = 0; i < m_InstanceCount; i++ )
 	{
-		for ( int j = i + 1; j < m_InstanceCount - 1; j++ )
+		for ( UINT j = i + 1; j < m_InstanceCount - 1; j++ )
 		{
 			KVE::Collisions::IntersectionValue iValue = m_OBB.intersects( XMLoadFloat3( &frameMeshInstances[ i ].Position ), XMLoadFloat3( &frameMeshInstances[ j ].Position ) );
 

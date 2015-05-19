@@ -40,7 +40,7 @@ namespace KVE
 
 			if ( m_ShaderLayouts != nullptr )
 			{
-				for ( int i = 0; i < m_ShaderLayoutCount; i++ )
+				for ( unsigned int i = 0; i < m_ShaderLayoutCount; i++ )
 					m_ShaderLayouts[ i ]->Release();
 
 				//delete m_ShaderLayouts;

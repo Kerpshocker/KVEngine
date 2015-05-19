@@ -18,7 +18,7 @@ Spaceship::~Spaceship( void )
 
 }
 
-void Spaceship::update( float dt )
+void Spaceship::update( double dt )
 {
 	const int inputKeyData = Input::GetKeyInputData();
 
@@ -88,10 +88,10 @@ void Spaceship::update( float dt )
 
 	KVE::GameComponents::FirstPersonCamera* camera = ( KVE::GameComponents::FirstPersonCamera* )KVE::Graphics::CameraManager::Instance().getActiveCamera();
 
-	camera->move( m_Vel * dt );
-	camera->rotatePitch( m_PitchVel * dt );
-	camera->rotateYaw( m_YawVel * dt );
-	camera->rotateRoll( m_RollVel * dt );
+	camera->move( (float)(m_Vel * dt) );
+	camera->rotatePitch( (float)(m_PitchVel * dt) );
+	camera->rotateYaw( (float)(m_YawVel * dt) );
+	camera->rotateRoll( (float)(m_RollVel * dt) );
 
 	// negatives and positives here could result in 0-value, but that possibility
 	// is so rare for our purposes we can consider it negligible

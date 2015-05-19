@@ -14,7 +14,7 @@ namespace KVE
 
 			int j = 0;
 
-			for ( int i = 0; i < s.length(); i++ )
+			for ( unsigned int i = 0; i < s.length(); i++ )
 			{
 				if ( s[ i ] != delimiter )
 				{
