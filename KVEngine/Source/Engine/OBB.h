@@ -36,7 +36,7 @@ namespace KVE
 		{
 		public:
 			OBB( );
-			OBB( DirectX::XMVECTOR position, DirectX::XMVECTOR frontTopRight, DirectX::XMVECTOR backBottomLeft );
+			OBB( DirectX::XMVECTOR frontTopRight, DirectX::XMVECTOR backBottomLeft );
 			~OBB( );
 
 			DirectX::XMVECTOR getCollisionFrontTopRight( void ){ return m_OABBCollisionCorners.collisionFrontTopRight; };

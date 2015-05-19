@@ -17,6 +17,10 @@ void GameManager::initialize( const KVE::Graphics::DXWindow* window, const KVE::
 
 	m_Timer = timer;
 
+	f32 randNum;
+
+	m_InstanceCount = 5;
+
 	KVE::Graphics::CameraParams cParams;
 	cParams.fieldOfView = 45.0f * ( 3.1415f / 180.0f );
 	cParams.nearPlane = .01f;
@@ -26,11 +30,19 @@ void GameManager::initialize( const KVE::Graphics::DXWindow* window, const KVE::
 	KVE::Graphics::CameraManager::Instance().getActiveCamera()->setProjMatrix( window->aspectRatio() );
 	KVE::Graphics::CameraManager::Instance().getActiveCamera()->setViewMatrix();
 
-	m_ObjectData = (ObjectData*)gameMemory->alloc( sizeof( ObjectData ) * 3 );
+	m_ObjectData = (ObjectData*)gameMemory->alloc( sizeof( ObjectData ) * m_InstanceCount );
 
-	m_ObjectData[ 0 ] = { XMLoadFloat3( &XMFLOAT3( 1.0f, 0.0f, 0.0f ) ), 0.5f };
-	m_ObjectData[ 1 ] = { XMLoadFloat3( &XMFLOAT3( -1.0f, 0.0f, 0.0f ) ), 0.5f };
-	m_ObjectData[ 2 ] = { XMLoadFloat3( &XMFLOAT3( 0.0f, -1.0f, 0.0f ) ), 0.5f };
+	for ( int i = 0; i < m_InstanceCount; i++ )
+	{
+		m_ObjectData[ i ] = { 
+			XMLoadFloat3( &XMFLOAT3(
+				(f32)( rand() % 100 ) / 99.0f,
+				(f32)( rand() % 100 ) / 99.0f,
+				(f32)( rand() % 100 ) / 99.0f
+			) ),
+			randNum = (f32)( rand() % 100 ) / 70.0f != 0 ? (f32)( rand() % 100 ) / 70.0f : 0.5f,
+		};
+	}
 
 	createShaders();
 	createGeometry();
@@ -75,9 +87,6 @@ void GameManager::update( void )
 	MeshInstance* frameMeshInstances = (MeshInstance*)m_CurrentFrame->Instances;
 	OABBInstance* frameOABBInstances = (OABBInstance*)&frameMeshInstances[ m_InstanceCount ];
 
-	m_MeshInstances[ 0 ].Position.x += m_ObjectData[ 0 ].velocity * (f32)m_CurrentFrame->DeltaTime;
-
-	bool iValue;
 	for ( UINT i = 0; i < m_InstanceCount; i++ )
 	{
 		XMFLOAT3 newPos;
@@ -104,16 +113,7 @@ void GameManager::update( void )
 			bool iValue = m_OBB->intersects( XMLoadFloat3( &frameOABBInstances[ i ].Position ), XMLoadFloat3( &frameOABBInstances[ j ].Position ) );
 
 			if ( iValue )
-			{
 				collides( &m_ObjectData[ i ], &m_ObjectData[ j ], XMLoadFloat3( &frameOABBInstances[ i ].Position ), XMLoadFloat3( &frameOABBInstances[ j ].Position ) );
-				frameOABBInstances[ i ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-				frameOABBInstances[ j ].Color = XMFLOAT4( 0.0f, 0.0f, 0.0f, 0.0f );
-			}
-			else
-			{
-				frameOABBInstances[ i ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-				frameOABBInstances[ j ].Color = XMFLOAT4( 1.0f, 1.0f, 1.0f, 1.0f );
-			}
 		}
 	}
 
@@ -146,14 +146,29 @@ void GameManager::createShaders( void )
 
 void GameManager::createGeometry( void )
 {
-	m_InstanceCount = 3;
-
 	// Set up the mesh instances
 	m_MeshInstances = (MeshInstance*)gameMemory->alloc( sizeof( MeshInstance ) * m_InstanceCount );
 	// Position, Color
-	m_MeshInstances[ 0 ] = { XMFLOAT3( -1.5f, -1.0f, 0.0f ), XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) };
+	for ( int i = 0; i < m_InstanceCount; i++ )
+	{
+		m_MeshInstances[ i ] = { 
+			XMFLOAT3(
+				(f32)( rand() % 10 - 5 ),
+				(f32)( rand() % 10 - 5 ),
+				(f32)( rand() % 10 - 5 ) 
+			), 
+			XMFLOAT4( 
+				1.0f,
+				1.0f,
+				1.0f,
+				1.0f
+			) 
+		};
+	}
+
+	/*m_MeshInstances[ 0 ] = { XMFLOAT3( -1.5f, -1.0f, 0.0f ), XMFLOAT4( 1.0f, 0.0f, 0.0f, 1.0f ) };
 	m_MeshInstances[ 1 ] = { XMFLOAT3( +1.5f, -1.0f, 0.0f ), XMFLOAT4( 0.0f, 1.0f, 0.0f, 1.0f ) };
-	m_MeshInstances[ 2 ] = { XMFLOAT3( 0.0f, +1.0f, 0.0f ), XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) };
+	m_MeshInstances[ 2 ] = { XMFLOAT3( 0.0f, +1.0f, 0.0f ), XMFLOAT4( 0.0f, 0.0f, 1.0f, 1.0f ) };*/
 
 	// Create shader buffers - vertices, indices, and instances
 	KVE::Graphics::ShaderBuffersDesc meshSBDesc;
@@ -172,7 +187,7 @@ void GameManager::createGeometry( void )
 
 	XMVECTOR frontTopRight = XMVectorSet( 0.5f, 0.5f, -0.5f, 0.0f );
 	XMVECTOR backBottomLeft = XMVectorSet( -0.5f, -0.5f, 0.5f, 0.0f );
-	*m_OBB = KVE::Collisions::OBB( XMLoadFloat3( &m_MeshInstances[ 0 ].Position ), frontTopRight, backBottomLeft );
+	*m_OBB = KVE::Collisions::OBB( frontTopRight, backBottomLeft );
 
 	XMVECTOR* obbCorners = m_OBB->getCollisionCorners();
 	Vertex corners[ 8 ];
@@ -202,9 +217,11 @@ void GameManager::collides( ObjectData* instance, ObjectData* other, DirectX::XM
 		XMVectorGetX( instancePos ) - XMVectorGetX( otherPos ),
 		XMVectorGetY( instancePos ) - XMVectorGetY( otherPos ),
 		XMVectorGetZ( instancePos ) - XMVectorGetZ( otherPos )
-		) );
+	) );
 
 	instance->dir += iVelDir;
+	XMVector3Normalize( instance->dir );
 
 	other->dir += XMVectorNegate( iVelDir );
+	XMVector3Normalize( other->dir );
 }

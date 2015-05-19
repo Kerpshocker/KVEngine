@@ -113,6 +113,8 @@ static WNDPROC MainWndProc = []( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPar
 
 int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine, int showCmd )
 {
+	srand(time(NULL));
+
 	System::WindowParams windowParams;
 	windowParams.HInstance = appInstance;
 	windowParams.Width = 800;

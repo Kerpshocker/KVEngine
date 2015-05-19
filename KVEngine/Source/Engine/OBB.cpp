@@ -10,9 +10,9 @@ namespace KVE
 		{
 		}
 
-		OBB::OBB( XMVECTOR vPosition, XMVECTOR vFrontTopRight, XMVECTOR vBackBottomLeft )
+		OBB::OBB( XMVECTOR vFrontTopRight, XMVECTOR vBackBottomLeft )
 		{
-			*m_Position = vPosition;
+			//*m_Position = vPosition;
 			*m_Rotation = XMVectorSet( 0.0f, 0.0f, 0.0f, 0.0f );
 			*m_Scale = XMVectorSet( 1.0f, 1.0f, 1.0f, 0.0f );
 
