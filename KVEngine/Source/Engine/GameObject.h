@@ -13,7 +13,7 @@ namespace KVE
 		{
 		public:
 			GameObject( void );
-			GameObject( GameObject* const mount );
+			//GameObject( GameObject* const mount );
 			~GameObject();
 
 			DirectX::XMVECTOR* const getPosition( void ) const;

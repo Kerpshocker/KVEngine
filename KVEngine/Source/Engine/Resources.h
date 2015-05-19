@@ -77,9 +77,6 @@ namespace KVE
 		{
 			Mesh						Mesh;
 			Material					Material;
-			// instances
-
-			// SHOULD NOT BE HERE
 			UINT						InstanceCount;
 			UINT						InstanceStride;
 			UINT						InstanceOffset;
@@ -100,13 +97,11 @@ namespace KVE
 			UINT						VertexStride;
 			UINT						VertexOffset;
 			UINT						VertexIndexCount;
-			void*						Vertices;
-			void*						VertexIndices;
-
-			// SHOULD NOT BE HERE
 			UINT						InstanceCount;
 			UINT						InstanceStride;
 			UINT						InstanceOffset;
+			void*						Vertices;
+			void*						VertexIndices;
 		};
 
 		struct ShaderLayout
@@ -124,9 +119,6 @@ namespace KVE
 				{
 					for ( UINT i = 0; i < BufferCount; i++ )
 						Buffers[ i ]->Release();
-
-					//delete[] Buffers;
-					Buffers = nullptr;
 				}
 			}
 		};

@@ -23,16 +23,22 @@ namespace KVE
 				m_Data[ i ].InstanceCounts  = new UINT[ buffersPerFrame ];
 				m_Data[ i ].InstanceOffsets	= new UINT[ buffersPerFrame ];
 			}
-
-			/*for ( i = 0; i < MAX_QUEUED; i++ )
-			{
-				m_FrameAllocators[i].al
-			}*/
 		}
 
 		void FrameManager::release( void )
 		{
+			int i;
+			for ( i = 0; i < MAX_FRAMES; i++ )
+			{
+				delete[] m_Data[ i ].InstanceStrides;
+				delete[] m_Data[ i ].InstanceCounts;
+				delete[] m_Data[ i ].InstanceOffsets;
+			}
 
+			for ( i = 0; i < MAX_QUEUED; i++ )
+			{
+				m_FrameAllocators[ i ].release();
+			}
 		}
 
 		bool FrameManager::openFrame( FrameParams** out )

@@ -72,7 +72,7 @@ namespace KVE
 			
 		}
 
-		/*void OBB::setPosition( XMVECTOR* vPosition )
+		void OBB::setPosition( XMVECTOR* vPosition )
 		{
 			*m_Position = *vPosition;
 			UpdateCollisionPoints();
@@ -88,7 +88,7 @@ namespace KVE
 		{
 			*m_Scale = *vScale;
 			UpdateCollisionPoints();
-		}*/
+		}
 
 		void OBB::UpdateCollisionPoints( void )
 		{

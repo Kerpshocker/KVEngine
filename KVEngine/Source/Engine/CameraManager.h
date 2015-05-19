@@ -14,7 +14,8 @@ namespace KVE
 		{
 			SINGLETON_INSTANCE( CameraManager );
 		public:
-			void release( void ) { }
+			void initialize( void );
+			void release( void );
 
 			int createNewCamera( const CameraParams& camParams, const bool makeActive = false );
 			void changeActiveCamera( const uint32_t index );

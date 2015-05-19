@@ -14,13 +14,13 @@ namespace KVE
 			m_Scale = (XMVECTOR*) _mm_malloc( sizeof( XMVECTOR ), 16 );
 		}
 
-		GameObject::GameObject( GameObject* const mount )
+		/*GameObject::GameObject( GameObject* const mount )
 		{
 			m_Mounted = true;
 			m_Position = mount->m_Position;
 			m_Rotation = mount->m_Rotation;
 			m_Scale = mount->m_Scale;
-		}
+		}*/
 
 		GameObject::~GameObject()
 		{

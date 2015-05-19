@@ -40,7 +40,7 @@ class GameManager : public KVE::Utilities::Manager
 	SINGLETON_INSTANCE( GameManager );
 public:
 	void initialize( const KVE::Graphics::DXWindow* window, const KVE::System::GameTimer* timer );
-	void release( void ) { }
+	void release( void );
 	void update( void );
 
 private:
