@@ -77,6 +77,9 @@ namespace KVE
 		{
 			Mesh						Mesh;
 			Material					Material;
+			// instances
+
+			// SHOULD NOT BE HERE
 			UINT						InstanceCount;
 			UINT						InstanceStride;
 			UINT						InstanceOffset;
@@ -119,6 +122,10 @@ namespace KVE
 				{
 					for ( UINT i = 0; i < BufferCount; i++ )
 						Buffers[ i ]->Release();
+
+					//delete[] Buffers;
+					//Buffers = nullptr;
+					int k = 0;
 				}
 			}
 		};

@@ -120,11 +120,6 @@ xcopy "$(SolutionDir)..\Lib\bin\*.dll" "$(OutDir)" /y</Command>
       <FileType>Document</FileType>
     </None>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="..\..\Assets\asteroid_obj.obj">
-      <FileType>Document</FileType>
-    </None>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
