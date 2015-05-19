@@ -7,13 +7,6 @@ namespace KVE
 {
 	namespace Collisions
 	{
-		enum IntersectionValue
-		{
-			CONTAINS,
-			INTERSECTS,
-			NONE
-		};
-
 		struct OABBCorners
 		{
 			DirectX::XMVECTOR frontTopRight;				
@@ -73,9 +66,7 @@ namespace KVE
 			void setRotation( DirectX::XMVECTOR* vRotation );
 			void setScale( DirectX::XMVECTOR* vScale );*/
 
-			IntersectionValue intersectsValue;
-
-			IntersectionValue intersects( DirectX::XMVECTOR instance, DirectX::XMVECTOR other );
+			bool intersects( DirectX::XMVECTOR instance, DirectX::XMVECTOR other );
 
 		private:
 			OABBCorners				m_OABBCorners;
@@ -89,7 +80,6 @@ namespace KVE
 
 			//used to keep in sync with the characteristics of the enclosed object
 			void UpdateCollisionPoints( void );
-			//void UpdateDrawingVectors( void );
 
 		protected:
 			DirectX::XMVECTOR getFrontNormal( void );

@@ -65,8 +65,6 @@ namespace KVE
 			m_Indices[ 21 ] = 6;
 			m_Indices[ 22 ] = 6;
 			m_Indices[ 23 ] = 7;
-
-			intersectsValue = NONE;
 		}
 
 		OBB::~OBB()
@@ -123,7 +121,7 @@ namespace KVE
 			m_CollisionCorners[ 7 ] = getCollisionBackTopRight();
 		}
 
-		IntersectionValue OBB::intersects( XMVECTOR instance, XMVECTOR other )
+		bool OBB::intersects( XMVECTOR instance, XMVECTOR other )
 		{
 			f32 myX		= XMVectorGetX( instance ); 
 			f32 myY		= XMVectorGetY( instance );
@@ -133,12 +131,10 @@ namespace KVE
 			f32 otherY	= XMVectorGetY( other );
 			f32 otherZ	= XMVectorGetZ( other );
 
-			if ( abs(myX - otherX) <= m_Width && abs(myY - otherY) <= m_Height && abs(myZ - otherZ) <= m_Depth )
-				return INTERSECTS;
+			if ( abs( myX - otherX ) <= m_Width && abs( myY - otherY ) <= m_Height && abs( myZ - otherZ ) <= m_Depth )
+				return true;
 
-			return NONE;
-
-			//http://www.atmos.illinois.edu/courses/atmos100/userdocs/3Dcollisions.html
+			return false;
 		}
 
 		DirectX::XMVECTOR OBB::getFrontNormal( void ){
