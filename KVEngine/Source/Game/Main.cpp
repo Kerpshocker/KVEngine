@@ -12,6 +12,7 @@ using namespace KVE;
 
 void RefreshScreen( void )
 {
+	window->resize();
 	Graphics::CameraManager::Instance().getActiveCamera()->setProjMatrix( window->aspectRatio() );
 	Graphics::RenderManager::Instance().setViewport( &window->getWindowViewport(), 0 );
 }
@@ -56,15 +57,13 @@ LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 			{
 				window->setPaused( false );
 				window->setMinimized( false );
-				window->resize();
-				RefreshScreen();
+				*refreshScreen = true;
 			}
 			else if ( window->isMaximized() )
 			{
 				window->setPaused( false );
 				window->setMaximized( false );
-				window->resize();
-				RefreshScreen();
+				*refreshScreen = true;
 			}
 			else if ( window->isResizing() )
 			{
@@ -87,8 +86,7 @@ LRESULT MsgProc( HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam )
 		window->setPaused( false );
 		window->setResizing( false );
 		timer->start();
-		window->resize();
-		RefreshScreen();
+		*refreshScreen = true;
 		return 0;
 	case WM_DESTROY:
 		PostQuitMessage( 0 );
@@ -124,6 +122,9 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	window = new Graphics::DXWindow( windowParams );
 
 	timer = new System::GameTimer();
+
+	refreshScreen = new std::atomic_bool();
+	*refreshScreen = false;
 
 #ifdef MULTI_THREADED
 	running = new std::atomic_bool();
@@ -171,6 +172,8 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 			else
 			{
 #ifndef MULTI_THREADED
+				if (*refreshScreen)	RefreshScreen();
+
 				CalculateFrameStats();
 				GameManager::Instance().update();
 				Graphics::RenderManager::Instance().render();
@@ -246,6 +249,8 @@ void RunRenderLogicThread( void )
 	{
 		if ( !window->isPaused() && KVE::Graphics::FrameManager::Instance().isReadReady() )
 		{
+			if (*refreshScreen)	RefreshScreen();
+
 			Graphics::RenderManager::Instance().render();
 			CalculateFrameStats();
 		}
