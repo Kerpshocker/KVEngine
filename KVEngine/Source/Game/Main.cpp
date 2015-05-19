@@ -185,7 +185,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 
 	Release();
 
-	_CrtDumpMemoryLeaks();
+	//_CrtDumpMemoryLeaks();
 	return (int) msg.wParam;
 }
 

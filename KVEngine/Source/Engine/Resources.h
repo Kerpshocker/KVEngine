@@ -122,10 +122,6 @@ namespace KVE
 				{
 					for ( UINT i = 0; i < BufferCount; i++ )
 						Buffers[ i ]->Release();
-
-					//delete[] Buffers;
-					//Buffers = nullptr;
-					int k = 0;
 				}
 			}
 		};
