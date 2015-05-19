@@ -1,23 +1,36 @@
 #include "CameraManager.h"
+#include "MemoryManager.h"
 
 namespace KVE
 {
+	static System::PageAllocator* cameraMemory;
+
 	namespace Graphics
 	{
+		void CameraManager::initialize( void )
+		{
+			cameraMemory = new System::PageAllocator();
+		}
+
+		void CameraManager::release( void )
+		{
+			if ( cameraMemory != nullptr )
+			{
+				delete cameraMemory;
+				cameraMemory = nullptr;
+			}
+		}
+
 		int CameraManager::createNewCamera( const CameraParams& camParams, const bool makeActive )
 		{
-			if ( numCameras >= MAX_CAMERAS )
-			{
-				// camera manager already full
-				return -1;
-			}
+			// is camera manager already full?
+			if ( numCameras >= MAX_CAMERAS ) return -1;
 
-			//new ( &cameras[ numCameras++ ] ) KVE::Camera( camParams );
-			cameras[ numCameras++ ] = new Camera( camParams );
+			cameras[ numCameras ] = new (cameraMemory->alloc( sizeof( Camera ) )) Camera(camParams);
 
-			if ( makeActive ) activeIndex = numCameras - 1;
+			if ( makeActive ) activeIndex = numCameras;
 
-			return numCameras;
+			return ++numCameras;
 		}
 
 		void CameraManager::changeActiveCamera( const uint32_t index )

@@ -8,23 +8,21 @@ using namespace DirectX;
 
 namespace KVE
 {
+	static System::PageAllocator* graphicsMemory;
+
 	namespace Graphics
 	{
-		static System::PageAllocator* graphicsMemory;
-
 		void RenderManager::initialize( const UINT numShaderLayouts, const D3D11_VIEWPORT* viewports, const UINT numViewports )
 		{
 			graphicsMemory = new System::PageAllocator();
 
 			m_ViewportCount = numViewports;
 			m_Viewports = (D3D11_VIEWPORT*)graphicsMemory->alloc( sizeof( D3D11_VIEWPORT ) * m_ViewportCount );
-			//m_Viewports = new D3D11_VIEWPORT[ m_ViewportCount ];
 			memcpy( m_Viewports, viewports, sizeof( D3D11_VIEWPORT ) * m_ViewportCount );
 
 			m_ShaderLayoutCount = 0;
 			m_ShaderLayoutMaxCount = numShaderLayouts;
 			m_ShaderLayouts = (ShaderLayout**)graphicsMemory->alloc( sizeof( ShaderLayout* ) * m_ShaderLayoutMaxCount );
-			//m_ShaderLayouts = new ShaderLayout*[ m_ShaderLayoutMaxCount ];
 
 			Manager::initialize();
 		}
@@ -47,7 +45,11 @@ namespace KVE
 				m_ShaderLayouts = nullptr;
 			}
 
-			graphicsMemory->free();
+			if ( graphicsMemory != nullptr )
+			{
+				delete graphicsMemory;
+				graphicsMemory = nullptr;
+			}
 
 			ReleaseMacro( m_ConstBuffer );
 		}

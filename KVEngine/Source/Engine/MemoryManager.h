@@ -18,9 +18,9 @@ namespace KVE
 		public:
 			PageAllocator( void );
 			~PageAllocator( void );
+			void release( void );
 
 			void* alloc( const size_t size );
-			void  free( void );
 			void  reset( void );
 
 		private:
@@ -43,6 +43,7 @@ namespace KVE
 
 			char* m_Memory;
 			Page* m_FreePages;
+			Page* m_PagesHead;
 
 		public:
 			void initialize( void );

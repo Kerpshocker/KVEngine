@@ -16,7 +16,21 @@ namespace KVE
 
 		PageAllocator::~PageAllocator( void )
 		{
-			this->free();
+			release();
+		}
+
+		void PageAllocator::release( void )
+		{
+			if ( m_AllocatedPages != nullptr )
+			{
+				for ( unsigned int i = 0; i < m_AllocatedPageCount; i++ )
+				{
+					MemoryManager::Instance().freePage( m_AllocatedPages[ i ] );
+				}
+
+				delete[] m_AllocatedPages;
+				m_AllocatedPages = nullptr;
+			}
 		}
 
 		void* PageAllocator::alloc( const size_t size )
@@ -29,14 +43,6 @@ namespace KVE
 			void* ptr = (char*)m_AllocatedPages[ m_AllocatedPageCount - 1 ]->data + m_NextFreeByte;
 			m_NextFreeByte += size;
 			return ptr;
-		}
-
-		void PageAllocator::free( void )
-		{
-			for ( unsigned int i = 0; i < m_AllocatedPageCount; i++ )
-			{
-				MemoryManager::Instance().freePage( m_AllocatedPages[ i ] );
-			}
 		}
 
 		void PageAllocator::reset( void )
@@ -59,21 +65,12 @@ namespace KVE
 			m_Memory = new char[ MEM_POOL_SIZE ];
 			memset( m_Memory, 0, MEM_POOL_SIZE );
 
-			m_FreePages = new Page[ PAGE_COUNT ];
+			m_PagesHead = m_FreePages = new Page[ PAGE_COUNT ];
 			for ( int i = 0; i < PAGE_COUNT; i++ )
 			{
 				m_FreePages[ i ].data = m_Memory + PAGE_SIZE * i;
 				m_FreePages[ i ].next = &m_FreePages[ ( i + 1 ) % PAGE_COUNT ];
 			}
-
-			/*Page* head = reinterpret_cast<Page*>( new( m_Memory ) char[ PAGE_SIZE ] );
-			m_FreePages = head;
-
-			for ( unsigned int i = 1; i < PAGE_COUNT; i++ )
-			{
-				head->next = reinterpret_cast<Page*>( new( m_Memory + i * PAGE_SIZE ) char[ PAGE_SIZE ] );
-				head = head->next;
-			}*/
 		}
 
 		void MemoryManager::release( void )
@@ -82,6 +79,12 @@ namespace KVE
 			{
 				delete[] m_Memory;
 				m_Memory = nullptr;
+			}
+
+			if ( m_PagesHead != nullptr )
+			{
+				delete[] m_PagesHead;
+				m_PagesHead = nullptr;
 			}
 		}
 

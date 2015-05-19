@@ -144,6 +144,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 	Input::Initialize();
 	Graphics::RenderManager::Instance().initialize( 1, &viewport, 1 );
 	Graphics::RenderManager::Instance().setWindow( window );
+	Graphics::CameraManager::Instance().initialize();
 	GameManager::Instance().initialize( window, timer );
 
 	MSG msg = { 0 };
@@ -184,6 +185,7 @@ int WINAPI WinMain( HINSTANCE appInstance, HINSTANCE prevInstance, PSTR cmdLine,
 
 	Release();
 
+	_CrtDumpMemoryLeaks();
 	return (int) msg.wParam;
 }
 
@@ -193,10 +195,17 @@ void Release( void )
 	running->store( false );
 	tGameLogic.join();
 	tRenderLogic.join();
+
+	delete running;
 #endif
 
+	GameManager::Instance().release();
+	Graphics::CameraManager::Instance().release();
 	Graphics::RenderManager::Instance().release();
+	Graphics::FrameManager::Instance().release();
 	System::MemoryManager::Instance().release();
+
+	delete refreshScreen;
 	delete window;
 	delete timer;
 }

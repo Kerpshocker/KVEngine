@@ -100,13 +100,11 @@ namespace KVE
 			UINT						VertexStride;
 			UINT						VertexOffset;
 			UINT						VertexIndexCount;
-			void*						Vertices;
-			void*						VertexIndices;
-
-			// SHOULD NOT BE HERE
 			UINT						InstanceCount;
 			UINT						InstanceStride;
 			UINT						InstanceOffset;
+			void*						Vertices;
+			void*						VertexIndices;
 		};
 
 		struct ShaderLayout
@@ -126,7 +124,8 @@ namespace KVE
 						Buffers[ i ]->Release();
 
 					//delete[] Buffers;
-					Buffers = nullptr;
+					//Buffers = nullptr;
+					int k = 0;
 				}
 			}
 		};

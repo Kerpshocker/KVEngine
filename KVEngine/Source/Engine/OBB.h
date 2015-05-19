@@ -69,9 +69,9 @@ namespace KVE
 			DirectX::XMVECTOR* getScale( void ){ return m_Scale; };
 
 			//set pos, rot, scale and update collision points of OABB
-			/*void setPosition( DirectX::XMVECTOR* vPosition );
+			void setPosition( DirectX::XMVECTOR* vPosition );
 			void setRotation( DirectX::XMVECTOR* vRotation );
-			void setScale( DirectX::XMVECTOR* vScale );*/
+			void setScale( DirectX::XMVECTOR* vScale );
 
 			IntersectionValue intersectsValue;
 
