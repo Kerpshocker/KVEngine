@@ -29,9 +29,8 @@ struct OABBInstance
 
 struct ObjectData
 {
-	f32 dir[ 3 ];
-	f32 velocity;
-	f32 mass;
+	DirectX::XMVECTOR	dir;
+	f32					velocity;
 };
 
 struct FrameParams;
@@ -47,6 +46,7 @@ public:
 private:
 	void createShaders( void );
 	void createGeometry( void );
+	void collides( ObjectData* instance, ObjectData* other, DirectX::XMVECTOR instancePos, DirectX::XMVECTOR otherPos );
 
 	const KVE::System::GameTimer*	m_Timer;
 	KVE::Graphics::FrameParams*		m_CurrentFrame;
